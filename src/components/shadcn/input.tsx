@@ -2,7 +2,11 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const Input = ({ className, type, ...props }: ComponentProps<'input'>) => {
+export const Input = ({
+  className,
+  type,
+  ...props
+}: ComponentProps<'input'>) => {
   return (
     <input
       type={type}
@@ -16,5 +20,4 @@ export const Input = ({ className, type, ...props }: ComponentProps<'input'>) =>
       {...props}
     />
   );
-}
-
+};

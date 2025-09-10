@@ -25,7 +25,7 @@ export const ResizablePanelGroup = ({
 
 export const ResizablePanel = ({ ...props }: ComponentProps<typeof Panel>) => {
   return <Panel data-slot="resizable-panel" {...props} />;
-}
+};
 
 export const ResizableHandle = ({
   withHandle,
@@ -51,4 +51,3 @@ export const ResizableHandle = ({
     </PanelResizeHandle>
   );
 };
-

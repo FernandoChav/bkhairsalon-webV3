@@ -10,5 +10,4 @@ export const Skeleton = ({ className, ...props }: ComponentProps<'div'>) => {
       {...props}
     />
   );
-}
-
+};

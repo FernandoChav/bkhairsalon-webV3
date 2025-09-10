@@ -7,7 +7,10 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const Checkbox = ({ className, ...props }: ComponentProps<typeof Root>) => {
+export const Checkbox = ({
+  className,
+  ...props
+}: ComponentProps<typeof Root>) => {
   return (
     <Root
       data-slot="checkbox"
@@ -25,5 +28,4 @@ export const Checkbox = ({ className, ...props }: ComponentProps<typeof Root>) =
       </Indicator>
     </Root>
   );
-}
-
+};

@@ -17,5 +17,4 @@ export const Label = ({ className, ...props }: ComponentProps<typeof Root>) => {
       {...props}
     />
   );
-}
-
+};

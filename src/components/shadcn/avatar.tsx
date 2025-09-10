@@ -6,7 +6,10 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const Avatar = ({ className, ...props }: ComponentProps<typeof Root>) => {
+export const Avatar = ({
+  className,
+  ...props
+}: ComponentProps<typeof Root>) => {
   return (
     <Root
       data-slot="avatar"
@@ -17,7 +20,7 @@ export const Avatar = ({ className, ...props }: ComponentProps<typeof Root>) => 
       {...props}
     />
   );
-}
+};
 
 export const AvatarImage = ({
   className,
@@ -32,7 +35,7 @@ export const AvatarImage = ({
       {...props}
     />
   );
-}
+};
 
 export const AvatarFallback = ({
   className,
@@ -48,5 +51,4 @@ export const AvatarFallback = ({
       {...props}
     />
   );
-}
-
+};

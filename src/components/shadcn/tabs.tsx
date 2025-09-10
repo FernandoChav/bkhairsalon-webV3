@@ -14,9 +14,12 @@ export const Tabs = ({ className, ...props }: ComponentProps<typeof Root>) => {
       {...props}
     />
   );
-}
+};
 
-export const TabsList = ({ className, ...props }: ComponentProps<typeof List>) => {
+export const TabsList = ({
+  className,
+  ...props
+}: ComponentProps<typeof List>) => {
   return (
     <List
       data-slot="tabs-list"
@@ -27,9 +30,12 @@ export const TabsList = ({ className, ...props }: ComponentProps<typeof List>) =
       {...props}
     />
   );
-}
+};
 
-export const TabsTrigger = ({ className, ...props }: ComponentProps<typeof Trigger>) => {
+export const TabsTrigger = ({
+  className,
+  ...props
+}: ComponentProps<typeof Trigger>) => {
   return (
     <Trigger
       data-slot="tabs-trigger"
@@ -40,9 +46,12 @@ export const TabsTrigger = ({ className, ...props }: ComponentProps<typeof Trigg
       {...props}
     />
   );
-}
+};
 
-export const TabsContent = ({ className, ...props }: ComponentProps<typeof Content>) => {
+export const TabsContent = ({
+  className,
+  ...props
+}: ComponentProps<typeof Content>) => {
   return (
     <Content
       data-slot="tabs-content"
@@ -50,5 +59,4 @@ export const TabsContent = ({ className, ...props }: ComponentProps<typeof Conte
       {...props}
     />
   );
-}
-
+};

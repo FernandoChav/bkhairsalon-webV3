@@ -6,7 +6,10 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const Switch = ({ className, ...props }: ComponentProps<typeof Root>) => {
+export const Switch = ({
+  className,
+  ...props
+}: ComponentProps<typeof Root>) => {
   return (
     <Root
       data-slot="switch"
@@ -24,5 +27,4 @@ export const Switch = ({ className, ...props }: ComponentProps<typeof Root>) => 
       />
     </Root>
   );
-}
-
+};

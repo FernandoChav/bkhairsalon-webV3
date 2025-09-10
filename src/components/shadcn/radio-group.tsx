@@ -7,7 +7,10 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const RadioGroup = ({ className, ...props }: ComponentProps<typeof Root>) => {
+export const RadioGroup = ({
+  className,
+  ...props
+}: ComponentProps<typeof Root>) => {
   return (
     <Root
       data-slot="radio-group"
@@ -15,9 +18,12 @@ export const RadioGroup = ({ className, ...props }: ComponentProps<typeof Root>)
       {...props}
     />
   );
-}
+};
 
-export const RadioGroupItem = ({ className, ...props }: ComponentProps<typeof Item>) => {
+export const RadioGroupItem = ({
+  className,
+  ...props
+}: ComponentProps<typeof Item>) => {
   return (
     <Item
       data-slot="radio-group-item"
@@ -35,5 +41,4 @@ export const RadioGroupItem = ({ className, ...props }: ComponentProps<typeof It
       </Indicator>
     </Item>
   );
-}
-
+};

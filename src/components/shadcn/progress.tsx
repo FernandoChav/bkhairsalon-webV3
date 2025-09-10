@@ -6,7 +6,11 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '@/libs';
 
-export const Progress = ({ className, value, ...props }: ComponentProps<typeof Root>) => {
+export const Progress = ({
+  className,
+  value,
+  ...props
+}: ComponentProps<typeof Root>) => {
   return (
     <Root
       data-slot="progress"
@@ -23,5 +27,4 @@ export const Progress = ({ className, value, ...props }: ComponentProps<typeof R
       />
     </Root>
   );
-}
-
+};

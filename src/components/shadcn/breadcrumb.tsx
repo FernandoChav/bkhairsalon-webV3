@@ -7,9 +7,12 @@ import { cn } from '@/libs';
 
 export const Breadcrumb = ({ ...props }: ComponentProps<'nav'>) => {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
-}
+};
 
-export const BreadcrumbList = ({ className, ...props }: ComponentProps<'ol'>) => {
+export const BreadcrumbList = ({
+  className,
+  ...props
+}: ComponentProps<'ol'>) => {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -20,9 +23,12 @@ export const BreadcrumbList = ({ className, ...props }: ComponentProps<'ol'>) =>
       {...props}
     />
   );
-}
+};
 
-export const BreadcrumbItem = ({ className, ...props }: ComponentProps<'li'>) => {
+export const BreadcrumbItem = ({
+  className,
+  ...props
+}: ComponentProps<'li'>) => {
   return (
     <li
       data-slot="breadcrumb-item"
@@ -30,7 +36,7 @@ export const BreadcrumbItem = ({ className, ...props }: ComponentProps<'li'>) =>
       {...props}
     />
   );
-}
+};
 
 export const BreadcrumbLink = ({
   asChild,
@@ -48,9 +54,12 @@ export const BreadcrumbLink = ({
       {...props}
     />
   );
-}
+};
 
-export const BreadcrumbPage = ({ className, ...props }: ComponentProps<'span'>) => {
+export const BreadcrumbPage = ({
+  className,
+  ...props
+}: ComponentProps<'span'>) => {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -61,7 +70,7 @@ export const BreadcrumbPage = ({ className, ...props }: ComponentProps<'span'>) 
       {...props}
     />
   );
-}
+};
 
 export const BreadcrumbSeparator = ({
   children,
@@ -79,9 +88,12 @@ export const BreadcrumbSeparator = ({
       {children ?? <ChevronRight />}
     </li>
   );
-}
+};
 
-export const BreadcrumbEllipsis = ({ className, ...props }: ComponentProps<'span'>) => {
+export const BreadcrumbEllipsis = ({
+  className,
+  ...props
+}: ComponentProps<'span'>) => {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -94,5 +106,4 @@ export const BreadcrumbEllipsis = ({ className, ...props }: ComponentProps<'span
       <span className="sr-only">More</span>
     </span>
   );
-}
-
+};

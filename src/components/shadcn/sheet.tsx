@@ -18,21 +18,24 @@ import { cn } from '@/libs';
 
 export const Sheet = ({ ...props }: ComponentProps<typeof Root>) => {
   return <Root data-slot="sheet" {...props} />;
-}
+};
 
 export const SheetTrigger = ({ ...props }: ComponentProps<typeof Trigger>) => {
   return <Trigger data-slot="sheet-trigger" {...props} />;
-}
+};
 
 export const SheetClose = ({ ...props }: ComponentProps<typeof Close>) => {
   return <Close data-slot="sheet-close" {...props} />;
-}
+};
 
 export const SheetPortal = ({ ...props }: ComponentProps<typeof Portal>) => {
   return <Portal data-slot="sheet-portal" {...props} />;
-}
+};
 
-export const SheetOverlay = ({ className, ...props }: ComponentProps<typeof Overlay>) => {
+export const SheetOverlay = ({
+  className,
+  ...props
+}: ComponentProps<typeof Overlay>) => {
   return (
     <Overlay
       data-slot="sheet-overlay"
@@ -43,7 +46,7 @@ export const SheetOverlay = ({ className, ...props }: ComponentProps<typeof Over
       {...props}
     />
   );
-}
+};
 
 export const SheetContent = ({
   className,
@@ -80,7 +83,7 @@ export const SheetContent = ({
       </Content>
     </SheetPortal>
   );
-}
+};
 
 export const SheetHeader = ({ className, ...props }: ComponentProps<'div'>) => {
   return (
@@ -90,7 +93,7 @@ export const SheetHeader = ({ className, ...props }: ComponentProps<'div'>) => {
       {...props}
     />
   );
-}
+};
 
 export const SheetFooter = ({ className, ...props }: ComponentProps<'div'>) => {
   return (
@@ -100,9 +103,12 @@ export const SheetFooter = ({ className, ...props }: ComponentProps<'div'>) => {
       {...props}
     />
   );
-}
+};
 
-export const SheetTitle = ({ className, ...props }: ComponentProps<typeof Title>) => {
+export const SheetTitle = ({
+  className,
+  ...props
+}: ComponentProps<typeof Title>) => {
   return (
     <Title
       data-slot="sheet-title"
@@ -110,7 +116,7 @@ export const SheetTitle = ({ className, ...props }: ComponentProps<typeof Title>
       {...props}
     />
   );
-}
+};
 
 export const SheetDescription = ({
   className,
@@ -123,5 +129,4 @@ export const SheetDescription = ({
       {...props}
     />
   );
-}
-
+};
