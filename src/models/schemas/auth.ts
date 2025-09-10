@@ -1,0 +1,26 @@
+import { z } from 'zod';
+
+export const registerSchema = z
+  .object({
+    firstName: z.string().min(1, 'El nombre es requerido'),
+    lastName: z.string().min(1, 'El apellido es requerido'),
+    email: z
+      .string()
+      .min(1, 'El correo electrónico es requerido')
+      .email('Por favor ingresa un correo electrónico válido'),
+    phoneNumber: z
+      .string()
+      .min(1, 'El número de teléfono es requerido')
+      .min(10, 'El número de teléfono debe tener al menos 10 dígitos'),
+    dateOfBirth: z.string().min(1, 'La fecha de nacimiento es requerida'),
+    password: z
+      .string()
+      .min(1, 'La contraseña es requerida')
+      .min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    confirmPassword: z.string().min(1, 'Debes confirmar tu contraseña'),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message:
+      'Las contraseñas no coinciden, por favor verifica que sean iguales',
+    path: ['confirmPassword'],
+  });
