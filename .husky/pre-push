@@ -1,0 +1,18 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-push checks..."
+
+# Fix unused dependencies and files automatically
+echo "Fixing unused dependencies and files..."
+npm run knip:fix
+
+# Check for unused dependencies and files
+echo "Checking for unused dependencies and files..."
+npm run knip
+
+# Build application to verify no errors
+echo "Building application..."
+npm run build
+
+echo "Pre-push checks completed successfully"
