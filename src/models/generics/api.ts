@@ -1,0 +1,48 @@
+// Tipos genéricos para respuestas de API (coincide exactamente con el backend C#)
+export interface ApiResponse<T = object> {
+  message: string;
+  data: T | null;
+  errorData: ValidationError | null;
+}
+
+export interface ValidationError {
+  errors: Record<string, string[]>;
+}
+
+// Tipos para errores HTTP específicos
+export interface HttpError {
+  message: string;
+  statusCode: number;
+  details?: Record<string, unknown>;
+}
+
+// Tipos para paginación
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+// Tipos para filtros comunes
+export interface BaseFilter {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+// Tipos para timestamps
+export interface Timestamps {
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Tipos para entidades base
+export interface BaseEntity extends Timestamps {
+  id: string;
+}
