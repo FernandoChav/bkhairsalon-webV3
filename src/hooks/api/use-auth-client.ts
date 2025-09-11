@@ -3,7 +3,8 @@ import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
 import { authClient } from '@/clients';
-import type { ApiResponse, RegisterRequest, ValidationError } from '@/models';
+import { ApiResponse, ValidationError } from '@/models/generics';
+import { RegisterRequest } from '@/models/requests';
 
 // Función helper para manejar errores del backend estandarizado
 const handleApiError = (error: AxiosError<ApiResponse>): string => {

@@ -1,10 +1,9 @@
-// Shadcn Components
 export {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from './shadcn/accordion';
+} from './accordion';
 export {
   AlertDialog,
   AlertDialogAction,
@@ -15,11 +14,11 @@ export {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './shadcn/alert-dialog';
-export { Alert, AlertDescription, AlertTitle } from './shadcn/alert';
-export { AspectRatio } from './shadcn/aspect-ratio';
-export { Avatar, AvatarFallback, AvatarImage } from './shadcn/avatar';
-export { Badge } from './shadcn/badge';
+} from './alert-dialog';
+export { Alert, AlertDescription, AlertTitle } from './alert';
+export { AspectRatio } from './aspect-ratio';
+export { Avatar, AvatarFallback, AvatarImage } from './avatar';
+export { Badge } from './badge';
 export {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -28,9 +27,9 @@ export {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from './shadcn/breadcrumb';
-export { Button, buttonVariants } from './shadcn/button';
-export { Calendar } from './shadcn/calendar';
+} from './breadcrumb';
+export { Button, buttonVariants } from './button';
+export { Calendar } from './calendar';
 export {
   Card,
   CardContent,
@@ -38,27 +37,27 @@ export {
   CardFooter,
   CardHeader,
   CardTitle,
-} from './shadcn/card';
+} from './card';
 export {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from './shadcn/carousel';
+} from './carousel';
 export {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from './shadcn/chart';
-export { Checkbox } from './shadcn/checkbox';
+} from './chart';
+export { Checkbox } from './checkbox';
 export {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from './shadcn/collapsible';
+} from './collapsible';
 export {
   Command,
   CommandDialog,
@@ -69,7 +68,7 @@ export {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from './shadcn/command';
+} from './command';
 export {
   ContextMenu,
   ContextMenuCheckboxItem,
@@ -86,7 +85,7 @@ export {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from './shadcn/context-menu';
+} from './context-menu';
 export {
   Dialog,
   DialogContent,
@@ -95,7 +94,7 @@ export {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './shadcn/dialog';
+} from './dialog';
 export {
   Drawer,
   DrawerClose,
@@ -107,7 +106,7 @@ export {
   DrawerPortal,
   DrawerTitle,
   DrawerTrigger,
-} from './shadcn/drawer';
+} from './drawer';
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -124,7 +123,7 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from './shadcn/dropdown-menu';
+} from './dropdown-menu';
 export {
   Form,
   FormControl,
@@ -134,20 +133,16 @@ export {
   FormLabel,
   FormMessage,
   useFormField,
-} from './shadcn/form';
-export {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from './shadcn/hover-card';
+} from './form';
+export { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
 export {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from './shadcn/input-otp';
-export { Input } from './shadcn/input';
-export { Label } from './shadcn/label';
+} from './input-otp';
+export { Input } from './input';
+export { Label } from './label';
 export {
   Menubar,
   MenubarCheckboxItem,
@@ -165,7 +160,7 @@ export {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from './shadcn/menubar';
+} from './menubar';
 export {
   NavigationMenu,
   NavigationMenuContent,
@@ -175,7 +170,7 @@ export {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
-} from './shadcn/navigation-menu';
+} from './navigation-menu';
 export {
   Pagination,
   PaginationContent,
@@ -184,16 +179,16 @@ export {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from './shadcn/pagination';
-export { Popover, PopoverContent, PopoverTrigger } from './shadcn/popover';
-export { Progress } from './shadcn/progress';
-export { RadioGroup, RadioGroupItem } from './shadcn/radio-group';
+} from './pagination';
+export { Popover, PopoverContent, PopoverTrigger } from './popover';
+export { Progress } from './progress';
+export { RadioGroup, RadioGroupItem } from './radio-group';
 export {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from './shadcn/resizable';
-export { ScrollArea, ScrollBar } from './shadcn/scroll-area';
+} from './resizable';
+export { ScrollArea, ScrollBar } from './scroll-area';
 export {
   Select,
   SelectContent,
@@ -203,8 +198,8 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from './shadcn/select';
-export { Separator } from './shadcn/separator';
+} from './select';
+export { Separator } from './separator';
 export {
   Sheet,
   SheetClose,
@@ -214,7 +209,7 @@ export {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from './shadcn/sheet';
+} from './sheet';
 export {
   Sidebar,
   SidebarContent,
@@ -239,11 +234,11 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
-} from './shadcn/sidebar';
-export { Skeleton } from './shadcn/skeleton';
-export { Slider } from './shadcn/slider';
-export { Toaster } from './shadcn/sonner';
-export { Switch } from './shadcn/switch';
+} from './sidebar';
+export { Skeleton } from './skeleton';
+export { Slider } from './slider';
+export { Toaster } from './sonner';
+export { Switch } from './switch';
 export {
   Table,
   TableBody,
@@ -252,18 +247,14 @@ export {
   TableHead,
   TableHeader,
   TableRow,
-} from './shadcn/table';
-export { Tabs, TabsContent, TabsList, TabsTrigger } from './shadcn/tabs';
-export { Textarea } from './shadcn/textarea';
-export { Toggle, toggleVariants } from './shadcn/toggle';
-export { ToggleGroup, ToggleGroupItem } from './shadcn/toggle-group';
+} from './table';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
+export { Textarea } from './textarea';
+export { Toggle, toggleVariants } from './toggle';
+export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from './shadcn/tooltip';
-
-// UI Components
-export { DatePicker } from './ui/date-picker';
-export { PhoneInput } from './ui/phone-input';
+} from './tooltip';

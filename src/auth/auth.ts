@@ -14,7 +14,6 @@ export const authOptions = {
         }
 
         try {
-          // Aquí harías la llamada a tu API backend
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
             {

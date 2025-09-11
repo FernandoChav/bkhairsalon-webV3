@@ -3,10 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { useRegisterMutation } from '@/hooks';
-import { transformRegisterData } from '@/models/helpers/auth';
-import type { RegisterRequest } from '@/models/requests/auth';
-import { registerSchema } from '@/models/schemas/auth';
+import { useRegisterMutation } from '@/hooks/api';
+import { formatPhoneNumber } from '@/libs';
+import type { RegisterRequest } from '@/models/requests';
+import { registerSchema } from '@/models/schemas';
 
 export const useRegisterForm = () => {
   const {
@@ -18,7 +18,7 @@ export const useRegisterForm = () => {
 
   const form = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
-    mode: 'all',
+    mode: 'onTouched',
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -32,7 +32,11 @@ export const useRegisterForm = () => {
 
   const onSubmit = (data: RegisterRequest) => {
     // Transformar datos antes de enviar
-    const transformedData = transformRegisterData(data);
+    const transformedData = {
+      ...data,
+      phoneNumber: formatPhoneNumber(data.phoneNumber),
+      dateOfBirth: data.dateOfBirth, // Ya está en formato YYYY-MM-DD, no necesita transformación
+    };
 
     // Ejecutar mutación de registro
     register(transformedData);

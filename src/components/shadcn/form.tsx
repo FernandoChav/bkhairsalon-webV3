@@ -14,7 +14,7 @@ import {
 
 import { type ComponentProps, createContext, useContext, useId } from 'react';
 
-import { Label } from '@/components';
+import { Label } from '@/components/shadcn';
 import { cn } from '@/libs';
 
 export const Form = FormProvider;

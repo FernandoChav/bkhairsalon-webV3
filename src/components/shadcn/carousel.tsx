@@ -15,7 +15,7 @@ import {
   useState,
 } from 'react';
 
-import { Button } from '@/components';
+import { Button } from '@/components/shadcn';
 import { cn } from '@/libs';
 
 type CarouselApi = UseEmblaCarouselType[1];
