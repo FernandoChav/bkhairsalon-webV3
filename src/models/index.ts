@@ -2,7 +2,7 @@
 export { registerSchema } from './schemas/auth';
 
 // Exportaciones específicas de requests
-export type { RegisterRequest } from './requests/auth';
+export type { RegisterRequest, LoginRequest } from './requests/auth';
 
 // Exportaciones específicas de entities
 export type { User } from './entities/auth';
