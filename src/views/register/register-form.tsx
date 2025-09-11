@@ -266,7 +266,7 @@ export const RegisterForm = () => {
         <div className="mt-6 text-center text-sm">
           <span className="text-gray-500">¿Ya tienes cuenta? </span>
           <a
-            href="/login"
+            href="/Login"
             className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
           >
             Inicia sesión
