@@ -28,18 +28,17 @@ export const authOptions = {
               }),
             }
           );
-
           if (!response.ok) {
             return null;
           }
 
           const data = await response.json();
 
-          if (data.success && data.data) {
+          if (data.data) {
             return {
-              id: data.data.user.id,
-              email: data.data.user.email,
-              name: data.data.user.name,
+              id: data.data.id,
+              email: data.data.email,
+              name: data.data.name,
               accessToken: data.data.token,
             };
           }
