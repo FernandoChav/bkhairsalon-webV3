@@ -6,7 +6,7 @@ import {
 
 import type { ComponentProps } from 'react';
 
-import { Button, buttonVariants } from '@/components';
+import { Button, buttonVariants } from '@/components/shadcn';
 import { cn } from '@/libs';
 
 export const Pagination = ({ className, ...props }: ComponentProps<'nav'>) => {

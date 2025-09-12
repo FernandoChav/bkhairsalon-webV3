@@ -5,8 +5,6 @@ export type {
   HttpError,
   PaginatedResponse,
   BaseFilter,
-  Timestamps,
-  BaseEntity,
 } from './api';
 
 // Exportaciones específicas de tipos genéricos de formularios

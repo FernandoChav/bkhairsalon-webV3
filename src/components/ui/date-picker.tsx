@@ -1,30 +1,38 @@
 'use client';
 
-import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { useState } from 'react';
+import { Ref, useState } from 'react';
 
-import { Button } from '@/components/shadcn/button';
-import { Calendar as CalendarComponent } from '@/components/shadcn/calendar';
 import {
+  Button,
+  Calendar as CalendarComponent,
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/shadcn/popover';
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/shadcn/select';
-import { cn } from '@/libs';
+} from '@/components/shadcn';
+import {
+  cn,
+  formatDateForDisplay,
+  formatDateToString,
+  generateMonths,
+  generateYears,
+  getMinDateString,
+  parseDateString,
+} from '@/libs';
 
 interface DatePickerProps {
-  value?: Date;
-  onChange?: (date: Date | undefined) => void;
+  value?: string; // Cambiar a string para manejar formato YYYY-MM-DD
+  onChange?: (date: string | undefined) => void; // Cambiar a string
+  onBlur?: () => void;
+  name?: string; // Para compatibilidad con React Hook Form
+  ref?: Ref<HTMLButtonElement>; // Para compatibilidad con React Hook Form
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -33,37 +41,28 @@ interface DatePickerProps {
 export const DatePicker = ({
   value,
   onChange,
+  onBlur,
+  name,
+  ref,
   placeholder = 'Seleccionar fecha',
   disabled = false,
   className,
 }: DatePickerProps) => {
-  const [currentMonth, setCurrentMonth] = useState(value || new Date());
+  // Helper functions for date formatting (now using date-utils)
+  const parseStringToDate = parseDateString;
+
+  const [currentMonth, setCurrentMonth] = useState(
+    parseStringToDate(value || '') || new Date()
+  );
   const [isOpen, setIsOpen] = useState(false);
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
   const currentYear = currentMonth.getFullYear();
   const currentMonthIndex = currentMonth.getMonth();
 
-  // Generate years from 1900 to current year
-  const years = Array.from(
-    { length: new Date().getFullYear() - 1899 },
-    (_, i) => 1900 + i
-  ).reverse();
-
-  // Generate months
-  const months = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
-  ];
+  // Generate years and months using date-utils
+  const years = generateYears();
+  const months = generateMonths();
 
   const handleYearChange = (year: string) => {
     const newDate = new Date(parseInt(year), currentMonthIndex, 1);
@@ -77,14 +76,33 @@ export const DatePicker = ({
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    onChange?.(date);
     if (date) {
+      const formattedDate = formatDateToString(date);
+      onChange?.(formattedDate);
       setIsOpen(false);
+      setHasBeenOpened(false); // Reset flag when date is selected
+    } else {
+      onChange?.(undefined);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+
+    if (open) {
+      setHasBeenOpened(true);
+    } else if (!open) {
+      // Si se cerró y había sido abierto, disparar validación si no hay valor
+      const parsedValue = parseStringToDate(value || '');
+      if (hasBeenOpened && !parsedValue) {
+        onBlur?.();
+      }
+      setHasBeenOpened(false);
     }
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -94,9 +112,19 @@ export const DatePicker = ({
             className
           )}
           disabled={disabled}
+          name={name}
+          ref={ref}
+          onBlur={() => {
+            // Solo disparar onBlur si no se está abriendo el picker
+            if (!isOpen) {
+              onBlur?.();
+            }
+          }}
         >
           <Calendar className="mr-2 h-4 w-4" />
-          {value ? format(value, 'PPP', { locale: es }) : placeholder}
+          {parseStringToDate(value || '')
+            ? formatDateForDisplay(value || '')
+            : placeholder}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -164,9 +192,11 @@ export const DatePicker = ({
 
         <CalendarComponent
           mode="single"
-          selected={value}
+          selected={parseStringToDate(value || '')}
           onSelect={handleDateSelect}
-          disabled={date => date > new Date() || date < new Date('1900-01-01')}
+          disabled={date =>
+            date > new Date() || date < new Date(getMinDateString())
+          }
           month={currentMonth}
           onMonthChange={setCurrentMonth}
           locale={es}

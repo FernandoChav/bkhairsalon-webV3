@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components';
+} from '@/components/shadcn';
 import { cn } from '@/libs';
 
 export const Command = ({

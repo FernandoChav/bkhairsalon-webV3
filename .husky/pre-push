@@ -7,4 +7,7 @@ echo "Running pre-push checks..."
 echo "Building application..."
 npm run build
 
+echo "Running tests..."
+npm run test
+
 echo "Pre-push checks completed successfully"

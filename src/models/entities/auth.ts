@@ -1,4 +1,4 @@
-import { BaseEntity } from '../generics/api';
+import { BaseEntity } from './base';
 
 export interface User extends BaseEntity {
   firstName: string;
