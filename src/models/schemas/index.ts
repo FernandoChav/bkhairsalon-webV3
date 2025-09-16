@@ -4,3 +4,4 @@
  */
 
 export { registerSchema } from './auth';
+export { editUserSchema } from './user';

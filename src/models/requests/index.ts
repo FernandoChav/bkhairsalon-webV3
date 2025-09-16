@@ -4,3 +4,4 @@
  */
 
 export type { RegisterRequest } from './auth';
+export type { EditUserRequest } from './user';
