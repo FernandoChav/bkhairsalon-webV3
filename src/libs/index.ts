@@ -24,3 +24,4 @@ export {
   normalizePhoneNumber,
 } from './phone-utils';
 export { cn } from './utils';
+export { handleApiError, handleValidationErrors } from './api-errors';

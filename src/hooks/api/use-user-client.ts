@@ -2,18 +2,18 @@ import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-import { authClient } from '@/clients';
+import { userClient } from '@/clients';
 import { handleApiError, handleValidationErrors } from '@/libs';
 import { ApiResponse } from '@/models/generics';
-import { RegisterRequest } from '@/models/requests';
+import { EditUserRequest } from '@/models/requests';
 
 // Mutación para registro
 
-export const useRegisterMutation = () =>
-  useMutation<ApiResponse, AxiosError<ApiResponse>, RegisterRequest>({
-    mutationFn: authClient.register,
+export const useEditUserMutation = () =>
+  useMutation<ApiResponse, AxiosError<ApiResponse>, EditUserRequest>({
+    mutationFn: userClient.editUser,
     onSuccess: (data: ApiResponse) => {
-      toast.success(data.message || 'Usuario registrado exitosamente');
+      toast.success(data.message || 'Usuario editado exitosamente');
     },
     onError: (error: AxiosError<ApiResponse>) => {
       const message = handleApiError(error);
