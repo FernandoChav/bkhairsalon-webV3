@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
 import { useState } from 'react';
 
