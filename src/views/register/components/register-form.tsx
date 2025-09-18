@@ -1,5 +1,3 @@
-'use client';
-
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import { useState } from 'react';
@@ -21,8 +19,7 @@ import {
 } from '@/components/shadcn';
 import { DatePicker, PhoneInput } from '@/components/ui';
 import { cn } from '@/libs';
-
-import { useRegisterForm } from './use-register-form';
+import { useRegisterForm } from '@/views/register/hooks';
 
 export const RegisterForm = () => {
   const { form, onSubmit, isLoading } = useRegisterForm();

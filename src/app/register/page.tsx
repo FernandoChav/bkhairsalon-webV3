@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import RegisterView from '@/views/register';
+import { RegisterView } from '@/views';
 
 export const metadata: Metadata = {
   title: 'Registro - BK Hair Salon',

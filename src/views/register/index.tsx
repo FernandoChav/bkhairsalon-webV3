@@ -1,20 +1,17 @@
 'use client';
 
-import { RegisterForm } from './register-form';
+import {
+  RegisterFooter,
+  RegisterForm,
+  RegisterHeader,
+} from '@/views/register/components';
 
-const RegisterView = () => {
+export const RegisterView = () => {
   return (
     <div className="min-h-screen">
       {/* Header */}
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 font-serif">
-            BK Hair Salon
-          </h1>
-          <p className="text-lg text-gray-600">
-            Únete a nuestra comunidad de belleza
-          </p>
-        </div>
+        <RegisterHeader />
 
         {/* Desktop Layout */}
         <div className="hidden md:flex md:items-center md:justify-center md:min-h-[calc(100vh-200px)]">
@@ -33,12 +30,8 @@ const RegisterView = () => {
 
       {/* Footer */}
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-sm text-gray-500">
-          <p>© 2024 BK Hair Salon. Todos los derechos reservados.</p>
-        </div>
+        <RegisterFooter />
       </div>
     </div>
   );
 };
-
-export default RegisterView;
