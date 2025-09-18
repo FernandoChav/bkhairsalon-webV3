@@ -18,6 +18,7 @@ export {
 
 // Exportaciones específicas de generics
 export type {
+  LoginResponse,
   ApiResponse,
   ValidationError,
   HttpError,
