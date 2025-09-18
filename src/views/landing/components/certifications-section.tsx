@@ -22,7 +22,7 @@ export const CertificationsSection = () => {
   ];
 
   return (
-    <section id="formación" className="py-20 bg-white overflow-hidden">
+    <section className="py-20 bg-white overflow-hidden">
       <div className="mb-12">
         <h2
           className="text-5xl md:text-6xl text-center mb-4"

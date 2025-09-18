@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { Heart, Scissors, Sparkles } from 'lucide-react';
+import { FaCut } from 'react-icons/fa';
+import { HiHeart, HiSparkles } from 'react-icons/hi';
 
 export const ServicesSection = () => {
   return (
-    <section id="servicios" className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-6 max-w-7xl">
         <motion.div
           initial={{ opacity: 0 }}
@@ -54,7 +55,7 @@ export const ServicesSection = () => {
             whileHover={{ scale: 1.05 }}
             className="bg-white p-6 shadow-sm"
           >
-            <Scissors className="w-8 h-8 mb-3" />
+            <FaCut className="w-8 h-8 mb-3" />
             <h4 className="font-semibold mb-1">Cortes</h4>
             <p className="text-xs text-gray-600">Modernos y clásicos</p>
           </motion.div>
@@ -67,7 +68,7 @@ export const ServicesSection = () => {
             whileHover={{ scale: 1.05 }}
             className="bg-gray-200 p-6"
           >
-            <Heart className="w-8 h-8 mb-3 text-gray-600" />
+            <HiHeart className="w-8 h-8 mb-3 text-gray-600" />
             <h4 className="font-semibold mb-1">Tratamientos</h4>
             <p className="text-xs text-gray-600">Cuidado integral</p>
           </motion.div>
@@ -80,7 +81,7 @@ export const ServicesSection = () => {
             whileHover={{ scale: 1.05 }}
             className="col-span-2 bg-gradient-to-r from-gray-100 to-gray-200 p-6"
           >
-            <Sparkles className="w-8 h-8 mb-3 text-gray-700" />
+            <HiSparkles className="w-8 h-8 mb-3 text-gray-700" />
             <h4
               className="text-xl mb-2"
               style={{ fontFamily: 'var(--font-playfair)' }}

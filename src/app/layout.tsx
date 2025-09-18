@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import { Montserrat, Playfair_Display } from 'next/font/google';
 
+import { FooterBar, NavigationBar } from '@/components/layout';
 import {
   AppNextAuthProvider,
   AppNextThemesProvider,
@@ -56,7 +57,15 @@ export default function RootLayout({
         <AppNextAuthProvider>
           <AppReactQueryProvider>
             <AppNextThemesProvider>
-              <AppSonnerProvider>{children}</AppSonnerProvider>
+              <AppSonnerProvider>
+                <div
+                  className={`min-h-screen bg-white text-gray-900 overflow-x-hidden`}
+                >
+                  <NavigationBar />
+                  <main className="py-20">{children}</main>
+                  <FooterBar />
+                </div>
+              </AppSonnerProvider>
             </AppNextThemesProvider>
           </AppReactQueryProvider>
         </AppNextAuthProvider>

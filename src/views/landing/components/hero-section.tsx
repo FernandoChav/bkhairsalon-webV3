@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { HiChevronDown } from 'react-icons/hi';
 
 import { useRef } from 'react';
 
@@ -26,7 +26,7 @@ export const HeroSection = () => {
       {/* Hero Section - Asymmetric Split */}
       <section
         ref={heroRef}
-        id="inicio"
+        id="home"
         className="relative min-h-screen flex items-center justify-center"
       >
         <motion.div
@@ -119,7 +119,7 @@ export const HeroSection = () => {
                   <span className="text-sm uppercase tracking-wider">
                     Descubre mi arte
                   </span>
-                  <ChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-2 transition-transform" />
+                  <HiChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-2 transition-transform" />
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -163,7 +163,7 @@ export const HeroSection = () => {
           transition={{ repeat: Infinity, duration: 2 }}
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
         >
-          <ChevronDown className="w-6 h-6" />
+          <HiChevronDown className="w-6 h-6" />
         </motion.div>
       </section>
     </>

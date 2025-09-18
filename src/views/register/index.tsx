@@ -1,14 +1,10 @@
 'use client';
 
-import {
-  RegisterFooter,
-  RegisterForm,
-  RegisterHeader,
-} from '@/views/register/components';
+import { RegisterForm, RegisterHeader } from '@/views/register/components';
 
 export const RegisterView = () => {
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Header */}
       <div className="container mx-auto px-4 py-8">
         <RegisterHeader />
@@ -26,11 +22,6 @@ export const RegisterView = () => {
             <RegisterForm />
           </div>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="container mx-auto px-4 py-8">
-        <RegisterFooter />
       </div>
     </div>
   );

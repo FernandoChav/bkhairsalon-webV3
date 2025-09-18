@@ -7,11 +7,7 @@ export const PhilosophySection = () => {
   const isPhilosophyInView = useInView(philosophyRef, { once: true });
 
   return (
-    <section
-      ref={philosophyRef}
-      id="filosofía"
-      className="relative py-32 overflow-hidden"
-    >
+    <section ref={philosophyRef} className="relative py-32 overflow-hidden">
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white"
         initial={{ scaleX: 0 }}

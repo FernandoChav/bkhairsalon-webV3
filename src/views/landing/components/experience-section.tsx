@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { Award, Palette, Sparkles } from 'lucide-react';
+import { FaAward, FaPalette } from 'react-icons/fa';
+import { HiSparkles } from 'react-icons/hi';
 
 export const ExperienceSection = () => {
   return (
-    <section id="experiencia" className="py-20 bg-white">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-6 max-w-7xl">
         <motion.div
           initial={{ opacity: 0 }}
@@ -33,7 +34,7 @@ export const ExperienceSection = () => {
             className="md:col-span-5 bg-black text-white p-8 relative overflow-hidden group"
           >
             <div className="relative z-10">
-              <Award className="w-8 h-8 mb-4" />
+              <FaAward className="w-8 h-8 mb-4" />
               <h3
                 className="text-2xl mb-4"
                 style={{ fontFamily: 'var(--font-playfair)' }}
@@ -57,7 +58,7 @@ export const ExperienceSection = () => {
             viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
             className="md:col-span-4 md:col-start-7 md:row-start-1 bg-gray-100 p-8 mt-12"
           >
-            <Sparkles className="w-8 h-8 mb-4 text-gray-600" />
+            <HiSparkles className="w-8 h-8 mb-4 text-gray-600" />
             <h3
               className="text-xl mb-2"
               style={{ fontFamily: 'var(--font-playfair)' }}
@@ -74,7 +75,7 @@ export const ExperienceSection = () => {
             viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
             className="md:col-span-3 md:col-start-10 bg-gray-900 text-white p-6"
           >
-            <Palette className="w-6 h-6 mb-3" />
+            <FaPalette className="w-6 h-6 mb-3" />
             <h3 className="text-lg mb-2">Cine Nacional</h3>
             <p className="text-xs text-gray-300">Estilista en producciones</p>
           </motion.div>
