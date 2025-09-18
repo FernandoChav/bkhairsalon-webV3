@@ -1,6 +1,6 @@
 'use client';
 
-import { Phone } from 'lucide-react';
+import { HiPhone } from 'react-icons/hi';
 
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
@@ -85,7 +85,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
 
     return (
       <div className="relative">
-        <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <HiPhone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="tel"
           className={cn('pl-10', className)}

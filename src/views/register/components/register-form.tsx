@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { HiEye, HiEyeOff, HiLockClosed, HiMail, HiUser } from 'react-icons/hi';
 
 import { useState } from 'react';
 
@@ -44,7 +44,7 @@ export const RegisterForm = () => {
           Crear cuenta
         </CardTitle>
         <CardDescription className="text-center text-gray-600">
-          Completa los datos para registrarte en BK Hair Salon
+          Completa los datos para registrarte en Banguelia Karamanos Hair Salon
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -63,7 +63,7 @@ export const RegisterForm = () => {
                   <FormLabel>Nombre</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         placeholder="Tu nombre"
                         className="pl-10"
@@ -86,7 +86,7 @@ export const RegisterForm = () => {
                   <FormLabel>Apellido</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         placeholder="Tu apellido"
                         className="pl-10"
@@ -109,7 +109,7 @@ export const RegisterForm = () => {
                   <FormLabel>Correo Electrónico</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type="email"
                         placeholder="tu@correo.com"
@@ -167,7 +167,7 @@ export const RegisterForm = () => {
                   <FormLabel>Contraseña</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Mínimo 8 caracteres"
@@ -183,9 +183,9 @@ export const RegisterForm = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
+                          <HiEyeOff className="h-4 w-4" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <HiEye className="h-4 w-4" />
                         )}
                       </Button>
                     </div>
@@ -204,7 +204,7 @@ export const RegisterForm = () => {
                   <FormLabel>Confirmar Contraseña</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Repite tu contraseña"
@@ -222,9 +222,9 @@ export const RegisterForm = () => {
                         }
                       >
                         {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4" />
+                          <HiEyeOff className="h-4 w-4" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <HiEye className="h-4 w-4" />
                         )}
                       </Button>
                     </div>
@@ -240,7 +240,7 @@ export const RegisterForm = () => {
               className={cn(
                 'w-full text-white shadow-lg transition-all duration-300 transform',
                 isFormValid && !isLoading
-                  ? 'bg-pink-500 hover:bg-pink-600 hover:scale-[1.02] hover:shadow-xl'
+                  ? 'bg-black hover:bg-gray-800 hover:scale-[1.02] hover:shadow-xl'
                   : 'bg-gray-400 cursor-not-allowed'
               )}
               disabled={!isFormValid || isLoading}
@@ -255,7 +255,7 @@ export const RegisterForm = () => {
           <span className="text-gray-500">¿Ya tienes cuenta? </span>
           <a
             href="/login"
-            className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
+            className="font-medium text-black hover:text-gray-600 hover:underline transition-colors duration-200"
           >
             Inicia sesión
           </a>

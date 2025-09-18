@@ -2,7 +2,7 @@
 
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
-import { PanelLeftIcon } from 'lucide-react';
+import { HiMenuAlt2 } from 'react-icons/hi';
 
 import {
   type CSSProperties,
@@ -281,7 +281,7 @@ export const SidebarTrigger = ({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      <HiMenuAlt2 />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

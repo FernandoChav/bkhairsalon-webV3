@@ -17,7 +17,7 @@ import {
   SubTrigger,
   Trigger,
 } from '@radix-ui/react-dropdown-menu';
-import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
+import { HiCheck, HiChevronRight, HiDotsHorizontal } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -106,7 +106,7 @@ export const DropdownMenuCheckboxItem = ({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <ItemIndicator>
-          <CheckIcon className="size-4" />
+          <HiCheck className="size-4" />
         </ItemIndicator>
       </span>
       {children}
@@ -136,7 +136,7 @@ export const DropdownMenuRadioItem = ({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <ItemIndicator>
-          <CircleIcon className="size-2 fill-current" />
+          <HiDotsHorizontal className="size-2 fill-current" />
         </ItemIndicator>
       </span>
       {children}
@@ -216,7 +216,7 @@ export const DropdownMenuSubTrigger = ({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      <HiChevronRight className="ml-auto size-4" />
     </SubTrigger>
   );
 };

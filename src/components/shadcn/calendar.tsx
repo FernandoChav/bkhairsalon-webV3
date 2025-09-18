@@ -1,12 +1,8 @@
 'use client';
 
 import { format } from 'date-fns';
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from 'lucide-react';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
+import { HiChevronDown, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 import { type ComponentProps, useEffect, useRef } from 'react';
 
@@ -140,21 +136,18 @@ export const Calendar = ({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
             return (
-              <ChevronLeftIcon className={cn('size-4', className)} {...props} />
+              <HiChevronLeft className={cn('size-4', className)} {...props} />
             );
           }
 
           if (orientation === 'right') {
             return (
-              <ChevronRightIcon
-                className={cn('size-4', className)}
-                {...props}
-              />
+              <HiChevronRight className={cn('size-4', className)} {...props} />
             );
           }
 
           return (
-            <ChevronDownIcon className={cn('size-4', className)} {...props} />
+            <HiChevronDown className={cn('size-4', className)} {...props} />
           );
         },
         DayButton: CalendarDayButton,

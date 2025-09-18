@@ -1,7 +1,7 @@
 'use client';
 
 import { es } from 'date-fns/locale';
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { HiCalendar, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 import { Ref, useState } from 'react';
 
@@ -121,7 +121,7 @@ export const DatePicker = ({
             }
           }}
         >
-          <Calendar className="mr-2 h-4 w-4" />
+          <HiCalendar className="mr-2 h-4 w-4" />
           {parseStringToDate(value || '')
             ? formatDateForDisplay(value || '')
             : placeholder}
@@ -173,7 +173,7 @@ export const DatePicker = ({
               }}
               className="h-8 w-8 p-0"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <HiChevronLeft className="h-4 w-4" />
             </Button>
 
             <Button
@@ -185,7 +185,7 @@ export const DatePicker = ({
               }}
               className="h-8 w-8 p-0"
             >
-              <ChevronRight className="h-4 w-4" />
+              <HiChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
