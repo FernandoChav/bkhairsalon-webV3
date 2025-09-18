@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import type { ReactNode } from 'react';
 
-import { Playfair_Display } from 'next/font/google';
+import { Montserrat, Playfair_Display } from 'next/font/google';
 
 import {
   AppNextAuthProvider,
@@ -14,14 +14,31 @@ import {
 import './globals.css';
 
 const playfair = Playfair_Display({
-  variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-playfair',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800', '900'],
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  display: 'swap',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 export const metadata: Metadata = {
-  title: 'BK Hair Salon',
-  description: 'Salon de belleza de Bangelia Karamanos',
+  title: 'Banguelia Karamanos | Estilista & Colorista Internacional',
+  description:
+    'Estilista y colorista profesional en Antofagasta con más de 10 años de experiencia. Especialista en coloración avanzada, cortes modernos y tratamientos capilares premium.',
+  keywords:
+    'Banguelia Karamanos, peluquería, estilista, colorista, Antofagasta, balayage, cortes modernos, coloración profesional, salón de belleza premium, Fashion Week Antofagasta',
+  openGraph: {
+    title: 'Banguelia Karamanos | Estilista & Colorista Internacional',
+    description: 'Tu estilo es mi compromiso, tu confianza mi mayor logro.',
+    type: 'website',
+    locale: 'es_CL',
+  },
 };
 
 export default function RootLayout({
@@ -30,8 +47,12 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" suppressHydrationWarning>
-      <body className={`${playfair.variable} antialiased`}>
+    <html
+      lang="es"
+      className={`${playfair.variable} ${montserrat.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="font-sans antialiased">
         <AppNextAuthProvider>
           <AppReactQueryProvider>
             <AppNextThemesProvider>

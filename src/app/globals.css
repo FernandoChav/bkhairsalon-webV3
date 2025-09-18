@@ -8,6 +8,7 @@
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-playfair);
   --font-body: var(--font-inter);
+  --font-montserrat: var(--font-montserrat);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -119,6 +120,7 @@ html.light {
   }
   html {
     color-scheme: light;
+    scroll-behavior: smooth;
   }
   html.light {
     color-scheme: light;
@@ -128,7 +130,7 @@ html.light {
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter), var(--font-montserrat), sans-serif;
   }
 
   /* Clases utilitarias para fuentes */
@@ -137,7 +139,7 @@ html.light {
   }
 
   .font-body {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter), var(--font-montserrat), sans-serif;
   }
 
   /* Aplicar fuentes por defecto a elementos */
@@ -157,6 +159,119 @@ html.light {
   input,
   textarea,
   select {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter), var(--font-montserrat), sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Selection */
+  ::selection {
+    background: #000;
+    color: #fff;
+  }
+
+  /* Smooth animations */
+  * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Remove focus outlines for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Add focus styles for keyboard users */
+  :focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+
+  /* Custom animation classes for landing page */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #000 0%, #666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Mask animations */
+  .mask-fade {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 20%,
+      black 80%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 20%,
+      black 80%,
+      transparent
+    );
   }
 }
