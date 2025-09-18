@@ -23,4 +23,4 @@ export {
   isValidChileanPhone,
   normalizePhoneNumber,
 } from './phone-utils';
-export { cn } from './utils';
+export { cn } from './tailwind-utils';
