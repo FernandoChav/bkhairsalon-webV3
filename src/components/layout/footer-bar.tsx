@@ -1,8 +1,10 @@
-export const FooterBar = () => {
+import { FC } from 'react';
+
+export const FooterBar: FC = () => {
   return (
-    <footer className="bg-white py-8 border-t border-gray-200">
+    <footer className="bg-background py-8 border-t border-border">
       <div className="container mx-auto px-6 text-center">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-muted-foreground">
           © 2025 Banguelia Karamanos. Todos los derechos reservados.
         </p>
       </div>

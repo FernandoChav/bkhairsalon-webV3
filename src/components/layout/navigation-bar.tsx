@@ -2,6 +2,8 @@
 
 import { HiMenu } from 'react-icons/hi';
 
+import { FC } from 'react';
+
 import Link from 'next/link';
 
 import { Button } from '@/components/shadcn';
@@ -13,14 +15,14 @@ import {
   SheetTrigger,
 } from '@/components/shadcn';
 
-export const NavigationBar = () => {
+export const NavigationBar: FC = () => {
   return (
-    <nav className="fixed w-full bg-white/95 backdrop-blur-sm z-50 shadow-sm top-0">
+    <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border">
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           <Link
             href="/"
-            className="text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+            className="text-xl sm:text-2xl font-bold text-foreground cursor-pointer hover:opacity-80 transition-opacity"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             BK Hair Salon
@@ -32,14 +34,14 @@ export const NavigationBar = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs uppercase tracking-wider hover:text-gray-600"
+                className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground"
                 asChild
               >
                 <Link href="/login">Iniciar sesión</Link>
               </Button>
               <Button
                 size="sm"
-                className="bg-black hover:bg-gray-800 text-white text-xs uppercase tracking-wider"
+                className="bg-primary hover:bg-primary/90 text-background text-xs uppercase tracking-wider"
                 asChild
               >
                 <Link href="/register">Registrarse</Link>
@@ -67,7 +69,7 @@ export const NavigationBar = () => {
                 <div className="p-6 h-full flex flex-col">
                   <SheetHeader className="p-0 mb-8">
                     <SheetTitle
-                      className="text-left text-xl font-bold"
+                      className="text-left text-xl font-bold text-foreground"
                       style={{ fontFamily: 'var(--font-playfair)' }}
                     >
                       BK Hair Salon
@@ -78,13 +80,13 @@ export const NavigationBar = () => {
                     <div className="flex flex-col space-y-3">
                       <Button
                         variant="ghost"
-                        className="justify-center text-sm uppercase tracking-wider hover:text-gray-600"
+                        className="justify-center text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground"
                         asChild
                       >
                         <Link href="/login">Iniciar sesión</Link>
                       </Button>
                       <Button
-                        className="justify-center bg-black hover:bg-gray-800 text-white text-sm uppercase tracking-wider"
+                        className="justify-center bg-primary hover:bg-primary/90 text-background text-sm uppercase tracking-wider"
                         asChild
                       >
                         <Link href="/register">Registrarse</Link>
