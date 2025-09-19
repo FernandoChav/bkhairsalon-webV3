@@ -1,4 +1,8 @@
+import { AxiosError } from 'axios';
 import CredentialsProvider from 'next-auth/providers/credentials';
+
+import { authClient } from '@/clients/auth-client';
+import { ApiResponse, LoginResponse } from '@/models/generics/api';
 
 export const authOptions = {
   providers: [
@@ -9,44 +13,32 @@ export const authOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: credentials.email,
-                password: credentials.password,
-              }),
-            }
-          );
+          const data: ApiResponse<LoginResponse> = await authClient.login({
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-          if (!response.ok) {
-            return null;
-          }
-
-          const data = await response.json();
-
-          if (data.success && data.data) {
+          if (data.data) {
+            const payload = JSON.parse(atob(data.data.token.split('.')[1]));
             return {
-              id: data.data.user.id,
-              email: data.data.user.email,
-              name: data.data.user.name,
+              id: payload.Id,
+              email: payload.Email,
+              name: `${payload.FirstName}`,
               accessToken: data.data.token,
             };
           }
 
           return null;
         } catch (error) {
-          console.error('Auth error:', error);
-          return null;
+          // si la respuesta no es 20X
+          const axiosError = error as AxiosError<ApiResponse>;
+          const message =
+            axiosError.response?.data?.message ||
+            'Error en el inicio de sesión.';
+          throw new Error(message);
         }
       },
     }),
