@@ -1,4 +1,4 @@
-import { BaseEntity } from './base';
+import { BaseEntity } from '@/models/entities/base';
 
 export interface User extends BaseEntity {
   firstName: string;
