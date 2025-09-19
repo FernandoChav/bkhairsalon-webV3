@@ -41,16 +41,6 @@ export const formatPhoneNumber = (phone: string): string => {
 };
 
 /**
- * Parsea un número de teléfono formateado y devuelve solo los dígitos
- * @param formattedPhone - Número de teléfono formateado
- * @returns Solo los dígitos del número
- */
-export const parsePhoneNumber = (formattedPhone: string): string => {
-  // Remove formatting and return only digits
-  return formattedPhone.replace(/\D/g, '');
-};
-
-/**
  * Valida si un número de teléfono es válido para Chile
  * @param phone - Número de teléfono a validar
  * @returns true si es válido, false si no
@@ -77,20 +67,4 @@ export const isValidChileanPhone = (phone: string): boolean => {
   }
 
   return false;
-};
-
-/**
- * Normaliza un número de teléfono a formato estándar (solo dígitos)
- * @param phone - Número de teléfono en cualquier formato
- * @returns Número normalizado (solo dígitos)
- */
-export const normalizePhoneNumber = (phone: string): string => {
-  const cleaned = phone.replace(/\D/g, '');
-
-  // If it starts with 56 and has 11 digits, remove the country code
-  if (cleaned.startsWith('56') && cleaned.length === 11) {
-    return cleaned.slice(2);
-  }
-
-  return cleaned;
 };
