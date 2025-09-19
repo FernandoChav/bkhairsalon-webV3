@@ -1,15 +1,15 @@
 import { motion, useInView } from 'framer-motion';
 
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 
-export const PhilosophySection = () => {
+export const PhilosophySection: FC = () => {
   const philosophyRef = useRef(null);
   const isPhilosophyInView = useInView(philosophyRef, { once: true });
 
   return (
     <section ref={philosophyRef} className="relative py-32 overflow-hidden">
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white"
+        className="absolute inset-0 bg-gradient-to-r from-background via-accent/10 to-background"
         initial={{ scaleX: 0 }}
         animate={isPhilosophyInView ? { scaleX: 1 } : {}}
         transition={{ duration: 1 }}
@@ -35,7 +35,7 @@ export const PhilosophySection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isPhilosophyInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.6 }}
-            className="block mb-6 text-gray-400"
+            className="block mb-6 text-muted-foreground"
           >
             lienzo en blanco
           </motion.span>
@@ -53,7 +53,7 @@ export const PhilosophySection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isPhilosophyInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.9 }}
-          className="text-center mt-12 text-gray-600 max-w-3xl mx-auto text-lg"
+          className="text-center mt-12 text-muted-foreground max-w-3xl mx-auto text-lg"
         >
           Mi arte consiste en darle vida, color, forma y estilo, respetando
           siempre la autenticidad de cada persona. Porque un cabello cuidado no

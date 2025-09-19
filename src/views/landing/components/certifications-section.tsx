@@ -22,10 +22,10 @@ export const CertificationsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
+    <section className="py-20 bg-background overflow-hidden">
       <div className="mb-12">
         <h2
-          className="text-5xl md:text-6xl text-center mb-4"
+          className="text-5xl md:text-6xl text-center mb-4 text-foreground"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
           Formación Internacional
@@ -42,7 +42,7 @@ export const CertificationsSection = () => {
           {brands.map((brand, i) => (
             <span
               key={i}
-              className="text-gray-300"
+              className="text-muted-foreground"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {brand} •
@@ -51,7 +51,7 @@ export const CertificationsSection = () => {
           {brands.map((brand, i) => (
             <span
               key={`${i}-2`}
-              className="text-gray-300"
+              className="text-muted-foreground"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {brand} •
@@ -73,13 +73,15 @@ export const CertificationsSection = () => {
               className="text-center"
             >
               <h3
-                className="text-2xl mb-2"
+                className="text-2xl mb-2 text-foreground"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
                 {item.brand}
               </h3>
-              <p className="text-gray-600">{item.cert}</p>
-              <p className="text-sm text-gray-400 mt-2">{item.year}</p>
+              <p className="text-muted-foreground">{item.cert}</p>
+              <p className="text-sm text-muted-foreground/70 mt-2">
+                {item.year}
+              </p>
             </motion.div>
           ))}
         </div>

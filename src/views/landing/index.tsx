@@ -1,5 +1,7 @@
 'use client';
 
+import { FC } from 'react';
+
 import {
   CertificationsSection,
   ContactSection,
@@ -10,7 +12,7 @@ import {
   ServicesSection,
 } from '@/views/landing/components';
 
-export const LandingView = () => {
+export const LandingView: FC = () => {
   return (
     <>
       <HeroSection />

@@ -2,13 +2,13 @@ import { motion } from 'framer-motion';
 
 export const GallerySection = () => {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-accent/20">
       <div className="container mx-auto px-6 max-w-7xl">
         <motion.h2
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
-          className="text-5xl md:text-6xl mb-12"
+          className="text-5xl md:text-6xl mb-12 text-foreground"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
           Portfolio
@@ -22,10 +22,12 @@ export const GallerySection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
             whileHover={{ scale: 1.02 }}
-            className="row-span-2 bg-gray-200 aspect-[3/4]"
+            className="row-span-2 bg-accent/30 aspect-[3/4]"
           >
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-500 text-xs">Foto Vertical</span>
+              <span className="text-muted-foreground text-xs">
+                Foto Vertical
+              </span>
             </div>
           </motion.div>
 
@@ -38,10 +40,12 @@ export const GallerySection = () => {
               viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="aspect-square bg-gray-300"
+              className="aspect-square bg-accent/40"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <span className="text-gray-500 text-xs">Foto Cuadrada</span>
+                <span className="text-muted-foreground text-xs">
+                  Foto Cuadrada
+                </span>
               </div>
             </motion.div>
           ))}
@@ -52,10 +56,12 @@ export const GallerySection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
             whileHover={{ scale: 1.02 }}
-            className="col-span-2 aspect-[2/1] bg-gray-200"
+            className="col-span-2 aspect-[2/1] bg-accent/30"
           >
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-500 text-xs">Foto Horizontal</span>
+              <span className="text-muted-foreground text-xs">
+                Foto Horizontal
+              </span>
             </div>
           </motion.div>
 
@@ -67,8 +73,10 @@ export const GallerySection = () => {
             whileHover={{ scale: 1.02 }}
             className="aspect-square"
           >
-            <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-gray-500 text-xs">Foto Circular</span>
+            <div className="w-full h-full bg-accent/40 rounded-full flex items-center justify-center">
+              <span className="text-muted-foreground text-xs">
+                Foto Circular
+              </span>
             </div>
           </motion.div>
 
@@ -81,10 +89,12 @@ export const GallerySection = () => {
               viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="aspect-square bg-gray-200"
+              className="aspect-square bg-accent/30"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <span className="text-gray-500 text-xs">Foto {i + 1}</span>
+                <span className="text-muted-foreground text-xs">
+                  Foto {i + 1}
+                </span>
               </div>
             </motion.div>
           ))}

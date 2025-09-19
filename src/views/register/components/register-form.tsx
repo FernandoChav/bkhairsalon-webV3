@@ -1,6 +1,6 @@
 import { HiEye, HiEyeOff, HiLockClosed, HiMail, HiUser } from 'react-icons/hi';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 import {
   Button,
@@ -21,7 +21,7 @@ import { DatePicker, PhoneInput } from '@/components/ui';
 import { cn } from '@/libs';
 import { useRegisterForm } from '@/views/register/hooks';
 
-export const RegisterForm = () => {
+export const RegisterForm: FC = () => {
   const { form, onSubmit, isLoading } = useRegisterForm();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -38,12 +38,12 @@ export const RegisterForm = () => {
     form.getValues('confirmPassword');
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-card/80 backdrop-blur-sm">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-gray-900 font-serif">
+        <CardTitle className="text-2xl font-bold text-center text-card-foreground font-serif">
           Crear cuenta
         </CardTitle>
-        <CardDescription className="text-center text-gray-600">
+        <CardDescription className="text-center text-muted-foreground">
           Completa los datos para registrarte en Banguelia Karamanos Hair Salon
         </CardDescription>
       </CardHeader>
@@ -238,10 +238,10 @@ export const RegisterForm = () => {
             <Button
               type="submit"
               className={cn(
-                'w-full text-white shadow-lg transition-all duration-300 transform',
+                'w-full text-background shadow-lg transition-all duration-300 transform',
                 isFormValid && !isLoading
-                  ? 'bg-black hover:bg-gray-800 hover:scale-[1.02] hover:shadow-xl'
-                  : 'bg-gray-400 cursor-not-allowed'
+                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+                  : 'bg-muted cursor-not-allowed'
               )}
               disabled={!isFormValid || isLoading}
             >
@@ -252,10 +252,10 @@ export const RegisterForm = () => {
 
         {/* Enlace al Login */}
         <div className="mt-6 text-center text-sm">
-          <span className="text-gray-500">¿Ya tienes cuenta? </span>
+          <span className="text-muted-foreground">¿Ya tienes cuenta? </span>
           <a
             href="/login"
-            className="font-medium text-black hover:text-gray-600 hover:underline transition-colors duration-200"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
           >
             Inicia sesión
           </a>
