@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -9,8 +10,9 @@ import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { type ComponentProps, useEffect, useRef } from 'react';
 
-import { Button, buttonVariants } from '@/components';
+import { Button, buttonVariants } from '@/components/shadcn';
 import { cn } from '@/libs';
+import { formatMonthShort } from '@/libs';
 
 export const Calendar = ({
   className,
@@ -37,8 +39,7 @@ export const Calendar = ({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: date =>
-          date.toLocaleString('default', { month: 'short' }),
+        formatMonthDropdown: date => formatMonthShort(date),
         ...formatters,
       }}
       classNames={{
@@ -191,7 +192,7 @@ export const CalendarDayButton = ({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString()}
+      data-day={format(day.date, 'yyyy-MM-dd')}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

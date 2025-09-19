@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { isValidChileanPhone } from '@/libs/phone-utils';
+
 export const registerSchema = z
   .object({
     firstName: z.string().min(1, 'El nombre es requerido'),
@@ -11,7 +13,10 @@ export const registerSchema = z
     phoneNumber: z
       .string()
       .min(1, 'El número de teléfono es requerido')
-      .min(10, 'El número de teléfono debe tener al menos 10 dígitos'),
+      .refine(isValidChileanPhone, {
+        message:
+          'El número de teléfono debe ser un formato chileno válido (+569XXXXXXXX, 569XXXXXXXX o 9XXXXXXXX)',
+      }),
     dateOfBirth: z.string().min(1, 'La fecha de nacimiento es requerida'),
     password: z
       .string()

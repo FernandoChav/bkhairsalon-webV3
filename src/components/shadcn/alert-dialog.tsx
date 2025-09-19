@@ -14,7 +14,7 @@ import {
 
 import type { ComponentProps } from 'react';
 
-import { buttonVariants } from '@/components';
+import { buttonVariants } from '@/components/shadcn';
 import { cn } from '@/libs';
 
 export const AlertDialog = ({ ...props }: ComponentProps<typeof Root>) => {

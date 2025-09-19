@@ -15,24 +15,22 @@ import {
   useState,
 } from 'react';
 
-import { Button } from '@/components';
-import { Input } from '@/components';
-import { Separator } from '@/components';
 import {
+  Button,
+  Input,
+  Separator,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@/components';
-import { Skeleton } from '@/components';
-import {
+  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components';
-import { useIsMobile } from '@/hooks';
+} from '@/components/shadcn';
+import { useIsMobile } from '@/hooks/common';
 import { cn } from '@/libs';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';

@@ -4,25 +4,22 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import { useState } from 'react';
 
-import { Button } from '@/components/shadcn/button';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/shadcn/card';
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/shadcn/form';
-import { Input } from '@/components/shadcn/input';
-import { DatePicker } from '@/components/ui/date-picker';
-import { PhoneInput } from '@/components/ui/phone-input';
+  Input,
+} from '@/components/shadcn';
+import { DatePicker, PhoneInput } from '@/components/ui';
 import { cn } from '@/libs';
 
 import { useRegisterForm } from './use-register-form';
@@ -157,13 +154,7 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Fecha de Nacimiento</FormLabel>
                   <FormControl>
-                    <DatePicker
-                      value={field.value ? new Date(field.value) : undefined}
-                      onChange={date => {
-                        field.onChange(date?.toISOString().split('T')[0]);
-                      }}
-                      placeholder="Seleccionar fecha"
-                    />
+                    <DatePicker placeholder="Seleccionar fecha" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

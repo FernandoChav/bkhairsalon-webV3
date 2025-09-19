@@ -2,12 +2,12 @@
 
 import { Phone } from 'lucide-react';
 
-import { forwardRef, useState } from 'react';
+import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
-import { Input } from '@/components/shadcn/input';
+import { Input } from '@/components/shadcn';
 import { cn } from '@/libs';
 
-interface PhoneInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
   onValueChange?: (value: string) => void;
 }
 
@@ -24,25 +24,16 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         return '';
       }
 
-      // If user starts typing without country code, assume Chilean mobile number
-      if (cleaned.length <= 9) {
-        // Chilean mobile number: 9XXXXXXXX
-        if (cleaned.length >= 1) {
-          const formatted = `+56 ${cleaned.slice(0, 1)}`;
-          if (cleaned.length >= 5) {
-            return `${formatted} ${cleaned.slice(1, 5)} ${cleaned.slice(5)}`;
-          } else if (cleaned.length > 1) {
-            return `${formatted} ${cleaned.slice(1)}`;
-          }
-          return formatted;
-        }
-      }
+      // Handle the three Chilean phone number formats:
+      // 1. "+569XXXXXXXX" (11 digits with +569)
+      // 2. "569XXXXXXXX" (10 digits with 569)
+      // 3. "9XXXXXXXX" (9 digits without country code)
 
-      // If user includes country code (56)
-      if (cleaned.startsWith('56') && cleaned.length >= 3) {
-        const withoutCountryCode = cleaned.slice(2);
+      // If user includes full country code (569) - formats 1 and 2
+      if (cleaned.startsWith('569') && cleaned.length >= 4) {
+        const withoutCountryCode = cleaned.slice(3);
         if (withoutCountryCode.length >= 1) {
-          const formatted = `+56 ${withoutCountryCode.slice(0, 1)}`;
+          const formatted = `+56 9 ${withoutCountryCode.slice(0, 1)}`;
           if (withoutCountryCode.length >= 5) {
             return `${formatted} ${withoutCountryCode.slice(1, 5)} ${withoutCountryCode.slice(5)}`;
           } else if (withoutCountryCode.length > 1) {
@@ -52,18 +43,31 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         }
       }
 
-      // If user includes full international format
-      if (cleaned.startsWith('56') && cleaned.length >= 11) {
-        const withoutCountryCode = cleaned.slice(2);
-        if (withoutCountryCode.length >= 9) {
-          return `+56 ${withoutCountryCode.slice(0, 1)} ${withoutCountryCode.slice(1, 5)} ${withoutCountryCode.slice(5, 9)}`;
+      // If user starts typing without country code - format 3
+      if (cleaned.length <= 9 && cleaned.startsWith('9')) {
+        // Chilean mobile number: 9XXXXXXXX
+        if (cleaned.length >= 1) {
+          const formatted = `+56 9 ${cleaned.slice(1, 2)}`;
+          if (cleaned.length >= 5) {
+            return `${formatted} ${cleaned.slice(2, 6)} ${cleaned.slice(6)}`;
+          } else if (cleaned.length > 2) {
+            return `${formatted} ${cleaned.slice(2)}`;
+          }
+          return formatted;
         }
       }
 
+      // If user types 8 digits without the leading 9, add it
+      if (cleaned.length === 8 && !cleaned.startsWith('9')) {
+        const withLeading9 = '9' + cleaned;
+        return `+56 9 ${withLeading9.slice(1, 2)} ${withLeading9.slice(2, 6)} ${withLeading9.slice(6)}`;
+      }
+
+      // For any other case, return the cleaned input
       return cleaned;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const formatted = formatChileanPhoneNumber(e.target.value);
       setValue(formatted);
 
