@@ -29,3 +29,11 @@ export const registerSchema = z
       'Las contraseñas no coinciden, por favor verifica que sean iguales',
     path: ['confirmPassword'],
   });
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'El correo electrónico es requerido')
+    .email('Por favor ingresa un correo electrónico válido'),
+  password: z.string().min(1, 'La contraseña es requerida'),
+});

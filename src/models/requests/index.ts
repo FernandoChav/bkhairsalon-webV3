@@ -3,4 +3,4 @@
  * Centraliza todas las exportaciones de requests
  */
 
-export type { RegisterRequest } from './auth';
+export type { RegisterRequest, LoginRequest } from './auth';

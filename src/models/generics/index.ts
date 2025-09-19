@@ -1,5 +1,6 @@
 // Exportaciones específicas de tipos genéricos de API
 export type {
+  LoginResponse,
   ApiResponse,
   ValidationError,
   HttpError,
