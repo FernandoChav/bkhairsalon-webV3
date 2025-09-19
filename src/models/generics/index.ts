@@ -15,3 +15,5 @@ export type {
   FormFieldProps,
   SelectOption,
 } from './forms';
+
+export type { EditUserForm } from './form-schemas';

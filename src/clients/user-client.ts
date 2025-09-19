@@ -9,7 +9,7 @@ class UserClient {
    * Editar la información del usuario
    */
   async editUser(data: EditUserRequest): Promise<ApiResponse> {
-    // Indicar que esta solicitud requiere autenticación
+    // Indicar que esta petición requiere autenticación
     const config: CustomAxiosRequestConfig = { requiresAuth: true };
     const response = await baseClient.put<ApiResponse>(
       '/User/edit',

@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form';
 
 import { useEditUserMutation } from '@/hooks/api';
 import { formatPhoneNumber } from '@/libs';
-import type { EditUserRequest } from '@/models/requests';
-import { editUserSchema } from '@/models/schemas';
+import type { EditUserForm } from '@/models/generics';
+import { editUserFormSchema } from '@/models/schemas';
+import { passwordSchema } from '@/models/schemas/helpers';
 
 export const useEditUserForm = () => {
   const {
@@ -16,8 +17,8 @@ export const useEditUserForm = () => {
     isSuccess,
   } = useEditUserMutation();
 
-  const form = useForm<EditUserRequest>({
-    resolver: zodResolver(editUserSchema),
+  const form = useForm<EditUserForm>({
+    resolver: zodResolver(editUserFormSchema),
     mode: 'onTouched',
     defaultValues: {
       firstName: '',
@@ -28,12 +29,19 @@ export const useEditUserForm = () => {
     },
   });
 
-  const onSubmit = (data: EditUserRequest) => {
+  const onSubmit = (data: EditUserForm, password: string) => {
+    const parsedPassword = passwordSchema.safeParse({ password });
+    if (!parsedPassword.success) {
+      console.error(parsedPassword.error.format());
+      return;
+    }
+
     // Transformar datos antes de enviar
     const transformedData = {
       ...data,
       phoneNumber: formatPhoneNumber(data.phoneNumber),
       dateOfBirth: data.dateOfBirth,
+      currentPassword: parsedPassword.data.password,
     };
 
     editUser(transformedData);

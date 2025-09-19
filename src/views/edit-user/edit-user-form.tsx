@@ -4,6 +4,7 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { ConfirmPasswordModal } from '@/components/modals';
 import {
   Button,
   Card,
@@ -25,8 +26,8 @@ import { cn } from '@/libs';
 import { useEditUserForm } from './use-edit-user-form';
 
 export const EditUserForm = () => {
+  const [showModal, setShowModal] = useState(false);
   const { form, onSubmit, isLoading } = useEditUserForm();
-  const [showPassword, setShowPassword] = useState(false);
 
   const isFormValid =
     form.formState.isValid &&
@@ -48,11 +49,7 @@ export const EditUserForm = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-            autoComplete="off"
-          >
+          <form className="space-y-4" autoComplete="off">
             {/* Nombre */}
             <FormField
               control={form.control}
@@ -156,7 +153,8 @@ export const EditUserForm = () => {
             />
             {/* Botón de Continuar */}
             <Button
-              type="submit"
+              type="button"
+              onClick={() => setShowModal(true)}
               className={cn(
                 'w-full text-white shadow-lg transition-all duration-300 transform',
                 isFormValid && !isLoading
@@ -167,6 +165,14 @@ export const EditUserForm = () => {
             >
               {isLoading ? 'Cargando...' : 'Continuar'}
             </Button>
+            <ConfirmPasswordModal
+              open={showModal}
+              onClose={() => setShowModal(false)}
+              onConfirm={password => {
+                // Aquí ejecutamos el submit con la contraseña
+                form.handleSubmit(data => onSubmit(data, password))();
+              }}
+            />
           </form>
         </Form>
       </CardContent>

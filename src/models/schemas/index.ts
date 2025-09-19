@@ -4,4 +4,5 @@
  */
 
 export { registerSchema } from './auth';
-export { editUserSchema } from './user';
+export { editUserFormSchema } from './user';
+export { passwordSchema } from './helpers';
