@@ -1,8 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "entry": [
-    "src/app/**/*.{js,ts,jsx,tsx}",
-    "src/pages/**/*.{js,ts,jsx,tsx}",
+    "src/**/*.{js,ts,jsx,tsx}",
     "next.config.*",
     "tailwind.config.*",
     "postcss.config.*"
@@ -15,17 +14,10 @@
     "**/.next/**",
     "**/out/**",
     "**/build/**",
-    "**/dist/**"
+    "**/dist/**",
+    "src/components/shadcn/**"
   ],
-  "ignoreDependencies": [
-    "@types/node",
-    "@types/react",
-    "@types/react-dom",
-    "eslint",
-    "prettier",
-    "husky",
-    "lint-staged"
-  ],
+  "ignoreDependencies": ["lint-staged"],
   "ignoreExportsUsedInFile": true,
   "includeEntryExports": true
 }
