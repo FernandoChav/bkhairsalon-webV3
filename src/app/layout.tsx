@@ -1,10 +1,11 @@
+import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 
 import type { ReactNode } from 'react';
 
 import { Montserrat, Playfair_Display } from 'next/font/google';
 
-import { FooterBar, NavigationBar } from '@/components/layout';
+import { FooterBar, NavigationBar, ProgressBar } from '@/components/layout';
 import {
   AppNextAuthProvider,
   AppNextThemesProvider,
@@ -53,22 +54,23 @@ export default function RootLayout({
       className={`${playfair.variable} ${montserrat.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased">
-        <AppNextAuthProvider>
-          <AppReactQueryProvider>
-            <AppNextThemesProvider>
-              <AppSonnerProvider>
-                <div
-                  className={`min-h-screen bg-white text-gray-900 overflow-x-hidden`}
-                >
+      <body className="font-montserrat antialiased">
+        <Provider>
+          <AppNextAuthProvider>
+            <AppReactQueryProvider>
+              <AppNextThemesProvider>
+                <AppSonnerProvider>
+                  <ProgressBar />
                   <NavigationBar />
-                  <main className="py-20">{children}</main>
-                  <FooterBar />
-                </div>
-              </AppSonnerProvider>
-            </AppNextThemesProvider>
-          </AppReactQueryProvider>
-        </AppNextAuthProvider>
+                  <div className="min-h-screen bg-background overflow-x-hidden">
+                    <main className="pt-20">{children}</main>
+                    <FooterBar />
+                  </div>
+                </AppSonnerProvider>
+              </AppNextThemesProvider>
+            </AppReactQueryProvider>
+          </AppNextAuthProvider>
+        </Provider>
       </body>
     </html>
   );
