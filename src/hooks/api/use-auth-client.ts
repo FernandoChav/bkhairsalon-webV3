@@ -5,10 +5,10 @@ import { toast } from 'sonner';
 
 import { authClient } from '@/clients';
 import { ApiResponse, ValidationError } from '@/models/generics';
-import { RegisterRequest, LoginRequest } from '@/models/requests';
+import { LoginRequest, RegisterRequest } from '@/models/requests';
 
 // Función helper para manejar errores del backend estandarizado
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const handleApiError = (error: AxiosError<ApiResponse>): string => {
   const apiResponse = error.response?.data;
 
@@ -20,7 +20,7 @@ const handleApiError = (error: AxiosError<ApiResponse>): string => {
 };
 
 // Función helper para manejar errores de validación de FluentValidation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const handleValidationErrors = (
   error: AxiosError<ApiResponse>
 ): ValidationError | null => {

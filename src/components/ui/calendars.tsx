@@ -1,11 +1,12 @@
-import * as React from "react"
-import { Check, ChevronRight } from "lucide-react"
+import { Check, ChevronRight } from 'lucide-react';
+
+import * as React from 'react';
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/shadcn/collapsible"
+} from '@/components/shadcn/collapsible';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -14,15 +15,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/shadcn/sidebar"
+} from '@/components/shadcn/sidebar';
 
 export function Calendars({
   calendars,
 }: {
   calendars: {
-    name: string
-    items: string[]
-  }[]
+    name: string;
+    items: string[];
+  }[];
 }) {
   return (
     <>
@@ -38,7 +39,7 @@ export function Calendars({
                 className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground w-full text-sm"
               >
                 <CollapsibleTrigger>
-                  {calendar.name}{" "}
+                  {calendar.name}{' '}
                   <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
                 </CollapsibleTrigger>
               </SidebarGroupLabel>
@@ -67,5 +68,5 @@ export function Calendars({
         </React.Fragment>
       ))}
     </>
-  )
+  );
 }

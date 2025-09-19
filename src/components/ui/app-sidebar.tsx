@@ -1,9 +1,7 @@
-import * as React from "react"
-import { Plus } from "lucide-react"
+import { Plus } from 'lucide-react';
 
-import { Calendars } from "@/components/ui/calendars"
-import { DatePicker } from "@/components/ui/date-picker"
-import { NavUser } from "@/components/ui/nav-user"
+import * as React from 'react';
+
 import {
   Sidebar,
   SidebarContent,
@@ -14,30 +12,33 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
-} from "@/components/shadcn/sidebar"
+} from '@/components/shadcn/sidebar';
+import { Calendars } from '@/components/ui/calendars';
+import { DatePicker } from '@/components/ui/date-picker';
+import { NavUser } from '@/components/ui/nav-user';
 
 // display data.
 const data = {
   user: {
-    name: "Admin",
-    email: "admin@example.com",
-    avatar: "https://i.pravatar.cc/150?img=3",
+    name: 'Admin',
+    email: 'admin@example.com',
+    avatar: 'https://i.pravatar.cc/150?img=3',
   },
   calendars: [
     {
-      name: "My Calendars",
-      items: ["Personal", "Work", "Family"],
+      name: 'My Calendars',
+      items: ['Personal', 'Work', 'Family'],
     },
     {
-      name: "Favorites",
-      items: ["Holidays", "Birthdays"],
+      name: 'Favorites',
+      items: ['Holidays', 'Birthdays'],
     },
     {
-      name: "Other",
-      items: ["Travel", "Reminders", "Deadlines"],
+      name: 'Other',
+      items: ['Travel', 'Reminders', 'Deadlines'],
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -47,7 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <DatePicker />
-        <SidebarSeparator className="mx-0" /> 
+        <SidebarSeparator className="mx-0" />
         <Calendars calendars={data.calendars} />
       </SidebarContent>
       <SidebarFooter>
@@ -62,5 +63,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

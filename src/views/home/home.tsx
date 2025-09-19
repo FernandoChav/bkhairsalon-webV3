@@ -1,6 +1,5 @@
 'use client';
 
-import { AppSidebar } from '@/components/ui/app-sidebar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +12,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/shadcn/sidebar';
+import { AppSidebar } from '@/components/ui/app-sidebar';
 
 export const Home = () => {
   return (

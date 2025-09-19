@@ -4,7 +4,7 @@ import { Home } from './home';
 
 const HomeView = () => {
   return (
-    <div className="min-h-screen"> 
+    <div className="min-h-screen">
       <Home></Home>
 
       {/* Footer */}
