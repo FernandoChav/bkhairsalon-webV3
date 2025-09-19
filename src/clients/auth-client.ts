@@ -1,5 +1,5 @@
-import { ApiResponse, LoginResponse } from '@/models';
-import type { LoginRequest, RegisterRequest } from '@/models/requests/auth';
+import { ApiResponse, LoginResponse } from '@/models/generics';
+import type { RegisterRequest, LoginRequest } from '@/models/requests';
 
 import { baseClient } from './base-client';
 

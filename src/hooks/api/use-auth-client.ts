@@ -4,12 +4,20 @@ import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import { authClient } from '@/clients';
-import type {
-  ApiResponse,
-  LoginRequest,
-  RegisterRequest,
-  ValidationError,
-} from '@/models';
+import { ApiResponse, ValidationError } from '@/models/generics';
+import { RegisterRequest, LoginRequest } from '@/models/requests';
+
+// Función helper para manejar errores del backend estandarizado
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const handleApiError = (error: AxiosError<ApiResponse>): string => {
+  const apiResponse = error.response?.data;
+
+  if (apiResponse?.message) {
+    return apiResponse.message;
+  }
+
+  return error.message || 'Ocurrió un error inesperado';
+};
 
 // Función helper para manejar errores de validación de FluentValidation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

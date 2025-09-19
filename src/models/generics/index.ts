@@ -1,12 +1,11 @@
 // Exportaciones específicas de tipos genéricos de API
 export type {
+  LoginResponse,
   ApiResponse,
   ValidationError,
   HttpError,
   PaginatedResponse,
   BaseFilter,
-  Timestamps,
-  BaseEntity,
 } from './api';
 
 // Exportaciones específicas de tipos genéricos de formularios
