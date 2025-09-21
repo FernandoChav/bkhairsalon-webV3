@@ -1,10 +1,6 @@
-// Tipos para timestamps
-export interface Timestamps {
+// Tipos para entidades base
+export interface BaseEntity {
+  id: string;
   createdAt: string;
   updatedAt: string;
-}
-
-// Tipos para entidades base
-export interface BaseEntity extends Timestamps {
-  id: string;
 }
