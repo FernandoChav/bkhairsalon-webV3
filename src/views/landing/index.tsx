@@ -65,7 +65,7 @@ export const LandingView: FC = () => {
         background="default"
         padding="none"
         maxWidth="full"
-        className="relative min-h-[calc(100vh-5rem)] flex items-center justify-center overflow-hidden"
+        className="relative min-h-[calc(100vh-6rem)] flex items-center justify-center overflow-hidden"
       >
         <div className="relative z-10 w-full max-w-none">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center h-full px-8 lg:px-16 xl:px-24">

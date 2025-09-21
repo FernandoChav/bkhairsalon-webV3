@@ -63,7 +63,7 @@ export default function RootLayout({
                   <ProgressBar />
                   <NavigationBar />
                   <div className="min-h-screen bg-background overflow-x-hidden flex flex-col">
-                    <main className="pt-20 pb-8 flex-1">{children}</main>
+                    <main className="pt-24 pb-8 flex-1">{children}</main>
                     <FooterBar />
                   </div>
                 </AppSonnerProvider>
