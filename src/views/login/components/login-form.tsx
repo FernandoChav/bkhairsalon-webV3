@@ -1,5 +1,3 @@
-'use client';
-
 import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
 import { FC, useState } from 'react';
@@ -47,7 +45,7 @@ export const LoginForm: FC = () => {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4"
-            autoComplete="off"
+            autoComplete="on"
           >
             {/* Correo Electrónico */}
             <FormField
@@ -63,7 +61,7 @@ export const LoginForm: FC = () => {
                         type="email"
                         placeholder="tu@correo.com"
                         className="pl-10"
-                        autoComplete="off"
+                        autoComplete="email"
                         {...field}
                       />
                     </div>
@@ -85,9 +83,9 @@ export const LoginForm: FC = () => {
                       <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Mínimo 8 caracteres"
+                        placeholder="Contraseña"
                         className="pl-10 pr-10"
-                        autoComplete="new-password"
+                        autoComplete="current-password"
                         {...field}
                       />
                       <Button
@@ -130,23 +128,12 @@ export const LoginForm: FC = () => {
         <div className="mt-6 text-center text-sm">
           <span className="text-muted-foreground">¿No tienes cuenta? </span>
           <a
-            href="/Register"
+            href="/register"
             className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
           >
             Crear una cuenta
           </a>
         </div>
-
-        {/* Enlace al Olvidé Contraseña //TODO: validar requerimiento funcional
-        <div className="mt-4 text-center text-sm">
-          <span className="text-muted-foreground">¿Olvidaste tu contraseña? </span>
-          <a
-            href="/Forgot-Password"
-            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
-          >
-            Recuperar mi contraseña
-          </a>
-        </div>*/}
       </CardContent>
     </Card>
   );
