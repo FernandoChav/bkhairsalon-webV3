@@ -62,8 +62,8 @@ export default function RootLayout({
                 <AppSonnerProvider>
                   <ProgressBar />
                   <NavigationBar />
-                  <div className="min-h-screen bg-background overflow-x-hidden">
-                    <main className="pt-20">{children}</main>
+                  <div className="min-h-screen bg-background overflow-x-hidden flex flex-col">
+                    <main className="pt-20 pb-8 flex-1">{children}</main>
                     <FooterBar />
                   </div>
                 </AppSonnerProvider>
