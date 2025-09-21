@@ -113,7 +113,7 @@ describe('RegisterForm', () => {
         screen.getByPlaceholderText('+56 9 1234 5678')
       ).toBeInTheDocument();
       expect(
-        screen.getByPlaceholderText('Seleccionar fecha de nacimiento')
+        screen.getByPlaceholderText('Tu fecha de nacimiento')
       ).toBeInTheDocument();
       expect(
         screen.getByPlaceholderText('Mínimo 8 caracteres')
