@@ -1,6 +1,7 @@
 'use client';
 
-import { HiMenu } from 'react-icons/hi';
+import { signOut, useSession } from 'next-auth/react';
+import { HiLogout, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
 
@@ -8,96 +9,88 @@ import Link from 'next/link';
 
 import { Button } from '@/components/shadcn';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/shadcn';
 
 export const NavigationBar: FC = () => {
-  return (
-    <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border">
-      <div className="container mx-auto px-4 sm:px-6 py-4">
-        <div className="flex justify-between items-center">
-          <Link
-            href="/"
-            className="text-xl sm:text-2xl font-bold text-foreground cursor-pointer hover:opacity-80 transition-opacity"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            BK Hair Salon
-          </Link>
+  const { data: session, status } = useSession();
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-3">
+  const handleLogout = async () => {
+    await signOut({
+      callbackUrl: '/',
+      redirect: true,
+    });
+  };
+
+  return (
+    <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border/50 h-16">
+      <div className="container mx-auto px-6 h-full flex justify-between items-center">
+        {/* Logo/Brand */}
+        <Link
+          href={session ? '/home' : '/'}
+          className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center"
+          style={{ fontFamily: 'var(--font-playfair)' }}
+        >
+          BK Hair Salon
+        </Link>
+
+        {/* Navigation */}
+        {status === 'loading' ? null : session ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground"
-                asChild
+                className="relative h-10 w-10 rounded-full p-0 hover:bg-muted/50 transition-colors duration-200 border border-border/50 hover:border-border"
               >
-                <Link href="/login">Iniciar sesión</Link>
-              </Button>
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider"
-                asChild
-              >
-                <Link href="/register">Registrarse</Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden p-2"
-                  aria-label="Abrir menú"
-                >
-                  <HiMenu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="w-[300px] sm:w-[400px] [&>button]:focus:ring-0 [&>button]:focus:ring-offset-0 p-0"
-              >
-                <div className="p-6 h-full flex flex-col">
-                  <SheetHeader className="p-0 mb-8">
-                    <SheetTitle
-                      className="text-left text-xl font-bold text-foreground"
-                      style={{ fontFamily: 'var(--font-playfair)' }}
-                    >
-                      BK Hair Salon
-                    </SheetTitle>
-                  </SheetHeader>
-
-                  <div className="flex flex-col space-y-4 flex-1">
-                    <div className="flex flex-col space-y-3">
-                      <Button
-                        variant="ghost"
-                        className="justify-center text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground"
-                        asChild
-                      >
-                        <Link href="/login">Iniciar sesión</Link>
-                      </Button>
-                      <Button
-                        className="justify-center bg-primary hover:bg-primary/90 text-primary-foreground text-sm uppercase tracking-wider"
-                        asChild
-                      >
-                        <Link href="/register">Registrarse</Link>
-                      </Button>
-                    </div>
-                  </div>
+                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                  <HiUser className="h-5 w-5 text-primary-foreground" />
                 </div>
-              </SheetContent>
-            </Sheet>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-64 border border-border shadow-lg bg-card"
+              align="end"
+              forceMount
+            >
+              <div className="px-4 py-3">
+                <p className="text-sm font-medium text-card-foreground">
+                  {session?.user?.name}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {session?.user?.email}
+                </p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/5 flex items-center space-x-2"
+                onClick={handleLogout}
+              >
+                <HiLogout className="h-4 w-4" />
+                <span>Cerrar Sesión</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              className="h-10 text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4"
+              asChild
+            >
+              <Link href="/login">Iniciar sesión</Link>
+            </Button>
+            <Button
+              className="h-10 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider px-4"
+              asChild
+            >
+              <Link href="/register">Registrarse</Link>
+            </Button>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );
