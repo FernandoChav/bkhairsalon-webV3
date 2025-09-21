@@ -5,11 +5,14 @@ import { toast } from 'sonner';
 
 import { useCallback, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import type { LoginRequest } from '@/models/requests/auth';
 import { loginSchema } from '@/models/schemas/auth';
 
 export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
@@ -35,6 +38,8 @@ export const useLoginForm = () => {
 
         if (signInResult?.ok) {
           toast.success('Bienvenido a BK Hair Salon');
+          // Redirigir a /home después del login exitoso
+          router.push('/home');
         } else {
           if (signInResult?.error) {
             toast.error(signInResult.error);
@@ -49,7 +54,7 @@ export const useLoginForm = () => {
         setIsLoading(false);
       }
     },
-    [isLoading, form]
+    [isLoading, form, router]
   );
 
   return {
