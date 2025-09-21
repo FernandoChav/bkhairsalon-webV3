@@ -1,6 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { HiChevronDown, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
@@ -8,7 +9,6 @@ import { type ComponentProps, useEffect, useRef } from 'react';
 
 import { Button, buttonVariants } from '@/components/shadcn';
 import { cn } from '@/libs';
-import { formatMonthShort } from '@/libs';
 
 export const Calendar = ({
   className,
@@ -35,7 +35,7 @@ export const Calendar = ({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: date => formatMonthShort(date),
+        formatMonthDropdown: date => format(date, 'MMM', { locale: es }),
         ...formatters,
       }}
       classNames={{
