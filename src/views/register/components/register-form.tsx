@@ -124,7 +124,7 @@ export const RegisterForm: FC = () => {
                     </FormLabel>
                     <FormControl>
                       <DatePicker
-                        placeholder="Seleccionar fecha de nacimiento"
+                        placeholder="Tu fecha de nacimiento"
                         className="h-10"
                         allowFutureDates={false}
                         allowPastDates={true}
@@ -217,7 +217,7 @@ export const RegisterForm: FC = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -255,7 +255,7 @@ export const RegisterForm: FC = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                           onClick={() =>
                             setShowConfirmPassword(!showConfirmPassword)
                           }

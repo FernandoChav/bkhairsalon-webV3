@@ -83,7 +83,7 @@ export const LoginForm: FC = () => {
                       <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Contraseña"
+                        placeholder="Tu contraseña"
                         className="pl-10 pr-10"
                         autoComplete="current-password"
                         {...field}
@@ -92,7 +92,7 @@ export const LoginForm: FC = () => {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -114,7 +114,7 @@ export const LoginForm: FC = () => {
               className={cn(
                 'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
                 isFormValid && !isLoading
-                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
                   : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
               )}
               disabled={!isFormValid || isLoading}
