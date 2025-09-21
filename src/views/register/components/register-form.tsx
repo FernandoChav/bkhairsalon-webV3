@@ -59,7 +59,7 @@ export const RegisterForm: FC = () => {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
-            autoComplete="off"
+            autoComplete="on"
           >
             {/* Primera fila - Nombre y Apellido */}
             <div className="grid grid-cols-2 gap-4 items-start">
