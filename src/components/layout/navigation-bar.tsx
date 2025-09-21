@@ -29,7 +29,6 @@ export const NavigationBar: FC = () => {
   return (
     <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border/50 h-16">
       <div className="container mx-auto px-6 h-full flex justify-between items-center">
-        {/* Logo/Brand */}
         <Link
           href="/"
           className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
@@ -38,7 +37,6 @@ export const NavigationBar: FC = () => {
           BK Hair Salon
         </Link>
 
-        {/* Navigation */}
         {status === 'loading' ? null : session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

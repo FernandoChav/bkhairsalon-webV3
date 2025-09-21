@@ -26,14 +26,12 @@ export const LandingSection: FC<LandingSectionProps> = ({
   maxWidth = '7xl',
   className = '',
 }) => {
-  // Background styles usando colores de ShadCN
   const backgroundStyles = {
-    default: 'bg-background', // Fondo por defecto
-    muted: 'bg-muted', // Fondo suave
-    primary: 'bg-primary text-primary-foreground', // Fondo principal con texto apropiado
+    default: 'bg-background',
+    muted: 'bg-muted',
+    primary: 'bg-primary text-primary-foreground',
   };
 
-  // Padding styles
   const paddingStyles = {
     none: 'py-0',
     sm: 'py-12',
@@ -42,7 +40,6 @@ export const LandingSection: FC<LandingSectionProps> = ({
     xl: 'py-32',
   };
 
-  // Max width styles
   const maxWidthStyles = {
     sm: 'max-w-sm',
     md: 'max-w-md',

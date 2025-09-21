@@ -7,7 +7,6 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const { token } = req.nextauth;
 
-    // Rutas que requieren autenticación
     const protectedRoutes = [
       '/home',
       '/profile',
@@ -15,12 +14,8 @@ export default withAuth(
       '/dashboard',
     ];
 
-    // Rutas públicas que no requieren autenticación
-
-    // Rutas de autenticación
     const authRoutes = ['/login', '/register'];
 
-    // Si el usuario no está autenticado y trata de acceder a rutas protegidas
     if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
       const callbackUrl = encodeURIComponent(pathname + req.nextUrl.search);
       return NextResponse.redirect(
@@ -28,7 +23,6 @@ export default withAuth(
       );
     }
 
-    // Si el usuario está autenticado y trata de acceder a rutas de autenticación
     if (token && authRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.redirect(new URL('/home', req.url));
     }
@@ -40,7 +34,6 @@ export default withAuth(
       authorized: ({ req }) => {
         const { pathname } = req.nextUrl;
 
-        // Siempre permitir rutas públicas, API routes, recursos estáticos
         const alwaysAllowedPaths = [
           '/',
           '/about',
@@ -50,7 +43,6 @@ export default withAuth(
           '/register',
         ];
 
-        // Permitir recursos de Next.js y API
         if (
           pathname.startsWith('/api/auth') ||
           pathname.startsWith('/_next') ||
@@ -63,8 +55,6 @@ export default withAuth(
           return true;
         }
 
-        // Para rutas protegidas, el middleware principal manejará la lógica
-        // Retornamos true aquí para que withAuth no bloquee antes de llegar al middleware
         return true;
       },
     },

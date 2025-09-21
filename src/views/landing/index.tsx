@@ -62,7 +62,6 @@ const certifications = [
 export const LandingView: FC = () => {
   return (
     <>
-      {/* Hero Section */}
       <LandingSection
         background="default"
         padding="none"
@@ -71,12 +70,9 @@ export const LandingView: FC = () => {
       >
         <div className="relative z-10 w-full max-w-none">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center h-full px-8 lg:px-16 xl:px-24">
-            {/* Left Content - Name & Title */}
             <div className="flex flex-col justify-center space-y-8">
-              {/* Decorative Line */}
               <div className="h-[2px] bg-primary w-24" />
 
-              {/* Main Name */}
               <div className="space-y-4">
                 <h1
                   className="text-5xl md:text-6xl lg:text-7xl xl:text-[8rem] leading-[0.85] font-light"
@@ -89,7 +85,6 @@ export const LandingView: FC = () => {
                 </h1>
               </div>
 
-              {/* Subtitle */}
               <div className="ml-8 lg:ml-12 space-y-2">
                 <p className="text-sm md:text-base lg:text-lg text-muted-foreground uppercase tracking-[0.4em] font-light">
                   Estilista & Colorista
@@ -99,7 +94,6 @@ export const LandingView: FC = () => {
                 </p>
               </div>
 
-              {/* CTA Element */}
               <div className="ml-8 lg:ml-12 pt-4">
                 <div className="group flex items-center space-x-4 text-primary hover:text-muted-foreground transition-colors duration-300">
                   <span className="text-sm lg:text-base uppercase tracking-wider font-medium">
@@ -110,7 +104,6 @@ export const LandingView: FC = () => {
               </div>
             </div>
 
-            {/* Right Image - Diagonal Shape */}
             <div className="relative h-[500px] md:h-[700px] flex items-center justify-center">
               <div
                 className="absolute inset-0 bg-accent hover:scale-[1.02] transition-transform duration-300"
@@ -118,7 +111,6 @@ export const LandingView: FC = () => {
                   clipPath: 'polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)',
                 }}
               >
-                {/* Placeholder for main image */}
                 <div className="w-full h-full flex items-center justify-center">
                   <span className="text-muted-foreground text-sm">
                     Imagen Principal
@@ -129,13 +121,11 @@ export const LandingView: FC = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
           <HiChevronDown className="w-6 h-6" />
         </div>
       </LandingSection>
 
-      {/* Philosophy Section */}
       <LandingSection
         background="primary"
         padding="xl"
@@ -164,7 +154,6 @@ export const LandingView: FC = () => {
         </div>
       </LandingSection>
 
-      {/* Career Section */}
       <LandingSection background="default" padding="lg" maxWidth="7xl">
         <SectionHeader
           title="Trayectoria"
@@ -214,7 +203,6 @@ export const LandingView: FC = () => {
         </LandingGrid>
       </LandingSection>
 
-      {/* Specialties Section */}
       <LandingSection
         background="default"
         padding="lg"
@@ -223,9 +211,7 @@ export const LandingView: FC = () => {
       >
         <SectionHeader title="Especialidades" />
 
-        {/* Grid Layout: 3 columnas x 2 filas - cuadrado perfecto */}
         <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4">
-          {/* Columna 1, Filas 1-2: Coloración Profesional - toda la altura */}
           <div className="md:row-span-2 h-full">
             <LandingCard variant="primary" className="h-full" size="md">
               <h3
@@ -244,7 +230,6 @@ export const LandingView: FC = () => {
             </LandingCard>
           </div>
 
-          {/* Columna 2, Fila 1: Cortes */}
           <div className="h-full">
             <LandingCard variant="accent" className="h-full" size="md">
               <h3
@@ -259,7 +244,6 @@ export const LandingView: FC = () => {
             </LandingCard>
           </div>
 
-          {/* Columna 3, Fila 1: Tratamientos */}
           <div className="h-full">
             <LandingCard variant="primary" className="h-full" size="md">
               <h3
@@ -274,7 +258,6 @@ export const LandingView: FC = () => {
             </LandingCard>
           </div>
 
-          {/* Columna 2-3, Fila 2: Eventos & Pasarela */}
           <div className="md:col-span-2 h-full">
             <LandingCard variant="accent" className="h-full" size="md">
               <h3
@@ -291,7 +274,6 @@ export const LandingView: FC = () => {
         </div>
       </LandingSection>
 
-      {/* Training Section */}
       <LandingSection
         background="muted"
         padding="lg"
@@ -305,7 +287,6 @@ export const LandingView: FC = () => {
           />
         </div>
 
-        {/* Certification Grid */}
         <div className="mt-16">
           <LandingGrid columns={{ default: 1, md: 3 }} gap="md">
             {certifications.map(item => (
@@ -330,7 +311,6 @@ export const LandingView: FC = () => {
           </LandingGrid>
         </div>
 
-        {/* Scrolling Marquee - Full Width */}
         <div className="relative py-8 -mx-6">
           <ScrollingMarquee
             items={brands}
@@ -340,11 +320,9 @@ export const LandingView: FC = () => {
         </div>
       </LandingSection>
 
-      {/* Portfolio Section */}
       <LandingSection background="default" padding="lg" maxWidth="7xl">
         <SectionHeader title="Portfolio" className="mb-12 text-right" />
 
-        {/* Portfolio Grid */}
         <LandingGrid columns={{ default: 2, md: 3, lg: 4 }} gap="md">
           {portfolioImages.map(image => (
             <LandingCard
@@ -369,7 +347,6 @@ export const LandingView: FC = () => {
         </LandingGrid>
       </LandingSection>
 
-      {/* Map Section */}
       <LandingSection
         background="muted"
         padding="none"
@@ -390,7 +367,6 @@ export const LandingView: FC = () => {
         </div>
       </LandingSection>
 
-      {/* Contact Section */}
       <LandingSection
         background="default"
         padding="xl"
@@ -398,7 +374,6 @@ export const LandingView: FC = () => {
         className="relative"
       >
         <div className="grid md:grid-cols-2">
-          {/* Left Side - Primary Background */}
           <div className="bg-primary text-primary-foreground p-12 md:p-20">
             <h2
               className="text-5xl md:text-6xl mb-12"
@@ -442,7 +417,6 @@ export const LandingView: FC = () => {
             </p>
           </div>
 
-          {/* Right Side - Light CTA */}
           <div className="bg-muted p-12 md:p-20 flex flex-col justify-center items-center text-center">
             <HiCalendar className="w-12 h-12 text-foreground" />
 

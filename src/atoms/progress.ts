@@ -10,7 +10,6 @@ export const progressAtom = atom<ProgressState>({
   isVisible: false,
 });
 
-// Derived atoms for individual properties
 export const progressValueAtom = atom(
   get => get(progressAtom).progress,
   (get, set, newProgress: number) => {
@@ -32,7 +31,6 @@ export const progressVisibilityAtom = atom(
   }
 );
 
-// Action atoms
 export const startProgressAtom = atom(
   null,
   (get, set, targetProgress: number = 100) => {
@@ -41,7 +39,6 @@ export const startProgressAtom = atom(
       isVisible: true,
     });
 
-    // Simulate smooth progress
     const increment = targetProgress / 50;
     let currentProgress = 0;
 

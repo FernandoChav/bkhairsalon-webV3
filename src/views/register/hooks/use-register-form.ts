@@ -39,7 +39,6 @@ export const useRegisterForm = () => {
   });
 
   const onSubmit = (data: RegisterRequest) => {
-    // Transformar datos antes de enviar
     const transformedData = {
       ...data,
       phoneNumber: formatPhoneNumber(data.phoneNumber),

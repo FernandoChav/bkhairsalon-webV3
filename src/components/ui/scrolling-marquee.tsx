@@ -58,7 +58,6 @@ export const ScrollingMarquee: FC<ScrollingMarqueeProps> = ({
       );
     }
 
-    // Para elementos personalizados
     return (
       <div key={index} className={`flex items-center ${itemClassName}`}>
         {item}

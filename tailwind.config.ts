@@ -17,7 +17,7 @@ const config: Config = {
         serif: ['var(--font-playfair)', 'serif'],
       },
 
-      // Colors - Usando las variables CSS de ShadCN sin modificar
+      // Colors
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -54,7 +54,7 @@ const config: Config = {
         ring: 'hsl(var(--ring))',
       },
 
-      // Spacing - Espaciado elegante para diseño minimalista
+      // Spacing
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
@@ -64,7 +64,7 @@ const config: Config = {
         '192': '48rem',
       },
 
-      // Border radius - Usando la variable CSS de ShadCN
+      // Border radius
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -73,7 +73,7 @@ const config: Config = {
         '5xl': '2.5rem',
       },
 
-      // Box shadow - Sombras sutiles para diseño minimalista
+      // Box shadow
       boxShadow: {
         xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
         sm: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
@@ -85,7 +85,7 @@ const config: Config = {
         none: 'none',
       },
 
-      // Animation - Animaciones elegantes para BK Hair Salon
+      // Animation
       animation: {
         float: 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',

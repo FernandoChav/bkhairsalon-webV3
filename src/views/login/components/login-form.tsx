@@ -26,7 +26,7 @@ export const LoginForm: FC = () => {
   const { form, onSubmit, isLoading } = useLoginForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Check if form is valid and all required fields are filled
+  // Validate form completion
   const isFormValid =
     form.formState.isValid &&
     form.getValues('email') &&
@@ -49,7 +49,6 @@ export const LoginForm: FC = () => {
             className="space-y-4"
             autoComplete="on"
           >
-            {/* Correo Electrónico */}
             <FormField
               control={form.control}
               name="email"
@@ -73,7 +72,6 @@ export const LoginForm: FC = () => {
               )}
             />
 
-            {/* Contraseña */}
             <FormField
               control={form.control}
               name="password"
@@ -110,7 +108,6 @@ export const LoginForm: FC = () => {
               )}
             />
 
-            {/* Botón de Inicio */}
             <Button
               type="submit"
               className={cn(
@@ -126,7 +123,6 @@ export const LoginForm: FC = () => {
           </form>
         </Form>
 
-        {/* Enlace a Registro */}
         <div className="mt-6 text-center text-sm">
           <span className="text-muted-foreground">¿No tienes cuenta? </span>
           <Link

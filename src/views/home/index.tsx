@@ -9,7 +9,6 @@ export const HomeView: FC = () => {
 
   return (
     <div className="container mx-auto px-6 max-w-7xl">
-      {/* Welcome Section */}
       <div className="mb-12">
         <h1
           className="text-4xl md:text-5xl lg:text-6xl mb-4 text-foreground"

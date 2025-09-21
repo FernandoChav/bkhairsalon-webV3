@@ -15,7 +15,6 @@ import {
 
 import { cn } from '@/libs';
 
-// Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
 
 export type ChartConfig = {
@@ -310,7 +309,6 @@ export const ChartLegendContent = ({
   );
 };
 
-// Helper to extract item config from a payload.
 export const getPayloadConfigFromPayload = (
   config: ChartConfig,
   payload: unknown,

@@ -38,7 +38,6 @@ export const useLoginForm = () => {
 
         if (signInResult?.ok) {
           toast.success('Bienvenido a BK Hair Salon');
-          // Redirigir a /home después del login exitoso
           router.push('/home');
         } else {
           if (signInResult?.error) {

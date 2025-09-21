@@ -18,5 +18,4 @@ class AuthClient {
   }
 }
 
-// Exportar instancia singleton
 export const authClient = new AuthClient();

@@ -32,7 +32,6 @@ export const LandingGrid: FC<LandingGridProps> = ({
   maxWidth,
   className = '',
 }) => {
-  // Convert columns object to CSS grid classes
   const getGridColumns = () => {
     const { default: defaultCols, sm, md, lg, xl } = columns;
 
@@ -46,7 +45,6 @@ export const LandingGrid: FC<LandingGridProps> = ({
     return gridClasses;
   };
 
-  // Gap styles
   const gapStyles = {
     sm: 'gap-3',
     md: 'gap-6',
@@ -54,7 +52,6 @@ export const LandingGrid: FC<LandingGridProps> = ({
     xl: 'gap-12',
   };
 
-  // Max width styles
   const maxWidthStyles = {
     sm: 'max-w-sm',
     md: 'max-w-md',

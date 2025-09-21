@@ -29,7 +29,6 @@ declare module 'next-auth/jwt' {
   }
 }
 
-// Extend NextAuth to support custom error types
 declare module 'next-auth/core/types' {
   interface CallbacksOptions {
     signIn?: (params: {
@@ -42,7 +41,6 @@ declare module 'next-auth/core/types' {
   }
 }
 
-// Custom error type for authentication
 export interface AuthError {
   message: string;
   type:

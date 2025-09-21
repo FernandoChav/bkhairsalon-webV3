@@ -17,7 +17,13 @@
     "**/dist/**",
     "src/components/shadcn/**"
   ],
-  "ignoreDependencies": ["lint-staged", "eslint-config-next"],
+  "ignoreDependencies": [
+    "lint-staged",
+    "eslint-config-next",
+    "tailwindcss-animate",
+    "tw-animate-css",
+    "@tanstack/eslint-plugin-query"
+  ],
   "ignoreExportsUsedInFile": true,
   "includeEntryExports": true
 }

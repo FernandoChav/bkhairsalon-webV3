@@ -25,7 +25,6 @@ export function useProgress() {
   const increment = useSetAtom(incrementProgressAtom);
   const set = useSetAtom(progressValueAtom);
 
-  // Auto navigation progress
   useEffect(() => {
     start(100);
 

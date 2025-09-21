@@ -35,7 +35,7 @@ export const RegisterForm: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Check if form is valid and all required fields are filled
+  // Validate form completion
   const isFormValid =
     form.formState.isValid &&
     form.getValues('firstName') &&
@@ -63,7 +63,6 @@ export const RegisterForm: FC = () => {
             className="space-y-6"
             autoComplete="on"
           >
-            {/* Primera fila - Nombre y Apellido */}
             <div className="grid grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
@@ -114,7 +113,6 @@ export const RegisterForm: FC = () => {
               />
             </div>
 
-            {/* Segunda fila - Fecha de Nacimiento y Teléfono */}
             <div className="grid grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
@@ -167,7 +165,6 @@ export const RegisterForm: FC = () => {
               />
             </div>
 
-            {/* Tercera fila - Email */}
             <div className="grid grid-cols-1 gap-4 items-start">
               <FormField
                 control={form.control}
@@ -195,7 +192,6 @@ export const RegisterForm: FC = () => {
               />
             </div>
 
-            {/* Cuarta fila - Contraseñas */}
             <div className="grid grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
@@ -276,7 +272,6 @@ export const RegisterForm: FC = () => {
               />
             </div>
 
-            {/* Botón de Registro */}
             <div className="pt-4">
               <Button
                 type="submit"
@@ -294,7 +289,6 @@ export const RegisterForm: FC = () => {
           </form>
         </Form>
 
-        {/* Enlace al Login */}
         <div className="mt-6 text-center text-sm">
           <span className="text-muted-foreground">¿Ya tienes cuenta? </span>
           <Link

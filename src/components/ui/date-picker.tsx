@@ -16,80 +16,51 @@ import {
 import { cn } from '@/libs';
 
 export interface DatePickerProps {
-  // Valores y eventos
-  value?: string; // Formato YYYY-MM-DD
+  value?: string;
   onChange?: (date: string | undefined) => void;
   onBlur?: () => void;
 
-  // Compatibilidad con React Hook Form
   name?: string;
   ref?: Ref<HTMLButtonElement>;
-
-  // Configuración de UI
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-
-  // Configuración de fechas
   minDate?: Date;
   maxDate?: Date;
   fromYear?: number;
   toYear?: number;
-
-  // Configuración de restricciones de edad
-  maxAge?: number; // Edad máxima en años (ej: 120)
-  minAge?: number; // Edad mínima en años (ej: 0)
-
-  // Configuración de localización
+  maxAge?: number;
+  minAge?: number;
   locale?: Locale;
-  dateFormat?: string; // Formato de visualización (ej: 'dd/MM/yyyy')
-
-  // Configuración del Calendar
+  dateFormat?: string;
   captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
   showOutsideDays?: boolean;
   fixedWeeks?: boolean;
-
-  // Configuración de validación
   required?: boolean;
   allowFutureDates?: boolean;
   allowPastDates?: boolean;
 }
 
 export const DatePicker = ({
-  // Valores y eventos
   value,
   onChange,
   onBlur,
-
-  // Compatibilidad con React Hook Form
   name,
   ref,
-
-  // Configuración de UI
   placeholder = 'Seleccionar fecha',
   disabled = false,
   className,
-
-  // Configuración de fechas
   minDate,
   maxDate,
   fromYear,
   toYear,
-
-  // Configuración de restricciones de edad
   maxAge,
   minAge,
-
-  // Configuración de localización
   locale = es,
   dateFormat = 'dd/MM/yyyy',
-
-  // Configuración del Calendar
   captionLayout = 'dropdown',
   showOutsideDays = true,
   fixedWeeks = false,
-
-  // Configuración de validación
   required = false,
   allowFutureDates = false,
   allowPastDates = true,
@@ -97,21 +68,18 @@ export const DatePicker = ({
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
-  // Parse string to Date using date-fns
   const parseStringToDate = (dateString: string): Date | undefined => {
     if (!dateString) return undefined;
     const date = parseISO(dateString);
     return isValid(date) ? date : undefined;
   };
 
-  // Format Date to string (YYYY-MM-DD)
   const formatDateToString = (date: Date): string => {
     return format(date, 'yyyy-MM-dd');
   };
 
   const selectedDate = parseStringToDate(value || '');
 
-  // Calcular fechas mínimas y máximas basadas en props
   const getMinDate = (): Date => {
     if (minDate) return minDate;
 
@@ -138,7 +106,7 @@ export const DatePicker = ({
     }
 
     if (!allowPastDates) return today;
-    return new Date(1900, 0, 1); // Default: 1 de enero de 1900
+    return new Date(1900, 0, 1);
   };
 
   const getMaxDate = (): Date => {
@@ -167,10 +135,9 @@ export const DatePicker = ({
     }
 
     if (!allowFutureDates) return today;
-    return new Date(2100, 11, 31); // Default: 31 de diciembre de 2100
+    return new Date(2100, 11, 31);
   };
 
-  // Calcular años para el dropdown
   const getFromYear = (): number => {
     if (fromYear) return fromYear;
     return getMinDate().getFullYear();
@@ -198,7 +165,6 @@ export const DatePicker = ({
     if (open) {
       setHasBeenOpened(true);
     } else if (!open) {
-      // Disparar validación si se cerró y no hay valor
       if (hasBeenOpened && !selectedDate && required) {
         onBlur?.();
       }
@@ -212,7 +178,6 @@ export const DatePicker = ({
     return format(date, dateFormat);
   };
 
-  // Función para determinar si una fecha está deshabilitada
   const isDateDisabled = (date: Date): boolean => {
     const min = getMinDate();
     const max = getMaxDate();
@@ -240,7 +205,6 @@ export const DatePicker = ({
           name={name}
           ref={ref}
           onBlur={() => {
-            // Solo disparar onBlur si no se está abriendo el picker
             if (!isOpen) {
               onBlur?.();
             }
