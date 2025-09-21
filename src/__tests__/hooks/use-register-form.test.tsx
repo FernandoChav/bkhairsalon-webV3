@@ -10,6 +10,25 @@ import { useRegisterForm } from '@/views/register/hooks/use-register-form';
 
 // Mock de las dependencias
 vi.mock('@/hooks/api/use-auth-client');
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
+  },
+}));
 
 const mockUseRegisterMutation = vi.mocked(useRegisterMutation);
 
@@ -110,7 +129,13 @@ describe('useRegisterForm', () => {
         phoneNumber: '+56912345678', // Formateado por formatPhoneNumber
       };
 
-      expect(mockMutate).toHaveBeenCalledWith(expectedData);
+      expect(mockMutate).toHaveBeenCalledWith(
+        expectedData,
+        expect.objectContaining({
+          onSuccess: expect.any(Function),
+          onError: expect.any(Function),
+        })
+      );
     });
   });
 
