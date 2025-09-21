@@ -5,6 +5,8 @@ import { HiCalendar, HiChevronDown, HiLocationMarker } from 'react-icons/hi';
 
 import { FC } from 'react';
 
+import Link from 'next/link';
+
 import { Button } from '@/components/shadcn';
 import { ScrollingMarquee } from '@/components/ui';
 import {
@@ -97,14 +99,14 @@ export const LandingView: FC = () => {
                 </p>
               </div>
 
-              {/* CTA Button */}
+              {/* CTA Element */}
               <div className="ml-8 lg:ml-12 pt-4">
-                <button className="group flex items-center space-x-4 text-primary hover:text-muted-foreground transition-colors duration-300">
+                <div className="group flex items-center space-x-4 text-primary hover:text-muted-foreground transition-colors duration-300">
                   <span className="text-sm lg:text-base uppercase tracking-wider font-medium">
                     Descubre mi arte
                   </span>
                   <HiChevronDown className="w-5 h-5 rotate-[-90deg] group-hover:translate-x-3 transition-transform duration-300" />
-                </button>
+                </div>
               </div>
             </div>
 
@@ -461,15 +463,18 @@ export const LandingView: FC = () => {
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 asChild
               >
-                <a href="/register">Crear cuenta y agendar</a>
+                <Link href="/register">Crear cuenta y agendar</Link>
               </Button>
             </div>
 
             <p className="text-sm text-muted-foreground mt-6">
               ¿Ya tienes cuenta?{' '}
-              <a href="/login" className="text-primary hover:underline">
+              <Link
+                href="/login"
+                className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
                 Inicia sesión
-              </a>
+              </Link>
             </p>
           </div>
         </div>

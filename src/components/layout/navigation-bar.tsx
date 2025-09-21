@@ -31,8 +31,8 @@ export const NavigationBar: FC = () => {
       <div className="container mx-auto px-6 h-full flex justify-between items-center">
         {/* Logo/Brand */}
         <Link
-          href={session ? '/home' : '/'}
-          className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center"
+          href="/"
+          className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
           BK Hair Salon
@@ -44,7 +44,7 @@ export const NavigationBar: FC = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full p-0 hover:bg-muted/50 transition-colors duration-200 border border-border/50 hover:border-border"
+                className="relative h-10 w-10 rounded-full p-0 hover:bg-muted/50 transition-colors duration-200 border border-border/50 hover:border-border cursor-pointer"
               >
                 <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                   <HiUser className="h-5 w-5 text-primary-foreground" />

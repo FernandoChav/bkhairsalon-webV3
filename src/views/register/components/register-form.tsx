@@ -9,6 +9,8 @@ import {
 
 import { FC, useState } from 'react';
 
+import Link from 'next/link';
+
 import {
   Button,
   Card,
@@ -295,12 +297,12 @@ export const RegisterForm: FC = () => {
         {/* Enlace al Login */}
         <div className="mt-6 text-center text-sm">
           <span className="text-muted-foreground">¿Ya tienes cuenta? </span>
-          <a
+          <Link
             href="/login"
-            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           >
             Inicia sesión
-          </a>
+          </Link>
         </div>
       </CardContent>
     </Card>

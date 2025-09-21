@@ -2,6 +2,8 @@ import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
 import { FC, useState } from 'react';
 
+import Link from 'next/link';
+
 import {
   Button,
   Card,
@@ -127,12 +129,12 @@ export const LoginForm: FC = () => {
         {/* Enlace a Registro */}
         <div className="mt-6 text-center text-sm">
           <span className="text-muted-foreground">¿No tienes cuenta? </span>
-          <a
+          <Link
             href="/register"
-            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           >
             Crear una cuenta
-          </a>
+          </Link>
         </div>
       </CardContent>
     </Card>
