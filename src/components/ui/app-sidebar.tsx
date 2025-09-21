@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { HiPlus } from 'react-icons/hi';
 
 import * as React from 'react';
 
@@ -55,7 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <Plus />
+              <HiPlus />
               <span>New Calendar</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -1,13 +1,13 @@
 'use client';
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-} from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import {
+  HiBadgeCheck,
+  HiBell,
+  HiChevronDown,
+  HiCreditCard,
+  HiLogout,
+} from 'react-icons/hi';
 
 import { redirect } from 'next/navigation';
 
@@ -60,7 +60,7 @@ export function NavUser({
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <HiChevronDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -84,15 +84,15 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => redirect('/Account')}>
-                <BadgeCheck />
+                <HiBadgeCheck />
                 Cuenta
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
+                <HiCreditCard />
                 Métodos de pago
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
+                <HiBell />
                 Notificaciones
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -100,7 +100,7 @@ export function NavUser({
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
-              <LogOut />
+              <HiLogout />
               Cerrar Sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
