@@ -17,7 +17,7 @@
     "**/dist/**",
     "src/components/shadcn/**"
   ],
-  "ignoreDependencies": ["lint-staged"],
+  "ignoreDependencies": ["lint-staged", "eslint-config-next"],
   "ignoreExportsUsedInFile": true,
   "includeEntryExports": true
 }
