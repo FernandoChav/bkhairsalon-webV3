@@ -232,7 +232,7 @@ export const DatePicker = ({
             'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
             'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
             'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-            'dark:bg-input/30',
+            'dark:bg-input/30 cursor-pointer',
             !value && 'text-muted-foreground',
             className
           )}
@@ -276,10 +276,6 @@ export const DatePicker = ({
             formatYearDropdown: (date: Date) => {
               return date.getFullYear().toString();
             },
-          }}
-          classNames={{
-            caption_label:
-              'min-w-[110px] max-w-[110px] flex items-center justify-between px-2 py-1', // Ancho fijo con padding interno para armonía visual
           }}
         />
       </PopoverContent>
