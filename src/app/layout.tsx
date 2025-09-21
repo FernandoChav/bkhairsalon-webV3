@@ -54,7 +54,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${montserrat.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-montserrat antialiased">
+      <body className="font-montserrat antialiased bg-background text-foreground">
         <Provider>
           <AppNextAuthProvider>
             <AppReactQueryProvider>

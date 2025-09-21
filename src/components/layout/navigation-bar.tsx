@@ -41,7 +41,7 @@ export const NavigationBar: FC = () => {
               </Button>
               <Button
                 size="sm"
-                className="bg-primary hover:bg-primary/90 text-background text-xs uppercase tracking-wider"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider"
                 asChild
               >
                 <Link href="/register">Registrarse</Link>
@@ -86,7 +86,7 @@ export const NavigationBar: FC = () => {
                         <Link href="/login">Iniciar sesión</Link>
                       </Button>
                       <Button
-                        className="justify-center bg-primary hover:bg-primary/90 text-background text-sm uppercase tracking-wider"
+                        className="justify-center bg-primary hover:bg-primary/90 text-primary-foreground text-sm uppercase tracking-wider"
                         asChild
                       >
                         <Link href="/register">Registrarse</Link>
