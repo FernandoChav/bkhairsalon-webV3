@@ -1,12 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import { authClient } from '@/clients';
 import { ApiResponse, ValidationError } from '@/models/generics';
-import { RegisterRequest } from '@/models/requests';
+import { LoginRequest, RegisterRequest } from '@/models/requests';
 
 // Función helper para manejar errores del backend estandarizado
+
 const handleApiError = (error: AxiosError<ApiResponse>): string => {
   const apiResponse = error.response?.data;
 
@@ -18,6 +20,7 @@ const handleApiError = (error: AxiosError<ApiResponse>): string => {
 };
 
 // Función helper para manejar errores de validación de FluentValidation
+
 const handleValidationErrors = (
   error: AxiosError<ApiResponse>
 ): ValidationError | null => {
@@ -30,8 +33,20 @@ const handleValidationErrors = (
   return null;
 };
 
-// Mutación para registro
+// Función centralizada para mostrar errores con toasts
+export const showApiError = (error: unknown) => {
+  if ((error as AxiosError)?.response) {
+    const axiosError = error as AxiosError<ApiResponse>;
+    const message =
+      axiosError.response?.data?.message || 'Ocurrió un error inesperado.';
+    toast.error(message);
+  } else if (error instanceof Error) {
+    toast.error(error.message || 'Ocurrió un error inesperado.');
+    return;
+  }
+};
 
+// Mutación para registro
 export const useRegisterMutation = () =>
   useMutation<ApiResponse, AxiosError<ApiResponse>, RegisterRequest>({
     mutationFn: authClient.register,
@@ -53,4 +68,27 @@ export const useRegisterMutation = () =>
         toast.error(message);
       }
     },
+  });
+
+export const useLoginMutation = () =>
+  useMutation<ApiResponse, AxiosError<ApiResponse>, LoginRequest>({
+    mutationFn: async (data: LoginRequest) => {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+      if (result?.error) {
+        throw new Error(result.error);
+      } // to onError callback
+      return {
+        message: 'Inicio de sesión exitoso!',
+        data: null,
+        errorData: null,
+      }; // to onSuccess callback;
+    },
+    onSuccess: (data: ApiResponse) => {
+      toast.success(data.message);
+    },
+    onError: showApiError,
   });
