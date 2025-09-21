@@ -114,10 +114,10 @@ export const LoginForm: FC = () => {
             <Button
               type="submit"
               className={cn(
-                'w-full text-white shadow-lg transition-all duration-300 transform',
+                'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
                 isFormValid && !isLoading
-                  ? 'bg-pink-500 hover:bg-pink-600 hover:scale-[1.02] hover:shadow-xl'
-                  : 'bg-gray-400 cursor-not-allowed'
+                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+                  : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
               )}
               disabled={!isFormValid || isLoading}
             >
@@ -128,10 +128,10 @@ export const LoginForm: FC = () => {
 
         {/* Enlace a Registro */}
         <div className="mt-6 text-center text-sm">
-          <span className="text-gray-500">¿No tienes cuenta? </span>
+          <span className="text-muted-foreground">¿No tienes cuenta? </span>
           <a
             href="/Register"
-            className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
           >
             Crear una cuenta
           </a>
@@ -139,10 +139,10 @@ export const LoginForm: FC = () => {
 
         {/* Enlace al Olvidé Contraseña //TODO: validar requerimiento funcional
         <div className="mt-4 text-center text-sm">
-          <span className="text-gray-500">¿Olvidaste tu contraseña? </span>
+          <span className="text-muted-foreground">¿Olvidaste tu contraseña? </span>
           <a
             href="/Forgot-Password"
-            className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200"
           >
             Recuperar mi contraseña
           </a>
