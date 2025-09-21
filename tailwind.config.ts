@@ -17,86 +17,63 @@ const config: Config = {
         serif: ['var(--font-playfair)', 'serif'],
       },
 
-      // Colors
+      // Colors - Usando las variables CSS de ShadCN sin modificar
       colors: {
-        primary: {
-          DEFAULT: '#000000',
-          50: '#f6f6f6',
-          100: '#e7e7e7',
-          200: '#d1d1d1',
-          300: '#b0b0b0',
-          400: '#888888',
-          500: '#6d6d6d',
-          600: '#5d5d5d',
-          700: '#4f4f4f',
-          800: '#454545',
-          900: '#3d3d3d',
-          950: '#000000',
-        },
-        secondary: {
-          DEFAULT: '#f8f9fa',
-          50: '#f8f9fa',
-          100: '#f1f3f4',
-          200: '#e8eaed',
-          300: '#dadce0',
-          400: '#bdc1c6',
-          500: '#9aa0a6',
-          600: '#80868b',
-          700: '#5f6368',
-          800: '#3c4043',
-          900: '#202124',
-        },
-        accent: {
-          DEFAULT: '#f3f4f6',
-          50: '#f9fafb',
-          100: '#f3f4f6',
-          200: '#e5e7eb',
-          300: '#d1d5db',
-          400: '#9ca3af',
-          500: '#6b7280',
-          600: '#4b5563',
-          700: '#374151',
-          800: '#1f2937',
-          900: '#111827',
-        },
-        muted: {
-          DEFAULT: '#f1f5f9',
-          foreground: '#64748b',
-        },
-        background: '#ffffff',
-        foreground: '#0f172a',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         card: {
-          DEFAULT: '#ffffff',
-          foreground: '#0f172a',
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
         popover: {
-          DEFAULT: '#ffffff',
-          foreground: '#0f172a',
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
         },
         destructive: {
-          DEFAULT: '#ef4444',
-          foreground: '#fef2f2',
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
         },
-        border: '#e2e8f0',
-        input: '#e2e8f0',
-        ring: '#0f172a',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
       },
 
-      // Spacing
+      // Spacing - Espaciado elegante para diseño minimalista
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
         '144': '36rem',
+        '160': '40rem',
+        '192': '48rem',
       },
 
-      // Border radius
+      // Border radius - Usando la variable CSS de ShadCN
       borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
         '4xl': '2rem',
         '5xl': '2.5rem',
       },
 
-      // Box shadow
+      // Box shadow - Sombras sutiles para diseño minimalista
       boxShadow: {
         xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
         sm: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
@@ -108,12 +85,7 @@ const config: Config = {
         none: 'none',
       },
 
-      // Backdrop blur
-      backdropBlur: {
-        xs: '2px',
-      },
-
-      // Animation
+      // Animation - Animaciones elegantes para BK Hair Salon
       animation: {
         float: 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -168,15 +140,6 @@ const config: Config = {
             'background-position': '200% 0',
           },
         },
-      },
-
-      // Clip path
-      clipPath: {
-        diagonal: 'polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)',
-        triangle: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-        'diagonal-reverse': 'polygon(0% 0%, 75% 0%, 100% 100%, 25% 100%)',
-        hexagon:
-          'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)',
       },
 
       // Aspect ratio
