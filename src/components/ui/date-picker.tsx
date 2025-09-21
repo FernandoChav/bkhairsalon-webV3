@@ -1,78 +1,184 @@
 'use client';
 
+import { Locale, format, isValid, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { HiCalendar, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { HiCalendar } from 'react-icons/hi';
 
-import { Ref, useState } from 'react';
+import React, { Ref, useState } from 'react';
 
 import {
   Button,
-  Calendar as CalendarComponent,
+  Calendar,
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from '@/components/shadcn';
-import {
-  cn,
-  formatDateForDisplay,
-  formatDateToString,
-  generateMonths,
-  generateYears,
-  getMinDateString,
-  parseDateString,
-} from '@/libs';
+import { cn } from '@/libs';
 
-interface DatePickerProps {
-  value?: string; // Cambiar a string para manejar formato YYYY-MM-DD
-  onChange?: (date: string | undefined) => void; // Cambiar a string
+export interface DatePickerProps {
+  // Valores y eventos
+  value?: string; // Formato YYYY-MM-DD
+  onChange?: (date: string | undefined) => void;
   onBlur?: () => void;
-  name?: string; // Para compatibilidad con React Hook Form
-  ref?: Ref<HTMLButtonElement>; // Para compatibilidad con React Hook Form
+
+  // Compatibilidad con React Hook Form
+  name?: string;
+  ref?: Ref<HTMLButtonElement>;
+
+  // Configuración de UI
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+
+  // Configuración de fechas
+  minDate?: Date;
+  maxDate?: Date;
+  fromYear?: number;
+  toYear?: number;
+
+  // Configuración de restricciones de edad
+  maxAge?: number; // Edad máxima en años (ej: 120)
+  minAge?: number; // Edad mínima en años (ej: 0)
+
+  // Configuración de localización
+  locale?: Locale;
+  dateFormat?: string; // Formato de visualización (ej: 'dd/MM/yyyy')
+
+  // Configuración del Calendar
+  captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
+  showOutsideDays?: boolean;
+  fixedWeeks?: boolean;
+
+  // Configuración de validación
+  required?: boolean;
+  allowFutureDates?: boolean;
+  allowPastDates?: boolean;
 }
 
 export const DatePicker = ({
+  // Valores y eventos
   value,
   onChange,
   onBlur,
+
+  // Compatibilidad con React Hook Form
   name,
   ref,
+
+  // Configuración de UI
   placeholder = 'Seleccionar fecha',
   disabled = false,
   className,
-}: DatePickerProps) => {
-  // Helper functions for date formatting (now using date-utils)
-  const parseStringToDate = parseDateString;
 
-  const [currentMonth, setCurrentMonth] = useState(
-    parseStringToDate(value || '') || new Date()
-  );
+  // Configuración de fechas
+  minDate,
+  maxDate,
+  fromYear,
+  toYear,
+
+  // Configuración de restricciones de edad
+  maxAge,
+  minAge,
+
+  // Configuración de localización
+  locale = es,
+  dateFormat = 'dd/MM/yyyy',
+
+  // Configuración del Calendar
+  captionLayout = 'dropdown',
+  showOutsideDays = true,
+  fixedWeeks = false,
+
+  // Configuración de validación
+  required = false,
+  allowFutureDates = false,
+  allowPastDates = true,
+}: DatePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
-  const currentYear = currentMonth.getFullYear();
-  const currentMonthIndex = currentMonth.getMonth();
-
-  // Generate years and months using date-utils
-  const years = generateYears();
-  const months = generateMonths();
-
-  const handleYearChange = (year: string) => {
-    const newDate = new Date(parseInt(year), currentMonthIndex, 1);
-    setCurrentMonth(newDate);
+  // Parse string to Date using date-fns
+  const parseStringToDate = (dateString: string): Date | undefined => {
+    if (!dateString) return undefined;
+    const date = parseISO(dateString);
+    return isValid(date) ? date : undefined;
   };
 
-  const handleMonthChange = (month: string) => {
-    const monthIndex = months.indexOf(month);
-    const newDate = new Date(currentYear, monthIndex, 1);
-    setCurrentMonth(newDate);
+  // Format Date to string (YYYY-MM-DD)
+  const formatDateToString = (date: Date): string => {
+    return format(date, 'yyyy-MM-dd');
+  };
+
+  const selectedDate = parseStringToDate(value || '');
+
+  // Calcular fechas mínimas y máximas basadas en props
+  const getMinDate = (): Date => {
+    if (minDate) return minDate;
+
+    const today = new Date();
+
+    // Si se especifica edad máxima, calcular fecha mínima
+    if (maxAge !== undefined) {
+      const minDateFromAge = new Date(
+        today.getFullYear() - maxAge,
+        today.getMonth(),
+        today.getDate()
+      );
+      return minDateFromAge;
+    }
+
+    // Si se especifica edad mínima, calcular fecha máxima
+    if (minAge !== undefined) {
+      const maxDateFromAge = new Date(
+        today.getFullYear() - minAge,
+        today.getMonth(),
+        today.getDate()
+      );
+      return maxDateFromAge;
+    }
+
+    if (!allowPastDates) return today;
+    return new Date(1900, 0, 1); // Default: 1 de enero de 1900
+  };
+
+  const getMaxDate = (): Date => {
+    if (maxDate) return maxDate;
+
+    const today = new Date();
+
+    // Si se especifica edad mínima, calcular fecha máxima
+    if (minAge !== undefined) {
+      const maxDateFromAge = new Date(
+        today.getFullYear() - minAge,
+        today.getMonth(),
+        today.getDate()
+      );
+      return maxDateFromAge;
+    }
+
+    // Si se especifica edad máxima, calcular fecha mínima
+    if (maxAge !== undefined) {
+      const minDateFromAge = new Date(
+        today.getFullYear() - maxAge,
+        today.getMonth(),
+        today.getDate()
+      );
+      return minDateFromAge;
+    }
+
+    if (!allowFutureDates) return today;
+    return new Date(2100, 11, 31); // Default: 31 de diciembre de 2100
+  };
+
+  // Calcular años para el dropdown
+  const getFromYear = (): number => {
+    if (fromYear) return fromYear;
+    return getMinDate().getFullYear();
+  };
+
+  const getToYear = (): number => {
+    if (toYear) return toYear;
+    return getMaxDate().getFullYear();
   };
 
   const handleDateSelect = (date: Date | undefined) => {
@@ -80,7 +186,7 @@ export const DatePicker = ({
       const formattedDate = formatDateToString(date);
       onChange?.(formattedDate);
       setIsOpen(false);
-      setHasBeenOpened(false); // Reset flag when date is selected
+      setHasBeenOpened(false);
     } else {
       onChange?.(undefined);
     }
@@ -92,13 +198,26 @@ export const DatePicker = ({
     if (open) {
       setHasBeenOpened(true);
     } else if (!open) {
-      // Si se cerró y había sido abierto, disparar validación si no hay valor
-      const parsedValue = parseStringToDate(value || '');
-      if (hasBeenOpened && !parsedValue) {
+      // Disparar validación si se cerró y no hay valor
+      if (hasBeenOpened && !selectedDate && required) {
         onBlur?.();
       }
       setHasBeenOpened(false);
     }
+  };
+
+  const formatDisplayDate = (dateString: string) => {
+    const date = parseStringToDate(dateString);
+    if (!date) return '';
+    return format(date, dateFormat);
+  };
+
+  // Función para determinar si una fecha está deshabilitada
+  const isDateDisabled = (date: Date): boolean => {
+    const min = getMinDate();
+    const max = getMaxDate();
+
+    return date < min || date > max;
   };
 
   return (
@@ -107,7 +226,13 @@ export const DatePicker = ({
         <Button
           variant="outline"
           className={cn(
-            'w-full justify-start text-left font-normal',
+            'w-full justify-start text-left font-normal h-10 px-3 py-1 text-base md:text-sm',
+            'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground',
+            'border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none',
+            'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+            'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+            'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+            'dark:bg-input/30',
             !value && 'text-muted-foreground',
             className
           )}
@@ -122,102 +247,40 @@ export const DatePicker = ({
           }}
         >
           <HiCalendar className="mr-2 h-4 w-4" />
-          {parseStringToDate(value || '')
-            ? formatDateForDisplay(value || '')
-            : placeholder}
+          {selectedDate ? formatDisplayDate(value || '') : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="p-3 border-b">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Select
-              value={months[currentMonthIndex]}
-              onValueChange={handleMonthChange}
-            >
-              <SelectTrigger className="w-[130px] h-9">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((month, index) => (
-                  <SelectItem key={index} value={month}>
-                    {month}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={currentYear.toString()}
-              onValueChange={handleYearChange}
-            >
-              <SelectTrigger className="w-[90px] h-9">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map(year => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const newDate = new Date(currentYear, currentMonthIndex - 1, 1);
-                setCurrentMonth(newDate);
-              }}
-              className="h-8 w-8 p-0"
-            >
-              <HiChevronLeft className="h-4 w-4" />
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const newDate = new Date(currentYear, currentMonthIndex + 1, 1);
-                setCurrentMonth(newDate);
-              }}
-              className="h-8 w-8 p-0"
-            >
-              <HiChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <CalendarComponent
+      <PopoverContent
+        className="w-auto p-0 border-input shadow-xs"
+        align="start"
+      >
+        <Calendar
           mode="single"
-          selected={parseStringToDate(value || '')}
+          selected={selectedDate}
           onSelect={handleDateSelect}
-          disabled={date =>
-            date > new Date() || date < new Date(getMinDateString())
-          }
-          month={currentMonth}
-          onMonthChange={setCurrentMonth}
-          locale={es}
+          disabled={isDateDisabled}
+          locale={locale}
+          initialFocus
+          captionLayout={captionLayout}
+          fromYear={getFromYear()}
+          toYear={getToYear()}
+          showOutsideDays={showOutsideDays}
+          fixedWeeks={fixedWeeks}
           formatters={{
-            formatCaption: date => {
-              const month = date.toLocaleDateString('es-ES', { month: 'long' });
-              const year = date.getFullYear();
-              return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+            formatMonthDropdown: (date: Date) => {
+              const monthName = date.toLocaleDateString(locale.code, {
+                month: 'long',
+              });
+              return monthName.charAt(0).toUpperCase() + monthName.slice(1);
             },
-            formatWeekdayName: date => {
-              return date.toLocaleDateString('es-ES', { weekday: 'short' });
-            },
-            formatMonthDropdown: date => {
-              const month = date.toLocaleDateString('es-ES', { month: 'long' });
-              return month.charAt(0).toUpperCase() + month.slice(1);
-            },
-            formatYearDropdown: date => {
+            formatYearDropdown: (date: Date) => {
               return date.getFullYear().toString();
             },
           }}
-          initialFocus
+          classNames={{
+            caption_label:
+              'min-w-[110px] max-w-[110px] flex items-center justify-between px-2 py-1', // Ancho fijo con padding interno para armonía visual
+          }}
         />
       </PopoverContent>
     </Popover>

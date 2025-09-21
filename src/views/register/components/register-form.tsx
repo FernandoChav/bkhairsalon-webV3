@@ -1,4 +1,11 @@
-import { HiEye, HiEyeOff, HiLockClosed, HiMail, HiUser } from 'react-icons/hi';
+import {
+  HiEye,
+  HiEyeOff,
+  HiLockClosed,
+  HiMail,
+  HiPhone,
+  HiUser,
+} from 'react-icons/hi';
 
 import { FC, useState } from 'react';
 
@@ -38,215 +45,250 @@ export const RegisterForm: FC = () => {
     form.getValues('confirmPassword');
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-card/80 backdrop-blur-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-card-foreground font-serif">
+    <Card className="w-full max-w-2xl mx-auto shadow-lg border border-border bg-card">
+      <CardHeader className="space-y-2 pb-6">
+        <CardTitle className="text-2xl font-light text-center text-card-foreground font-serif">
           Crear cuenta
         </CardTitle>
         <CardDescription className="text-center text-muted-foreground">
-          Completa los datos para registrarte en Banguelia Karamanos Hair Salon
+          Completa los datos para registrarte en BK Hair Salon
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
+            className="space-y-6"
             autoComplete="off"
           >
-            {/* Nombre */}
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        placeholder="Tu nombre"
-                        className="pl-10"
-                        autoComplete="off"
+            {/* Primera fila - Nombre y Apellido */}
+            <div className="grid grid-cols-2 gap-4 items-start">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Nombre
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          placeholder="Tu nombre"
+                          className="pl-10 h-10"
+                          autoComplete="given-name"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Apellido
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          placeholder="Tu apellido"
+                          className="pl-10 h-10"
+                          autoComplete="family-name"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Segunda fila - Fecha de Nacimiento y Teléfono */}
+            <div className="grid grid-cols-2 gap-4 items-start">
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Fecha de Nacimiento
+                    </FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        placeholder="Seleccionar fecha de nacimiento"
+                        className="h-10"
+                        allowFutureDates={false}
+                        allowPastDates={true}
+                        required={true}
+                        maxAge={120}
+                        minAge={0}
+                        captionLayout="dropdown"
                         {...field}
                       />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Apellido */}
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Apellido</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        placeholder="Tu apellido"
-                        className="pl-10"
-                        autoComplete="off"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Teléfono
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiPhone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <PhoneInput
+                          placeholder="+56 9 1234 5678"
+                          autoComplete="tel"
+                          className="h-10"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            {/* Correo Electrónico */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo Electrónico</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        type="email"
-                        placeholder="tu@correo.com"
-                        className="pl-10"
-                        autoComplete="off"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Tercera fila - Email */}
+            <div className="grid grid-cols-1 gap-4 items-start">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Correo Electrónico
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          type="email"
+                          placeholder="tu@correo.com"
+                          className="pl-10 h-10"
+                          autoComplete="email"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            {/* Teléfono */}
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      placeholder="+56 9 1234 5678"
-                      autoComplete="off"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Cuarta fila - Contraseñas */}
+            <div className="grid grid-cols-2 gap-4 items-start">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Contraseña
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Mínimo 8 caracteres"
+                          className="pl-10 pr-10 h-10"
+                          autoComplete="new-password"
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <HiEyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <HiEye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Fecha de Nacimiento */}
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fecha de Nacimiento</FormLabel>
-                  <FormControl>
-                    <DatePicker placeholder="Seleccionar fecha" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Contraseña */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Mínimo 8 caracteres"
-                        className="pl-10 pr-10"
-                        autoComplete="new-password"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <HiEyeOff className="h-4 w-4" />
-                        ) : (
-                          <HiEye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Confirmar Contraseña */}
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirmar Contraseña</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Repite tu contraseña"
-                        className="pl-10 pr-10"
-                        autoComplete="new-password"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                      >
-                        {showConfirmPassword ? (
-                          <HiEyeOff className="h-4 w-4" />
-                        ) : (
-                          <HiEye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Confirmar Contraseña
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder="Repite tu contraseña"
+                          className="pl-10 pr-10 h-10"
+                          autoComplete="new-password"
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        >
+                          {showConfirmPassword ? (
+                            <HiEyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <HiEye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Botón de Registro */}
-            <Button
-              type="submit"
-              className={cn(
-                'w-full text-background shadow-lg transition-all duration-300 transform',
-                isFormValid && !isLoading
-                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
-                  : 'bg-muted cursor-not-allowed'
-              )}
-              disabled={!isFormValid || isLoading}
-            >
-              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
-            </Button>
+            <div className="pt-4">
+              <Button
+                type="submit"
+                className={cn(
+                  'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+                  isFormValid && !isLoading
+                    ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+                    : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+                )}
+                disabled={!isFormValid || isLoading}
+              >
+                {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+              </Button>
+            </div>
           </form>
         </Form>
 

@@ -1,7 +1,5 @@
 'use client';
 
-import { HiPhone } from 'react-icons/hi';
-
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
 import { Input } from '@/components/shadcn';
@@ -14,6 +12,9 @@ interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   ({ className, onValueChange, onChange, ...props }, ref) => {
     const [value, setValue] = useState((props.value as string) || '');
+
+    // Extract error-related props
+    const { 'aria-invalid': ariaInvalid, ...restProps } = props;
 
     const formatChileanPhoneNumber = (input: string): string => {
       // Remove all non-digit characters
@@ -84,19 +85,17 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     };
 
     return (
-      <div className="relative">
-        <HiPhone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="tel"
-          className={cn('pl-10', className)}
-          ref={ref}
-          value={value}
-          onChange={handleChange}
-          placeholder="+56 9 1234 5678"
-          maxLength={16} // +56 9 1234 5678
-          {...props}
-        />
-      </div>
+      <Input
+        type="tel"
+        className={cn('pl-10', className)}
+        ref={ref}
+        value={value}
+        onChange={handleChange}
+        placeholder="+56 9 1234 5678"
+        maxLength={16} // +56 9 1234 5678
+        aria-invalid={ariaInvalid}
+        {...restProps}
+      />
     );
   }
 );
