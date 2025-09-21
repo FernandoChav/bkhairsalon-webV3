@@ -2,30 +2,27 @@
 
 import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
-import { Button } from '@/components/shadcn/button';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/shadcn/card';
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/shadcn/form';
-import { Input } from '@/components/shadcn/input';
+  Input,
+} from '@/components/shadcn';
 import { cn } from '@/libs';
+import { useLoginForm } from '@/views/login/hooks';
 
-import { useLoginForm } from './use-login-form';
-
-export const LoginForm = () => {
+export const LoginForm: FC = () => {
   const { form, onSubmit, isLoading } = useLoginForm();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,12 +33,12 @@ export const LoginForm = () => {
     form.getValues('password');
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-gray-900 font-serif">
+    <Card className="w-full max-w-md mx-auto shadow-lg border border-border bg-card">
+      <CardHeader className="space-y-2 pb-6">
+        <CardTitle className="text-2xl font-light text-center text-card-foreground font-serif">
           Iniciar sesión
         </CardTitle>
-        <CardDescription className="text-center text-gray-600">
+        <CardDescription className="text-center text-muted-foreground">
           Inicia en tu cuenta para agendar tu cita en BK Hair Salon
         </CardDescription>
       </CardHeader>
