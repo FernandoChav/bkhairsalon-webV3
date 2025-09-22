@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import {
   Button,
   Card,
@@ -16,22 +17,26 @@ import {
   Input,
   Textarea,
 } from '@/components/shadcn';
+
+import { useCreateServiceForm } from '../hooks/use-create-service-form';
 import { CategorySelector } from './category-selector';
 import { ImageUpload } from './image-upload';
-import { useCreateServiceForm } from '../hooks/use-create-service-form';
 
 export const CreateServiceForm: FC = () => {
-  const { form, onSubmit, isLoading, fileUpload, resetForm, isValid } = useCreateServiceForm();
+  const { form, onSubmit, isLoading, fileUpload, resetForm, isValid } =
+    useCreateServiceForm();
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Crear Nuevo Servicio</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          Crear Nuevo Servicio
+        </CardTitle>
         <CardDescription>
           Completa la información para agregar un nuevo servicio a tu catálogo
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -39,7 +44,7 @@ export const CreateServiceForm: FC = () => {
               {/* Información básica */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Información Básica</h3>
-                
+
                 <FormField
                   control={form.control}
                   name="name"
@@ -97,7 +102,7 @@ export const CreateServiceForm: FC = () => {
               {/* Detalles del servicio */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Detalles del Servicio</h3>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -110,7 +115,9 @@ export const CreateServiceForm: FC = () => {
                             type="number"
                             min="1"
                             {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                            onChange={e =>
+                              field.onChange(parseInt(e.target.value, 10))
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -130,7 +137,9 @@ export const CreateServiceForm: FC = () => {
                             min="0"
                             step="0.01"
                             {...field}
-                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                            onChange={e =>
+                              field.onChange(parseFloat(e.target.value))
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -182,11 +191,14 @@ export const CreateServiceForm: FC = () => {
                           max="100"
                           step="0.01"
                           {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                          onChange={e =>
+                            field.onChange(parseFloat(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormDescription>
-                        Porcentaje de comisión que se aplicará a este servicio (0-100%)
+                        Porcentaje de comisión que se aplicará a este servicio
+                        (0-100%)
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -235,7 +247,7 @@ export const CreateServiceForm: FC = () => {
               >
                 {isLoading ? 'Creando Servicio...' : 'Crear Servicio'}
               </Button>
-              
+
               <Button
                 type="button"
                 variant="outline"

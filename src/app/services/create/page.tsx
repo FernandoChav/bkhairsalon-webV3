@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import { CreateServiceView } from '@/views/create-service';
 
 export const metadata: Metadata = {

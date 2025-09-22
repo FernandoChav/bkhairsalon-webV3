@@ -3,8 +3,8 @@ export interface CreateServiceRequest {
   description: string;
   duration: number;
   price: number;
-  startTime: string; 
-  endTime: string;   
+  startTime: string;
+  endTime: string;
   commissionPercentage: number;
   categoryId: string;
   discountId?: string;

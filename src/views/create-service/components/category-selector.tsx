@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import {
   Select,
   SelectContent,
@@ -19,7 +20,7 @@ interface CategorySelectorProps {
 export const CategorySelector: FC<CategorySelectorProps> = ({
   value,
   onValueChange,
-  placeholder = "Selecciona una categoría",
+  placeholder = 'Selecciona una categoría',
   disabled = false,
 }) => {
   const { data: categories, isLoading, error } = useGetCategoriesQuery();
@@ -27,7 +28,7 @@ export const CategorySelector: FC<CategorySelectorProps> = ({
   // Flatten categories and filter only final categories
   const getFinalCategories = (cats: CategoryDto[]): CategoryDto[] => {
     const finalCats: CategoryDto[] = [];
-    
+
     const traverse = (categories: CategoryDto[]) => {
       categories.forEach(category => {
         if (category.isFinal) {
@@ -38,7 +39,7 @@ export const CategorySelector: FC<CategorySelectorProps> = ({
         }
       });
     };
-    
+
     traverse(cats);
     return finalCats;
   };
@@ -71,7 +72,7 @@ export const CategorySelector: FC<CategorySelectorProps> = ({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {finalCategories.map((category) => (
+        {finalCategories.map(category => (
           <SelectItem key={category.id} value={category.id}>
             <span className="text-sm">{category.fullPath}</span>
           </SelectItem>
