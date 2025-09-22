@@ -1,7 +1,7 @@
 'use client';
 
 import { Indicator, Item, Root } from '@radix-ui/react-radio-group';
-import { CircleIcon } from 'lucide-react';
+import { HiDotsHorizontal } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -37,7 +37,7 @@ export const RadioGroupItem = ({
         data-slot="radio-group-indicator"
         className="relative flex items-center justify-center"
       >
-        <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
+        <HiDotsHorizontal className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
       </Indicator>
     </Item>
   );

@@ -18,7 +18,7 @@ import {
   SubTrigger,
   Trigger,
 } from '@radix-ui/react-menubar';
-import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
+import { HiCheck, HiChevronRight, HiDotsHorizontal } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -139,7 +139,7 @@ export const MenubarCheckboxItem = ({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <ItemIndicator>
-          <CheckIcon className="size-4" />
+          <HiCheck className="size-4" />
         </ItemIndicator>
       </span>
       {children}
@@ -163,7 +163,7 @@ export const MenubarRadioItem = ({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <ItemIndicator>
-          <CircleIcon className="size-2 fill-current" />
+          <HiDotsHorizontal className="size-2 fill-current" />
         </ItemIndicator>
       </span>
       {children}
@@ -243,7 +243,7 @@ export const MenubarSubTrigger = ({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto h-4 w-4" />
+      <HiChevronRight className="ml-auto h-4 w-4" />
     </SubTrigger>
   );
 };

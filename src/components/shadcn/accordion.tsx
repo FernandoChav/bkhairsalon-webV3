@@ -7,7 +7,7 @@ import {
   Root,
   Trigger,
 } from '@radix-ui/react-accordion';
-import { ChevronDownIcon } from 'lucide-react';
+import { HiChevronDown } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -46,7 +46,7 @@ export const AccordionTrigger = ({
         {...props}
       >
         {children}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        <HiChevronDown className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
       </Trigger>
     </Header>
   );

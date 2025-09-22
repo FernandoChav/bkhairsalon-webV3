@@ -6,11 +6,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InputHTMLAttributes } from 'react';
 
 import { render as customRender } from '@/__tests__/libs/render';
-import { RegisterForm } from '@/views/register/register-form';
-import { useRegisterForm } from '@/views/register/use-register-form';
+import { RegisterForm } from '@/views/register/components/register-form';
+import { useRegisterForm } from '@/views/register/hooks/use-register-form';
 
 // Mock del hook useRegisterForm
-vi.mock('@/views/register/use-register-form');
+vi.mock('@/views/register/hooks/use-register-form');
 
 // Mock React Hook Form
 vi.mock('react-hook-form', async importOriginal => {
@@ -113,7 +113,7 @@ describe('RegisterForm', () => {
         screen.getByPlaceholderText('+56 9 1234 5678')
       ).toBeInTheDocument();
       expect(
-        screen.getByPlaceholderText('Seleccionar fecha')
+        screen.getByPlaceholderText('Tu fecha de nacimiento')
       ).toBeInTheDocument();
       expect(
         screen.getByPlaceholderText('Mínimo 8 caracteres')

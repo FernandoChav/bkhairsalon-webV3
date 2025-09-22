@@ -1,8 +1,8 @@
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MoreHorizontalIcon,
-} from 'lucide-react';
+  HiChevronLeft,
+  HiChevronRight,
+  HiDotsHorizontal,
+} from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -77,7 +77,7 @@ export const PaginationPrevious = ({
       className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
       {...props}
     >
-      <ChevronLeftIcon />
+      <HiChevronLeft />
       <span className="hidden sm:block">Previous</span>
     </PaginationLink>
   );
@@ -95,7 +95,7 @@ export const PaginationNext = ({
       {...props}
     >
       <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
+      <HiChevronRight />
     </PaginationLink>
   );
 };
@@ -111,7 +111,7 @@ export const PaginationEllipsis = ({
       className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <MoreHorizontalIcon className="size-4" />
+      <HiDotsHorizontal className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
   );

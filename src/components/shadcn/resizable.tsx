@@ -1,6 +1,6 @@
 'use client';
 
-import { GripVerticalIcon } from 'lucide-react';
+import { HiDotsVertical } from 'react-icons/hi';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import type { ComponentProps } from 'react';
@@ -45,7 +45,7 @@ export const ResizableHandle = ({
     >
       {withHandle && (
         <div className="bg-border z-10 flex h-4 w-3 items-center justify-center rounded-xs border">
-          <GripVerticalIcon className="size-2.5" />
+          <HiDotsVertical className="size-2.5" />
         </div>
       )}
     </PanelResizeHandle>

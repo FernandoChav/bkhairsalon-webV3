@@ -1,20 +1,26 @@
 'use client';
 
-import { Home } from './home';
+import { useSession } from 'next-auth/react';
 
-const HomeView = () => {
+import { FC } from 'react';
+
+export const HomeView: FC = () => {
+  const { data: session } = useSession();
+
   return (
-    <div className="min-h-screen">
-      <Home></Home>
-
-      {/* Footer */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-sm text-gray-500">
-          <p>© 2024 BK Hair Salon. Todos los derechos reservados.</p>
-        </div>
+    <div className="container mx-auto px-6 max-w-7xl">
+      <div className="mb-12">
+        <h1
+          className="text-4xl md:text-5xl lg:text-6xl mb-4 text-foreground"
+          style={{ fontFamily: 'var(--font-playfair)' }}
+        >
+          Bienvenido/a{session?.user?.name ? `, ${session.user.name}` : ''}
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Gestiona tus citas, explora nuestros servicios y mantente al día con
+          las últimas tendencias en belleza.
+        </p>
       </div>
     </div>
   );
 };
-
-export default HomeView;

@@ -17,7 +17,7 @@ import {
   Value,
   Viewport,
 } from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { HiCheck, HiChevronDown, HiChevronUp } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -55,7 +55,7 @@ export const SelectTrigger = ({
     >
       {children}
       <Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50" />
+        <HiChevronDown className="size-4 opacity-50" />
       </Icon>
     </Trigger>
   );
@@ -125,7 +125,7 @@ export const SelectItem = ({
     >
       <span className="absolute right-2 flex size-3.5 items-center justify-center">
         <ItemIndicator>
-          <CheckIcon className="size-4" />
+          <HiCheck className="size-4" />
         </ItemIndicator>
       </span>
       <ItemText>{children}</ItemText>
@@ -159,7 +159,7 @@ export const SelectScrollUpButton = ({
       )}
       {...props}
     >
-      <ChevronUpIcon className="size-4" />
+      <HiChevronUp className="size-4" />
     </ScrollUpButton>
   );
 };
@@ -177,7 +177,7 @@ export const SelectScrollDownButton = ({
       )}
       {...props}
     >
-      <ChevronDownIcon className="size-4" />
+      <HiChevronDown className="size-4" />
     </ScrollDownButton>
   );
 };

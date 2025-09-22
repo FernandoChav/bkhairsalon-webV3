@@ -1,47 +1,44 @@
-'use client';
+import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { FC, useState } from 'react';
 
-import { useState } from 'react';
+import Link from 'next/link';
 
-import { Button } from '@/components/shadcn/button';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/shadcn/card';
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/shadcn/form';
-import { Input } from '@/components/shadcn/input';
+  Input,
+} from '@/components/shadcn';
 import { cn } from '@/libs';
+import { useLoginForm } from '@/views/login/hooks';
 
-import { useLoginForm } from './use-login-form';
-
-export const LoginForm = () => {
+export const LoginForm: FC = () => {
   const { form, onSubmit, isLoading } = useLoginForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Check if form is valid and all required fields are filled
+  // Validate form completion
   const isFormValid =
     form.formState.isValid &&
     form.getValues('email') &&
     form.getValues('password');
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-gray-900 font-serif">
+    <Card className="w-full max-w-md mx-auto shadow-lg border border-border bg-card">
+      <CardHeader className="space-y-2 pb-6">
+        <CardTitle className="text-2xl font-light text-center text-card-foreground font-serif">
           Iniciar sesión
         </CardTitle>
-        <CardDescription className="text-center text-gray-600">
+        <CardDescription className="text-center text-muted-foreground">
           Inicia en tu cuenta para agendar tu cita en BK Hair Salon
         </CardDescription>
       </CardHeader>
@@ -50,9 +47,8 @@ export const LoginForm = () => {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4"
-            autoComplete="off"
+            autoComplete="on"
           >
-            {/* Correo Electrónico */}
             <FormField
               control={form.control}
               name="email"
@@ -61,12 +57,12 @@ export const LoginForm = () => {
                   <FormLabel>Correo Electrónico</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type="email"
                         placeholder="tu@correo.com"
                         className="pl-10"
-                        autoComplete="off"
+                        autoComplete="email"
                         {...field}
                       />
                     </div>
@@ -76,7 +72,6 @@ export const LoginForm = () => {
               )}
             />
 
-            {/* Contraseña */}
             <FormField
               control={form.control}
               name="password"
@@ -85,25 +80,25 @@ export const LoginForm = () => {
                   <FormLabel>Contraseña</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Mínimo 8 caracteres"
+                        placeholder="Tu contraseña"
                         className="pl-10 pr-10"
-                        autoComplete="new-password"
+                        autoComplete="current-password"
                         {...field}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
+                          <HiEyeOff className="h-4 w-4" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <HiEye className="h-4 w-4" />
                         )}
                       </Button>
                     </div>
@@ -113,14 +108,13 @@ export const LoginForm = () => {
               )}
             />
 
-            {/* Botón de Inicio */}
             <Button
               type="submit"
               className={cn(
-                'w-full text-white shadow-lg transition-all duration-300 transform',
+                'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
                 isFormValid && !isLoading
-                  ? 'bg-pink-500 hover:bg-pink-600 hover:scale-[1.02] hover:shadow-xl'
-                  : 'bg-gray-400 cursor-not-allowed'
+                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+                  : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
               )}
               disabled={!isFormValid || isLoading}
             >
@@ -129,27 +123,15 @@ export const LoginForm = () => {
           </form>
         </Form>
 
-        {/* Enlace a Registro */}
         <div className="mt-6 text-center text-sm">
-          <span className="text-gray-500">¿No tienes cuenta? </span>
-          <a
-            href="/Register"
-            className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
+          <span className="text-muted-foreground">¿No tienes cuenta? </span>
+          <Link
+            href="/register"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           >
             Crear una cuenta
-          </a>
+          </Link>
         </div>
-
-        {/* Enlace al Olvidé Contraseña //TODO: validar requerimiento funcional
-        <div className="mt-4 text-center text-sm">
-          <span className="text-gray-500">¿Olvidaste tu contraseña? </span>
-          <a
-            href="/Forgot-Password"
-            className="font-medium text-pink-500 hover:text-pink-600 hover:underline transition-colors duration-200"
-          >
-            Recuperar mi contraseña
-          </a>
-        </div>*/}
       </CardContent>
     </Card>
   );
