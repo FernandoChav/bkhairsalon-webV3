@@ -1,4 +1,5 @@
 export { DatePicker } from './date-picker';
+export { FileUpload } from './file-upload';
 export { PhoneInput } from './phone-input';
 export { ScrollingMarquee } from './scrolling-marquee';
 export { LoadingPage } from './loading-page';
