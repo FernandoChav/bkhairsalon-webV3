@@ -66,7 +66,7 @@ export const CreateServiceView: FC = () => {
                         <div className="relative">
                           <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                           <Input
-                            placeholder="ej. Corte y Peinado Premium"
+                            placeholder="Nombre del servicio"
                             className="pl-10 h-10"
                             autoComplete="off"
                             {...field}
@@ -90,7 +90,7 @@ export const CreateServiceView: FC = () => {
                         <div className="relative">
                           <HiDocumentText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                           <Textarea
-                            placeholder="Describe detalladamente qué incluye este servicio..."
+                            placeholder="Descripción del servicio"
                             className="pl-10 min-h-[100px]"
                             {...field}
                           />
@@ -139,7 +139,7 @@ export const CreateServiceView: FC = () => {
                             <Input
                               type="number"
                               min="1"
-                              placeholder="60"
+                              placeholder="Duración en minutos"
                               className="pl-10 h-10"
                               {...field}
                               onChange={e =>
@@ -168,7 +168,7 @@ export const CreateServiceView: FC = () => {
                               type="number"
                               min="0"
                               step="0.01"
-                              placeholder="25.00"
+                              placeholder="Precio del servicio"
                               className="pl-10 h-10"
                               {...field}
                               onChange={e =>
@@ -247,7 +247,7 @@ export const CreateServiceView: FC = () => {
                             min="0"
                             max="100"
                             step="0.01"
-                            placeholder="15.00"
+                            placeholder="Porcentaje de comisión"
                             className="pl-10 h-10"
                             {...field}
                             onChange={e =>
@@ -277,7 +277,7 @@ export const CreateServiceView: FC = () => {
                         <div className="relative">
                           <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                           <Input
-                            placeholder="Dejar vacío si no aplica descuento"
+                            placeholder="ID de descuento (opcional)"
                             className="pl-10 h-10"
                             {...field}
                           />
