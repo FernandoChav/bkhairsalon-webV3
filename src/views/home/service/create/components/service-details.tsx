@@ -97,13 +97,15 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                     step="0.01"
                     placeholder="Precio del servicio"
                     className="pl-10 h-10"
-                    {...field}
+                    value={field.value ?? ''}
                     onChange={e => {
                       const value = e.target.value;
                       field.onChange(
                         value === '' ? undefined : parseFloat(value)
                       );
                     }}
+                    onBlur={field.onBlur}
+                    name={field.name}
                   />
                 </div>
               </FormControl>
@@ -195,13 +197,15 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                   step="0.01"
                   placeholder="Porcentaje de comisión"
                   className="pl-10 h-10"
-                  {...field}
+                  value={field.value ?? ''}
                   onChange={e => {
                     const value = e.target.value;
                     field.onChange(
                       value === '' ? undefined : parseFloat(value)
                     );
                   }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               </div>
             </FormControl>
