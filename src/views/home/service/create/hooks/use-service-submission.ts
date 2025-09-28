@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -27,35 +27,32 @@ export const useServiceSubmission = (
   const router = useRouter();
   const createServiceMutation = useCreateServiceMutation();
 
-  const onSubmit = useCallback(
-    async (data: CreateServiceFormData) => {
-      if (isLoading) return;
-      setIsLoading(true);
-      try {
-        const serviceRequest: CreateServiceRequest = {
-          ...data,
-          photos: fileUpload.files,
-        };
-        await createServiceMutation.mutateAsync(serviceRequest);
-        toast.success('Servicio creado exitosamente');
-        router.push('/services'); // Actualmente redireciono a si mismo
-      } catch (error) {
-        const messages = error as AxiosError<ApiResponse>;
+  const onSubmit = async (data: CreateServiceFormData) => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      const serviceRequest: CreateServiceRequest = {
+        ...data,
+        photos: fileUpload.files,
+      };
+      await createServiceMutation.mutateAsync(serviceRequest);
+      toast.success('Servicio creado exitosamente');
+      router.push('/home/service');
+    } catch (error) {
+      const messages = error as AxiosError<ApiResponse>;
 
-        if (isValidationError(messages)) {
-          const validationMessages = extractValidationMessages(messages);
-          toast.error(validationMessages[0] || 'Error de validación');
-        } else {
-          const message =
-            messages.response?.data?.message || 'Error al crear el servicio';
-          toast.error(message);
-        }
-      } finally {
-        setIsLoading(false);
+      if (isValidationError(messages)) {
+        const validationMessages = extractValidationMessages(messages);
+        toast.error(validationMessages[0] || 'Error de validación');
+      } else {
+        const message =
+          messages.response?.data?.message || 'Error al crear el servicio';
+        toast.error(message);
       }
-    },
-    [isLoading, createServiceMutation, fileUpload.files, router]
-  );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return {
     onSubmit,
