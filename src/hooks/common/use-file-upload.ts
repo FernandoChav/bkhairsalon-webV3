@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react';
 
-export interface FileWithPreview extends File {
-  preview?: string;
-}
+import { FileWithPreview } from '@/models/helpers';
 
 export const useFileUpload = (maxFiles: number = 5) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);

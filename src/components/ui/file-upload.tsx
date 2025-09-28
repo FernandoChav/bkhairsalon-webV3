@@ -5,8 +5,8 @@ import { FC, useCallback, useRef } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/components/shadcn';
-import { FileWithPreview } from '@/hooks/common';
 import { cn } from '@/libs';
+import { FileWithPreview } from '@/models/helpers';
 
 interface FileUploadProps {
   files: FileWithPreview[];
