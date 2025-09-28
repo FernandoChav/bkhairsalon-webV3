@@ -20,7 +20,8 @@ import {
   Input,
 } from '@/components/shadcn';
 import { cn } from '@/libs';
-import { useLoginForm } from '@/views/login/hooks';
+
+import { useLoginForm } from '../hooks';
 
 export const LoginForm: FC = () => {
   const { form, onSubmit, isLoading } = useLoginForm();
@@ -33,12 +34,10 @@ export const LoginForm: FC = () => {
     form.getValues('password');
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border border-border bg-card">
-      <CardHeader className="space-y-2 pb-6">
-        <CardTitle className="text-2xl font-light text-center text-card-foreground font-serif">
-          Iniciar sesión
-        </CardTitle>
-        <CardDescription className="text-center text-muted-foreground">
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle>Iniciar sesión</CardTitle>
+        <CardDescription>
           Inicia en tu cuenta para agendar tu cita en BK Hair Salon
         </CardDescription>
       </CardHeader>

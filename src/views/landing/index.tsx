@@ -9,12 +9,13 @@ import Link from 'next/link';
 
 import { Button } from '@/components/shadcn';
 import { ScrollingMarquee } from '@/components/ui';
+
 import {
   LandingCard,
   LandingGrid,
   LandingSection,
   SectionHeader,
-} from '@/views/landing/components';
+} from './components';
 
 const brands = [
   'REDKEN',

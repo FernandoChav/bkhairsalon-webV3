@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import { LoginForm } from '@/views/login/components';
+import { LoginForm } from './components';
 
 export const LoginView: FC = () => {
   return (

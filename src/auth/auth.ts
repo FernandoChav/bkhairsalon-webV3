@@ -2,8 +2,8 @@ import type { AxiosError } from 'axios';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-import { authClient } from '@/clients/auth-client';
-import { ApiResponse } from '@/models/generics/api';
+import { authClient } from '@/clients';
+import { ApiResponse } from '@/models/generics';
 import { LoginResponse } from '@/models/responses';
 
 export const authOptions: NextAuthOptions = {

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { LoginView } from '@/views/login';
+import { LoginView } from '@/views';
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión - BK Hair Salon',
