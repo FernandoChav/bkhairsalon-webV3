@@ -25,14 +25,20 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Textarea,
 } from '@/components/shadcn';
+import { FileUpload, TimeInput } from '@/components/ui';
 
-import { CategorySelector, ImageUpload } from './components';
+import { CategorySelector } from './components';
 import { useCreateServiceForm } from './hooks';
 
 export const CreateServiceView: FC = () => {
-  const { form, onSubmit, isLoading, fileUpload, isValid } =
+  const { form, onSubmit, isLoading, fileUpload, isValid, durationOptions } =
     useCreateServiceForm();
 
   return (
@@ -135,20 +141,39 @@ export const CreateServiceView: FC = () => {
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                              type="number"
-                              min="1"
-                              placeholder="Duración en minutos"
-                              className="pl-10 h-10"
-                              {...field}
-                              onChange={e => {
-                                const value = e.target.value;
-                                field.onChange(
-                                  value === '' ? undefined : parseInt(value, 10)
-                                );
+                            <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                            <Select
+                              value={field.value ? field.value.toString() : ''}
+                              onValueChange={value => {
+                                const duration = parseInt(value, 10);
+                                field.onChange(duration);
                               }}
-                            />
+                              onOpenChange={open => {
+                                if (!open && !field.value) {
+                                  field.onBlur();
+                                }
+                              }}
+                            >
+                              <SelectTrigger className="pl-10 !h-10 w-full">
+                                <SelectValue placeholder="Selecciona duración" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {durationOptions.map(minutes => (
+                                  <SelectItem
+                                    key={minutes}
+                                    value={minutes.toString()}
+                                  >
+                                    {minutes === 0
+                                      ? '0 minutos'
+                                      : minutes < 60
+                                        ? `${minutes} minutos`
+                                        : minutes === 60
+                                          ? '1 hora'
+                                          : `${Math.floor(minutes / 60)}h ${minutes % 60}m`}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -196,17 +221,25 @@ export const CreateServiceView: FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium">
-                          Hora de Inicio
+                          Horario de Inicio
                         </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                              type="time"
-                              className="pl-10 h-10"
-                              {...field}
-                            />
-                          </div>
+                          <TimeInput
+                            value={
+                              field.value
+                                ? parseInt(field.value.split(':')[0]) * 60 +
+                                  parseInt(field.value.split(':')[1])
+                                : undefined
+                            }
+                            onChange={minutes => {
+                              const hours = Math.floor(minutes / 60);
+                              const mins = minutes % 60;
+                              const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+                              field.onChange(timeString);
+                            }}
+                            minHour={8}
+                            maxHour={22}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -219,17 +252,25 @@ export const CreateServiceView: FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium">
-                          Hora de Fin
+                          Horario de Término
                         </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                              type="time"
-                              className="pl-10 h-10"
-                              {...field}
-                            />
-                          </div>
+                          <TimeInput
+                            value={
+                              field.value
+                                ? parseInt(field.value.split(':')[0]) * 60 +
+                                  parseInt(field.value.split(':')[1])
+                                : undefined
+                            }
+                            onChange={minutes => {
+                              const hours = Math.floor(minutes / 60);
+                              const mins = minutes % 60;
+                              const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+                              field.onChange(timeString);
+                            }}
+                            minHour={8}
+                            maxHour={22}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -310,11 +351,22 @@ export const CreateServiceView: FC = () => {
               <div className="relative">
                 <HiPhotograph className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <div className="pl-10">
-                  <ImageUpload
+                  <FileUpload
                     files={fileUpload.files}
                     onFileAdd={fileUpload.addFiles}
                     onFileRemove={fileUpload.removeFile}
                     maxFiles={10}
+                    accept="image/*"
+                    multiple={true}
+                    title={
+                      fileUpload.files.length >= 10
+                        ? 'Límite máximo alcanzado (10 fotos)'
+                        : 'Sube fotos de tu servicio'
+                    }
+                    description="Arrastra las imágenes aquí o haz clic para seleccionar"
+                    placeholder={`${fileUpload.files.length}/10 fotos subidas`}
+                    showPreview={true}
+                    previewGridCols="4"
                   />
                 </div>
               </div>

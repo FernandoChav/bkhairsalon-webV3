@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -66,6 +66,56 @@ export const useCreateServiceForm = () => {
     [isLoading, createServiceMutation, fileUpload.files, router]
   );
 
+  // Validación personalizada en tiempo real
+  useEffect(() => {
+    const subscription = form.watch((_value, { name }) => {
+      // Solo validar endTime cuando cambien los campos relacionados
+      if (name === 'endTime' || name === 'startTime' || name === 'duration') {
+        const startTime = form.getValues('startTime');
+        const endTime = form.getValues('endTime');
+        const duration = form.getValues('duration');
+
+        if (startTime && endTime) {
+          // Validar que hora fin > hora inicio
+          const startTimeParts = startTime.split(':').map(Number);
+          const endTimeParts = endTime.split(':').map(Number);
+          const startMinutes = startTimeParts[0] * 60 + startTimeParts[1];
+          const endMinutes = endTimeParts[0] * 60 + endTimeParts[1];
+
+          if (endMinutes <= startMinutes) {
+            form.setError('endTime', {
+              type: 'manual',
+              message:
+                'El horario de término debe ser posterior al horario de inicio',
+            });
+            return;
+          }
+
+          // Validar que el intervalo sea suficiente para la duración
+          if (duration) {
+            const intervalMinutes = endMinutes - startMinutes;
+            if (intervalMinutes < duration) {
+              form.setError('endTime', {
+                type: 'manual',
+                message:
+                  'El horario de disponibilidad debe ser suficiente para realizar el servicio',
+              });
+              return;
+            }
+          }
+
+          // Limpiar errores si todo está bien
+          form.clearErrors('endTime');
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  // Generar opciones de duración de 5 en 5 minutos desde 0 hasta 300 minutos
+  const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
+
   const resetForm = useCallback(() => {
     form.reset();
     fileUpload.clearFiles();
@@ -79,5 +129,6 @@ export const useCreateServiceForm = () => {
     resetForm,
     errors: form.formState.errors,
     isValid: form.formState.isValid && form.formState.isDirty,
+    durationOptions,
   };
 };
