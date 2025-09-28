@@ -91,7 +91,7 @@ export const CreateServiceView: FC = () => {
                           <HiDocumentText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                           <Textarea
                             placeholder="Descripción del servicio"
-                            className="pl-10 min-h-[100px]"
+                            className="pl-10 min-h-[40px]"
                             {...field}
                           />
                         </div>
@@ -142,9 +142,12 @@ export const CreateServiceView: FC = () => {
                               placeholder="Duración en minutos"
                               className="pl-10 h-10"
                               {...field}
-                              onChange={e =>
-                                field.onChange(parseInt(e.target.value, 10))
-                              }
+                              onChange={e => {
+                                const value = e.target.value;
+                                field.onChange(
+                                  value === '' ? undefined : parseInt(value, 10)
+                                );
+                              }}
                             />
                           </div>
                         </FormControl>
@@ -171,9 +174,12 @@ export const CreateServiceView: FC = () => {
                               placeholder="Precio del servicio"
                               className="pl-10 h-10"
                               {...field}
-                              onChange={e =>
-                                field.onChange(parseFloat(e.target.value))
-                              }
+                              onChange={e => {
+                                const value = e.target.value;
+                                field.onChange(
+                                  value === '' ? undefined : parseFloat(value)
+                                );
+                              }}
                             />
                           </div>
                         </FormControl>
@@ -250,9 +256,12 @@ export const CreateServiceView: FC = () => {
                             placeholder="Porcentaje de comisión"
                             className="pl-10 h-10"
                             {...field}
-                            onChange={e =>
-                              field.onChange(parseFloat(e.target.value))
-                            }
+                            onChange={e => {
+                              const value = e.target.value;
+                              field.onChange(
+                                value === '' ? undefined : parseFloat(value)
+                              );
+                            }}
                           />
                         </div>
                       </FormControl>

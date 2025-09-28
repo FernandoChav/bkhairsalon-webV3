@@ -32,7 +32,7 @@ export const useCreateServiceForm = () => {
       endTime: '',
       commissionPercentage: undefined,
       categoryId: '',
-      discountId: undefined,
+      discountId: '',
     },
   });
 
