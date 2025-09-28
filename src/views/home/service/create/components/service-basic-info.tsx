@@ -99,16 +99,24 @@ export const ServiceBasicInfo: FC<ServiceBasicInfoProps> = ({
                         ? 'Cargando categorías...'
                         : categories.error
                           ? 'Error al cargar categorías'
-                          : 'Selecciona una categoría'
+                          : categories.data.length === 0
+                            ? 'No hay categorías disponibles'
+                            : 'Selecciona una categoría'
                     }
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.data.map(category => (
-                    <SelectItem key={category.id} value={category.id}>
-                      <span className="text-sm">{category.fullPath}</span>
-                    </SelectItem>
-                  ))}
+                  {categories.data.length > 0 ? (
+                    categories.data.map(category => (
+                      <SelectItem key={category.id} value={category.id}>
+                        <span className="text-sm">{category.fullPath}</span>
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                      No hay categorías disponibles
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </FormControl>
