@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest } from '@/models/requests';
-import { ServiceResponse } from '@/models/responses';
+import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
@@ -38,6 +38,12 @@ class ServiceClient {
         },
       }
     );
+    return response.data;
+  }
+
+  async getAll(): Promise<ApiResponse<PublicServiceResponse[]>> {
+    const response =
+      await baseClient.get<ApiResponse<PublicServiceResponse[]>>('/service');
     return response.data;
   }
 }

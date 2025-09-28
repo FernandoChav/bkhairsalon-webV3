@@ -11,3 +11,11 @@ export interface ServiceResponse {
   createdAt: string;
   createdBy: string;
 }
+
+export interface PublicServiceResponse {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  durationInMinutes: number;
+}
