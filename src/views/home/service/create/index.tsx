@@ -4,7 +4,6 @@ import {
   HiClock,
   HiCurrencyDollar,
   HiDocumentText,
-  HiPhotograph,
   HiTag,
 } from 'react-icons/hi';
 
@@ -348,28 +347,23 @@ export const CreateServiceView: FC = () => {
               <FormLabel className="text-sm font-medium">
                 Fotos del Servicio
               </FormLabel>
-              <div className="relative">
-                <HiPhotograph className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <div className="pl-10">
-                  <FileUpload
-                    files={fileUpload.files}
-                    onFileAdd={fileUpload.addFiles}
-                    onFileRemove={fileUpload.removeFile}
-                    maxFiles={10}
-                    accept="image/*"
-                    multiple={true}
-                    title={
-                      fileUpload.files.length >= 10
-                        ? 'Límite máximo alcanzado (10 fotos)'
-                        : 'Sube fotos de tu servicio'
-                    }
-                    description="Arrastra las imágenes aquí o haz clic para seleccionar"
-                    placeholder={`${fileUpload.files.length}/10 fotos subidas`}
-                    showPreview={true}
-                    previewGridCols="4"
-                  />
-                </div>
-              </div>
+              <FileUpload
+                files={fileUpload.files}
+                onFileAdd={fileUpload.addFiles}
+                onFileRemove={fileUpload.removeFile}
+                maxFiles={10}
+                accept="image/*"
+                multiple={true}
+                title={
+                  fileUpload.files.length >= 10
+                    ? 'Límite máximo alcanzado (10 fotos)'
+                    : 'Sube fotos de tu servicio'
+                }
+                description="Arrastra las imágenes aquí o haz clic para seleccionar"
+                placeholder={`${fileUpload.files.length}/10 fotos subidas`}
+                showPreview={true}
+                previewGridCols="4"
+              />
             </div>
 
             <Button
