@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import { RegisterForm } from '@/views/register/components';
+import { RegisterForm } from './components';
 
 export const RegisterView: FC = () => {
   return (

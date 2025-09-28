@@ -7,8 +7,8 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import { Button } from '@/components/shadcn';
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,

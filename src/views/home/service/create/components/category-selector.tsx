@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn';
-import { useGetCategoriesQuery } from '@/hooks/api/use-service-client';
-import { CategoryDto } from '@/models/responses/category';
+import { useGetCategoriesQuery } from '@/hooks/api';
+import { CategoryDto } from '@/models/responses';
 
 interface CategorySelectorProps {
   value: string;

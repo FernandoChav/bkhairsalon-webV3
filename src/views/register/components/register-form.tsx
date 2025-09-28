@@ -28,7 +28,8 @@ import {
 } from '@/components/shadcn';
 import { DatePicker, PhoneInput } from '@/components/ui';
 import { cn } from '@/libs';
-import { useRegisterForm } from '@/views/register/hooks';
+
+import { useRegisterForm } from '../hooks';
 
 export const RegisterForm: FC = () => {
   const { form, onSubmit, isLoading } = useRegisterForm();

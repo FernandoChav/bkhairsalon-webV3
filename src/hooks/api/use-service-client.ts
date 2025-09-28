@@ -3,7 +3,7 @@ import type { AxiosError } from 'axios';
 
 import { categoryClient, serviceClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
-import { CreateServiceRequest } from '@/models/requests/service';
+import { CreateServiceRequest } from '@/models/requests';
 import { CategoryDto, ServiceDto } from '@/models/responses';
 
 export const useCreateServiceMutation = () =>

@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/models/generics';
-import { CreateServiceRequest } from '@/models/requests/service';
+import { CreateServiceRequest } from '@/models/requests';
 import { ServiceDto } from '@/models/responses';
 
 import { baseClient } from './base-client';

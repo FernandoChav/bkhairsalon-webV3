@@ -7,8 +7,8 @@ import { useCallback, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import type { LoginRequest } from '@/models/requests/auth';
-import { loginSchema } from '@/models/schemas/auth';
+import { LoginRequest } from '@/models/requests';
+import { loginSchema } from '@/models/schemas';
 
 export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);

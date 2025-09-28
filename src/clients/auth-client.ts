@@ -1,4 +1,4 @@
-import { baseClient } from '@/clients/base-client';
+import { baseClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
 import type { LoginRequest, RegisterRequest } from '@/models/requests';
 import { LoginResponse } from '@/models/responses';

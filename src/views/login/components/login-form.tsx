@@ -20,7 +20,8 @@ import {
   Input,
 } from '@/components/shadcn';
 import { cn } from '@/libs';
-import { useLoginForm } from '@/views/login/hooks';
+
+import { useLoginForm } from '../hooks';
 
 export const LoginForm: FC = () => {
   const { form, onSubmit, isLoading } = useLoginForm();

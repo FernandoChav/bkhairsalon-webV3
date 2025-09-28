@@ -7,15 +7,12 @@ import { useCallback, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useCreateServiceMutation } from '@/hooks/api/use-service-client';
-import { useFileUpload } from '@/hooks/common/use-file-upload';
-import { extractValidationMessages, isValidationError } from '@/libs/api-utils';
+import { useCreateServiceMutation } from '@/hooks/api';
+import { useFileUpload } from '@/hooks/common';
+import { extractValidationMessages, isValidationError } from '@/libs';
 import { ApiResponse } from '@/models/generics';
-import { CreateServiceRequest } from '@/models/requests/service';
-import {
-  CreateServiceFormData,
-  createServiceSchema,
-} from '@/models/schemas/service';
+import { CreateServiceRequest } from '@/models/requests';
+import { CreateServiceFormData, createServiceSchema } from '@/models/schemas';
 
 export const useCreateServiceForm = () => {
   const [isLoading, setIsLoading] = useState(false);

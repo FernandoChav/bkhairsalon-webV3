@@ -3,7 +3,7 @@ import { HiCamera, HiPlus, HiX } from 'react-icons/hi';
 import { FC, useCallback, useRef } from 'react';
 
 import { Button } from '@/components/shadcn';
-import { FileWithPreview } from '@/hooks/common/use-file-upload';
+import { FileWithPreview } from '@/hooks/common';
 import { cn } from '@/libs';
 
 interface ImageUploadProps {

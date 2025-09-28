@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isValidChileanPhone } from '@/libs/phone-utils';
+import { isValidChileanPhone } from '@/libs';
 
 export const registerSchema = z
   .object({

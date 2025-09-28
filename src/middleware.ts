@@ -7,12 +7,7 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const { token } = req.nextauth;
 
-    const protectedRoutes = [
-      '/home',
-      '/profile',
-      '/appointments',
-      '/dashboard',
-    ];
+    const protectedRoutes = ['/home'];
 
     const authRoutes = ['/login', '/register'];
 
