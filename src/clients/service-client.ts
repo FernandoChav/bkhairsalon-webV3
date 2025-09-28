@@ -30,7 +30,7 @@ class ServiceClient {
     }
 
     const response = await baseClient.post<ApiResponse<ServiceDto>>(
-      '/Service',
+      '/service',
       formData,
       {
         headers: {
