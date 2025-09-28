@@ -48,12 +48,10 @@ export const RegisterForm: FC = () => {
     form.getValues('confirmPassword');
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-lg border border-border bg-card">
-      <CardHeader className="space-y-2 pb-6">
-        <CardTitle className="text-2xl font-light text-center text-card-foreground font-serif">
-          Crear cuenta
-        </CardTitle>
-        <CardDescription className="text-center text-muted-foreground">
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle>Crear cuenta</CardTitle>
+        <CardDescription>
           Completa los datos para registrarte en BK Hair Salon
         </CardDescription>
       </CardHeader>
