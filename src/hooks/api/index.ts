@@ -1,5 +1,6 @@
 export { useRegisterMutation } from './use-auth-client';
+export { useCreateServiceMutation } from './use-service-client';
 export {
-  useCreateServiceMutation,
   useGetCategoriesQuery,
-} from './use-service-client';
+  useCreateCategoryMutation,
+} from './use-category-client';
