@@ -1,6 +1,7 @@
+import { useDropzone } from 'react-dropzone';
 import { HiCamera, HiPlus, HiX } from 'react-icons/hi';
 
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback } from 'react';
 
 import Image from 'next/image';
 
@@ -39,41 +40,23 @@ export const FileUpload: FC<FileUploadProps> = ({
   previewGridCols = '4',
   disabled = false,
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFiles = e.target.files;
-      if (selectedFiles && selectedFiles.length > 0) {
-        onFileAdd(selectedFiles);
-      }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        onFileAdd(acceptedFiles);
       }
     },
     [onFileAdd]
   );
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      const droppedFiles = e.dataTransfer.files;
-      if (droppedFiles.length > 0) {
-        onFileAdd(droppedFiles);
-      }
-    },
-    [onFileAdd]
-  );
-
-  const openFileDialog = useCallback(() => {
-    if (!disabled && files.length < maxFiles) {
-      fileInputRef.current?.click();
-    }
-  }, [disabled, files.length, maxFiles]);
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+    onDrop,
+    accept: accept ? { [accept]: [] } : undefined,
+    multiple,
+    disabled: disabled || files.length >= maxFiles,
+    noClick: false,
+    noKeyboard: false,
+  });
 
   const isImageFile = accept.includes('image');
   const isAtMaxFiles = files.length >= maxFiles;
@@ -106,25 +89,16 @@ export const FileUpload: FC<FileUploadProps> = ({
   return (
     <div className={cn('space-y-4', className)}>
       <div
-        onClick={openFileDialog}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
+        {...getRootProps()}
         className={cn(
           'relative border-2 border-dashed border-border rounded-lg p-8 text-center transition-colors',
           !isDisabled &&
             'cursor-pointer hover:border-primary hover:bg-primary/5',
-          isDisabled && 'pointer-events-none opacity-50'
+          isDisabled && 'pointer-events-none opacity-50',
+          isDragActive && 'border-primary bg-primary/5'
         )}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={accept}
-          multiple={multiple}
-          onChange={handleFileChange}
-          className="hidden"
-          disabled={isDisabled}
-        />
+        <input {...getInputProps()} />
 
         <div className="flex flex-col items-center space-y-3">
           <div className="p-3 rounded-full bg-primary/10">
@@ -146,7 +120,11 @@ export const FileUpload: FC<FileUploadProps> = ({
         {showPreview && files.length > 0 && (
           <div className={cn('grid gap-4 mt-6', gridColsClass)}>
             {files.map((file, index) => (
-              <div key={index} className="relative group">
+              <div
+                key={index}
+                className="relative group"
+                onClick={e => e.stopPropagation()}
+              >
                 <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                   {isImageFile && file.preview ? (
                     <Image
@@ -172,8 +150,12 @@ export const FileUpload: FC<FileUploadProps> = ({
                   type="button"
                   size="sm"
                   variant="destructive"
-                  onClick={() => onFileRemove(index)}
-                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onFileRemove(index);
+                  }}
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 >
                   <HiX className="h-3 w-3" />
                 </Button>
@@ -185,7 +167,10 @@ export const FileUpload: FC<FileUploadProps> = ({
 
             {files.length < maxFiles && !disabled && (
               <div
-                onClick={openFileDialog}
+                onClick={e => {
+                  e.stopPropagation();
+                  open();
+                }}
                 className="aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
               >
                 <div className="flex flex-col items-center space-y-2">
