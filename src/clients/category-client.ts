@@ -1,13 +1,13 @@
 import { ApiResponse } from '@/models/generics';
 import { CreateCategoryRequest } from '@/models/requests';
-import { CategoryDto } from '@/models/responses';
+import { CategoryResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
 class CategoryClient {
-  async getAll(): Promise<ApiResponse<CategoryDto[]>> {
+  async getAll(): Promise<ApiResponse<CategoryResponse[]>> {
     const response =
-      await baseClient.get<ApiResponse<CategoryDto[]>>('/category');
+      await baseClient.get<ApiResponse<CategoryResponse[]>>('/category');
     return response.data;
   }
 

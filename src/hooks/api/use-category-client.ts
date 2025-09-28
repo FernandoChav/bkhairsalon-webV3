@@ -4,10 +4,10 @@ import type { AxiosError } from 'axios';
 import { categoryClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
 import { CreateCategoryRequest } from '@/models/requests';
-import { CategoryDto } from '@/models/responses';
+import { CategoryResponse } from '@/models/responses';
 
 export const useGetCategoriesQuery = () =>
-  useQuery<CategoryDto[], AxiosError<ApiResponse>>({
+  useQuery<CategoryResponse[], AxiosError<ApiResponse>>({
     queryKey: ['categories'],
     queryFn: async () => {
       const response = await categoryClient.getAll();

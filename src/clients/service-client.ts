@@ -1,13 +1,13 @@
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest } from '@/models/requests';
-import { ServiceDto } from '@/models/responses';
+import { ServiceResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
 class ServiceClient {
   async createService(
     data: CreateServiceRequest
-  ): Promise<ApiResponse<ServiceDto>> {
+  ): Promise<ApiResponse<ServiceResponse>> {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('description', data.description);
@@ -29,7 +29,7 @@ class ServiceClient {
       });
     }
 
-    const response = await baseClient.post<ApiResponse<ServiceDto>>(
+    const response = await baseClient.post<ApiResponse<ServiceResponse>>(
       '/service',
       formData,
       {
