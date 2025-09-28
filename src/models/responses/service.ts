@@ -8,6 +8,7 @@ export interface ServiceResponse {
   endTime: string;
   commissionPercentage: number;
   categoryName: string;
+  images: string[];
   createdAt: string;
   createdBy: string;
 }
@@ -18,4 +19,5 @@ export interface PublicServiceResponse {
   description?: string;
   price: number;
   durationInMinutes: number;
+  images: string[];
 }
