@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isValidChileanPhone } from '@/libs/phone-utils';
+import { isValidChileanPhone } from '@/libs';
 
 export const registerSchema = z
   .object({
@@ -37,3 +37,12 @@ export const loginSchema = z.object({
     .email('Por favor ingresa un correo electrónico válido'),
   password: z.string().min(1, 'La contraseña es requerida'),
 });
+
+export const passwordSchema = z.object({
+  password: z
+    .string()
+    .min(1, 'La contraseña es requerida')
+    .min(8, 'La contraseña debe tener al menos 8 caracteres'),
+});
+
+export type PasswordForm = z.infer<typeof passwordSchema>;

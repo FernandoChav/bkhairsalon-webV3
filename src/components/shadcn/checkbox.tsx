@@ -1,7 +1,7 @@
 'use client';
 
 import { Indicator, Root } from '@radix-ui/react-checkbox';
-import { CheckIcon } from 'lucide-react';
+import { HiCheck } from 'react-icons/hi';
 
 import type { ComponentProps } from 'react';
 
@@ -24,7 +24,7 @@ export const Checkbox = ({
         data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current transition-none"
       >
-        <CheckIcon className="size-3.5" />
+        <HiCheck className="size-3.5" />
       </Indicator>
     </Root>
   );

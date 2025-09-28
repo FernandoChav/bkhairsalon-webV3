@@ -1,24 +1,20 @@
 import { ApiResponse } from '@/models/generics';
-import type { EditUserRequest } from '@/models/requests';
-import type { CustomAxiosRequestConfig } from '@/types/custom-axios';
+import { EditUserRequest } from '@/models/requests';
+import { ProfileDto } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
 class UserClient {
-  /**
-   * Editar la información del usuario
-   */
   async editUser(data: EditUserRequest): Promise<ApiResponse> {
-    // Indicar que esta petición requiere autenticación
-    const config: CustomAxiosRequestConfig = { requiresAuth: true };
-    const response = await baseClient.put<ApiResponse>(
-      '/User/edit',
-      data,
-      config
-    );
+    const response = await baseClient.put<ApiResponse>('/user/edit', data);
+    return response.data;
+  }
+
+  async getProfile(): Promise<ApiResponse<ProfileDto>> {
+    const response =
+      await baseClient.get<ApiResponse<ProfileDto>>('/user/profile');
     return response.data;
   }
 }
 
-// Exportar instancia singleton
 export const userClient = new UserClient();

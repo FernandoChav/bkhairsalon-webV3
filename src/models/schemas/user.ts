@@ -18,3 +18,5 @@ export const editUserFormSchema = z.object({
     }),
   dateOfBirth: z.string().min(1, 'La fecha de nacimiento es requerida'),
 });
+
+export type EditUserForm = z.infer<typeof editUserFormSchema>;

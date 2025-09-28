@@ -1,44 +1,139 @@
 'use client';
 
-import { LoginForm } from './login-form';
+import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
-const LoginView = () => {
+import { FC, useState } from 'react';
+
+import Link from 'next/link';
+
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+} from '@/components/shadcn';
+import { cn } from '@/libs';
+
+import { useLoginForm } from './hooks';
+
+export const LoginView: FC = () => {
+  const { form, onSubmit, isLoading } = useLoginForm();
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Validate form completion
+  const isFormValid =
+    form.formState.isValid &&
+    form.getValues('email') &&
+    form.getValues('password');
+
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 font-serif">
-            BK Hair Salon
-          </h1>
-          <p className="text-lg text-gray-600">
-            Únete a nuestra comunidad de belleza
-          </p>
-        </div>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle>Iniciar sesión</CardTitle>
+        <CardDescription>
+          Inicia en tu cuenta para agendar tu cita en BK Hair Salon
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4"
+            autoComplete="on"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Correo Electrónico</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        type="email"
+                        placeholder="tu@correo.com"
+                        className="pl-10"
+                        autoComplete="email"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Desktop Layout */}
-        <div className="hidden md:flex md:items-center md:justify-center md:min-h-[calc(100vh-200px)]">
-          <div className="w-full max-w-md">
-            <LoginForm />
-          </div>
-        </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contraseña</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Tu contraseña"
+                        className="pl-10 pr-10"
+                        autoComplete="current-password"
+                        {...field}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <HiEyeOff className="h-4 w-4" />
+                        ) : (
+                          <HiEye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Mobile Layout */}
-        <div className="block md:hidden">
-          <div className="w-full max-w-sm mx-auto">
-            <LoginForm />
-          </div>
-        </div>
-      </div>
+            <Button
+              type="submit"
+              className={cn(
+                'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+                isFormValid && !isLoading
+                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+                  : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+              )}
+              disabled={!isFormValid || isLoading}
+            >
+              {isLoading ? 'Entrando...' : 'Entrar'}
+            </Button>
+          </form>
+        </Form>
 
-      {/* Footer */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-sm text-gray-500">
-          <p>© 2024 BK Hair Salon. Todos los derechos reservados.</p>
+        <div className="mt-6 text-center text-sm">
+          <span className="text-muted-foreground">¿No tienes cuenta? </span>
+          <Link
+            href="/register"
+            className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+          >
+            Crear una cuenta
+          </Link>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
-
-export default LoginView;

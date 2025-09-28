@@ -3,7 +3,7 @@ export interface RegisterRequest {
   lastName: string;
   email: string;
   phoneNumber: string;
-  dateOfBirth: string; // ISO date string
+  dateOfBirth: string;
   password: string;
   confirmPassword: string;
 }

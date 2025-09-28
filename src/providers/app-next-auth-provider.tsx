@@ -11,10 +11,9 @@ interface AppNextAuthProviderProps {
 export const AppNextAuthProvider = ({ children }: AppNextAuthProviderProps) => {
   return (
     <SessionProvider
-      // Configuración para evitar el error CLIENT_FETCH_ERROR
       basePath="/api/auth"
-      refetchInterval={0}
-      refetchOnWindowFocus={false}
+      refetchInterval={5 * 60} // Refetch every 5 minutes to check session validity
+      refetchOnWindowFocus={true} // Refetch when window gains focus
     >
       {children}
     </SessionProvider>
