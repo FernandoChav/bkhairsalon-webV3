@@ -1,8 +1,6 @@
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
-
-import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -23,40 +21,39 @@ export const useServiceSubmission = (
   form: UseFormReturn<CreateServiceFormData>,
   fileUpload: FileUploadHook
 ) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const createServiceMutation = useCreateServiceMutation();
+  const { mutate: createService, isPending } = useCreateServiceMutation();
 
-  const onSubmit = async (data: CreateServiceFormData) => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      const serviceRequest: CreateServiceRequest = {
-        ...data,
-        photos: fileUpload.files,
-      };
-      await createServiceMutation.mutateAsync(serviceRequest);
-      toast.success('Servicio creado exitosamente');
-      router.push('/home/service');
-    } catch (error) {
-      const messages = error as AxiosError<ApiResponse>;
+  const onSubmit = (data: CreateServiceFormData) => {
+    const serviceRequest: CreateServiceRequest = {
+      ...data,
+      photos: fileUpload.files,
+    };
 
-      if (isValidationError(messages)) {
-        const validationMessages = extractValidationMessages(messages);
-        toast.error(validationMessages[0] || 'Error de validación');
-      } else {
-        const message =
-          messages.response?.data?.message || 'Error al crear el servicio';
-        toast.error(message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    createService(serviceRequest, {
+      onSuccess: (data: ApiResponse) => {
+        toast.success(data.message);
+        router.push('/home/service');
+      },
+      onError: (error: AxiosError<unknown>) => {
+        const axiosError = error as AxiosError<ApiResponse>;
+        if (isValidationError(axiosError)) {
+          const validationMessages = extractValidationMessages(axiosError);
+          validationMessages.forEach(message => {
+            toast.error(message);
+          });
+        } else {
+          const message =
+            axiosError.response?.data?.message || 'Error al crear el servicio';
+          toast.error(message);
+        }
+      },
+    });
   };
 
   return {
     onSubmit,
-    isLoading,
+    isLoading: isPending,
     isValid: form.formState.isValid && form.formState.isDirty,
   };
 };
