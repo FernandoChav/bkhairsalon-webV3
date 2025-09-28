@@ -7,11 +7,12 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useCreateServiceMutation } from '@/hooks/api';
+import { useCreateServiceMutation, useGetCategoriesQuery } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
 import { extractValidationMessages, isValidationError } from '@/libs';
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest } from '@/models/requests';
+import { CategoryDto } from '@/models/responses';
 import { CreateServiceFormData, createServiceSchema } from '@/models/schemas';
 
 export const useCreateServiceForm = () => {
@@ -19,6 +20,11 @@ export const useCreateServiceForm = () => {
   const router = useRouter();
   const createServiceMutation = useCreateServiceMutation();
   const fileUpload = useFileUpload(10); //Ver cuanto será el limite
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useGetCategoriesQuery();
 
   const form = useForm<CreateServiceFormData>({
     resolver: zodResolver(createServiceSchema),
@@ -116,6 +122,30 @@ export const useCreateServiceForm = () => {
   // Generar opciones de duración de 5 en 5 minutos desde 0 hasta 300 minutos
   const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
 
+  // Flatten categories and filter only final categories
+  const getFinalCategories = useCallback(
+    (cats: CategoryDto[]): CategoryDto[] => {
+      const finalCats: CategoryDto[] = [];
+
+      const traverse = (categories: CategoryDto[]) => {
+        categories.forEach(category => {
+          if (category.isFinal) {
+            finalCats.push(category);
+          }
+          if (category.subCategories && category.subCategories.length > 0) {
+            traverse(category.subCategories);
+          }
+        });
+      };
+
+      traverse(cats);
+      return finalCats;
+    },
+    []
+  );
+
+  const finalCategories = categories ? getFinalCategories(categories) : [];
+
   const resetForm = useCallback(() => {
     form.reset();
     fileUpload.clearFiles();
@@ -130,5 +160,8 @@ export const useCreateServiceForm = () => {
     errors: form.formState.errors,
     isValid: form.formState.isValid && form.formState.isDirty,
     durationOptions,
+    categories: finalCategories,
+    categoriesLoading,
+    categoriesError,
   };
 };

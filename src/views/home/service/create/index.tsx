@@ -33,12 +33,20 @@ import {
 } from '@/components/shadcn';
 import { FileUpload, TimeInput } from '@/components/ui';
 
-import { CategorySelector } from './components';
 import { useCreateServiceForm } from './hooks';
 
 export const CreateServiceView: FC = () => {
-  const { form, onSubmit, isLoading, fileUpload, isValid, durationOptions } =
-    useCreateServiceForm();
+  const {
+    form,
+    onSubmit,
+    isLoading,
+    fileUpload,
+    isValid,
+    durationOptions,
+    categories,
+    categoriesLoading,
+    categoriesError,
+  } = useCreateServiceForm();
 
   return (
     <Card className="w-full max-w-7xl mx-auto">
@@ -115,11 +123,32 @@ export const CreateServiceView: FC = () => {
                         Categoría
                       </FormLabel>
                       <FormControl>
-                        <CategorySelector
+                        <Select
                           value={field.value}
                           onValueChange={field.onChange}
-                          disabled={isLoading}
-                        />
+                          disabled={isLoading || categoriesLoading}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={
+                                categoriesLoading
+                                  ? 'Cargando categorías...'
+                                  : categoriesError
+                                    ? 'Error al cargar categorías'
+                                    : 'Selecciona una categoría'
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map(category => (
+                              <SelectItem key={category.id} value={category.id}>
+                                <span className="text-sm">
+                                  {category.fullPath}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
