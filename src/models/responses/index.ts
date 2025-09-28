@@ -1,4 +1,4 @@
 export type { LoginResponse } from './auth';
-export type { ServiceDto } from './service';
-export type { CategoryDto } from './category';
-export type { PhotoDto } from './photo';
+export type { ServiceResponse as ServiceDto } from './service';
+export type { CategoryResponse as CategoryDto } from './category';
+export type { PhotoResponse as PhotoDto } from './photo';

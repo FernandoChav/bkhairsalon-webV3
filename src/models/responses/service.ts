@@ -1,4 +1,4 @@
-export interface ServiceDto {
+export interface ServiceResponse {
   id: string;
   name: string;
   description: string;
