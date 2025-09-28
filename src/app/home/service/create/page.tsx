@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { CreateServiceView } from '@/views/create-service';
+import { CreateServiceView } from '@/views';
 
 export const metadata: Metadata = {
   title: 'Crear Servicio - BK Hair Salon',
