@@ -19,19 +19,18 @@ export const ProtectedRouteWrapper = ({
 }: ProtectedRouteWrapperProps) => {
   const { data: session, status } = useSession();
 
-  // Función para validar si el token está expirado
+  // Función para validar si el token está completamente expirado
   const isTokenExpired = (token: string): boolean => {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const currentTime = Date.now() / 1000; // Convert to seconds
       return payload.exp < currentTime;
-    } catch (error) {
-      console.error('Error validating token expiration:', error);
+    } catch {
       return true; // Consider invalid tokens as expired
     }
   };
 
-  // Función para manejar la expiración de sesión
+  // Función para manejar la expiración de sesión (solo cuando está completamente expirado)
   const handleSessionExpiration = async (): Promise<void> => {
     toast.error('Sesión expirada', {
       description:
@@ -46,14 +45,38 @@ export const ProtectedRouteWrapper = ({
     });
   };
 
-  // Validar sesión cuando cambie
+  // Validar sesión cuando cambie - solo actuar si está completamente expirado
   useEffect(() => {
     if (status === 'authenticated' && session?.accessToken) {
+      // Solo forzar logout si está completamente expirado
       if (isTokenExpired(session.accessToken)) {
         handleSessionExpiration();
       }
     }
   }, [session, status]);
+
+  // Listener para errores de autenticación desde el BaseClient
+  useEffect(() => {
+    const handleAuthError = () => {
+      toast.error('Error de autenticación', {
+        description:
+          'No se pudo renovar tu sesión. Por favor, inicia sesión nuevamente.',
+        duration: 5000,
+      });
+
+      signOut({
+        callbackUrl: '/login',
+        redirect: true,
+      });
+    };
+
+    // Escuchar eventos de error de autenticación
+    window.addEventListener('auth-error', handleAuthError);
+
+    return () => {
+      window.removeEventListener('auth-error', handleAuthError);
+    };
+  }, []);
 
   if (status === 'loading') {
     return <LoadingPage message={loadingMessage} />;
