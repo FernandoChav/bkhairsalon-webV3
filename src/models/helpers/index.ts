@@ -1,1 +1,1 @@
-export type { FileWithPreview } from './file';
+export { type FileWithPreview } from './file';

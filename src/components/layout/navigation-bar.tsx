@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut, useSession } from 'next-auth/react';
-import { HiLogout, HiUser } from 'react-icons/hi';
+import { HiCog, HiLogout, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
 
@@ -62,6 +62,16 @@ export const NavigationBar: FC = () => {
                   {session?.user?.email}
                 </p>
               </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/home/profile/edit"
+                  className="cursor-pointer flex items-center space-x-2 focus:bg-accent focus:text-accent-foreground"
+                >
+                  <HiCog className="h-4 w-4" />
+                  <span>Editar Perfil</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/5 flex items-center space-x-2"
