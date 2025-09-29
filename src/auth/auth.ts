@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.accessToken = user.accessToken;
         // Decode JWT to get expiration time
@@ -59,13 +59,67 @@ export const authOptions: NextAuthOptions = {
           try {
             const payload = JSON.parse(atob(user.accessToken.split('.')[1]));
             token.exp = payload.exp;
-          } catch (error) {
-            console.error('Error decoding JWT:', error);
+            token.refreshAttempted = false;
+          } catch {
+            // Token inválido, se manejará en la validación de expiración
           }
         }
       }
 
-      // Check if token is expired
+      // ✅ Manejar actualizaciones de sesión
+      if (trigger === 'update' && session) {
+        // Actualizar los datos del usuario en el token
+        if (session.user?.name) {
+          token.name = session.user.name;
+        }
+        if (session.user?.email) {
+          token.email = session.user.email;
+        }
+
+        return token;
+      }
+
+      // Check if token is expired or about to expire (5 minutes before)
+      const now = Date.now() / 1000;
+      const fiveMinutesFromNow = now + 5 * 60;
+
+      if (
+        token.exp &&
+        typeof token.exp === 'number' &&
+        token.exp <= fiveMinutesFromNow &&
+        !token.refreshAttempted
+      ) {
+        try {
+          // Marcar que ya intentamos refresh para evitar loops
+          token.refreshAttempted = true;
+
+          const refreshResponse = await authClient.refreshToken();
+
+          if (refreshResponse.data?.token) {
+            // Actualizar token con el nuevo
+            token.accessToken = refreshResponse.data.token;
+
+            // Decodificar el nuevo token para obtener nueva expiración
+            try {
+              const payload = JSON.parse(
+                atob(refreshResponse.data.token.split('.')[1])
+              );
+              token.exp = payload.exp;
+              token.refreshAttempted = false; // Reset para futuros refresh
+            } catch {
+              // Token inválido, se manejará en la validación de expiración
+            }
+          } else {
+            // Si el refresh falla, limpiar token
+            return {};
+          }
+        } catch {
+          // Si hay error en refresh, limpiar token para forzar re-autenticación
+          return {};
+        }
+      }
+
+      // Si el token ya expiró completamente, limpiar
       if (
         token.exp &&
         typeof token.exp === 'number' &&
@@ -79,7 +133,15 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.accessToken = token.accessToken as string;
+
+        if (token.name) {
+          session.user.name = token.name as string;
+        }
+        if (token.email) {
+          session.user.email = token.email as string;
+        }
       }
+
       return session;
     },
   },
