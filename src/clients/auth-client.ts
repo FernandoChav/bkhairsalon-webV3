@@ -16,6 +16,12 @@ class AuthClient {
     );
     return response.data;
   }
+
+  async refreshToken(): Promise<ApiResponse<LoginResponse>> {
+    const response =
+      await baseClient.post<ApiResponse<LoginResponse>>('/auth/refresh');
+    return response.data;
+  }
 }
 
 export const authClient = new AuthClient();
