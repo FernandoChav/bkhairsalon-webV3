@@ -18,9 +18,8 @@ export default function ServicesPage() {
         setLoading(true);
         const response = await serviceClient.getAll();
         setServices(response.data || []);
-      } catch (err) {
+      } catch {
         setError('Error al cargar los servicios');
-        console.error('Error fetching services:', err);
       } finally {
         setLoading(false);
       }
