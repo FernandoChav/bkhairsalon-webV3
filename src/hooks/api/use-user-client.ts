@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 
+import { useRouter } from 'next/navigation';
+
 import { userClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
 import { EditUserRequest } from '@/models/requests';
@@ -39,17 +41,34 @@ export const useUpdateUserProfileMutation = () => {
 
 export const useEditUserMutation = () => {
   const queryClient = useQueryClient();
-  const { update: updateSession } = useSession();
+  const router = useRouter();
+  const { update } = useSession();
 
   return useMutation<ApiResponse, AxiosError<ApiResponse>, EditUserRequest>({
     mutationFn: userClient.editUser,
     onSuccess: async () => {
-      // Invalidar el perfil del usuario para que se vuelva a cargar
-      queryClient.invalidateQueries({
-        queryKey: ['user', 'profile'],
-      });
+      try {
+        const updatedProfile = await userClient.getProfile();
 
-      await updateSession();
+        if (updatedProfile.data) {
+          queryClient.setQueryData(['user', 'profile'], updatedProfile.data);
+
+          await update({
+            user: {
+              name: `${updatedProfile.data.firstName}`,
+              email: updatedProfile.data.email,
+            },
+          });
+
+          router.push('/home');
+        }
+      } catch {
+        queryClient.invalidateQueries({
+          queryKey: ['user', 'profile'],
+        });
+
+        router.push('/home');
+      }
     },
   });
 };
