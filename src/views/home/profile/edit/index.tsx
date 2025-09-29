@@ -18,7 +18,6 @@ export const EditUserView: FC = () => {
     form.formState.isValid &&
     !!form.getValues('firstName') &&
     !!form.getValues('lastName') &&
-    !!form.getValues('email') &&
     !!form.getValues('phoneNumber') &&
     !!form.getValues('dateOfBirth');
 

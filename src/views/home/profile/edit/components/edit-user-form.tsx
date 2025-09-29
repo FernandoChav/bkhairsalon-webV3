@@ -1,7 +1,7 @@
 'use client';
 
 import { UseFormReturn } from 'react-hook-form';
-import { HiMail, HiPhone, HiUser } from 'react-icons/hi';
+import { HiPhone, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
 
@@ -161,32 +161,6 @@ export const EditUserForm: FC<EditUserFormProps> = ({
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 items-start">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">
-                      Correo Electrónico
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          type="email"
-                          placeholder="tu@correo.com"
-                          className="pl-10 h-10"
-                          autoComplete="email"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <div className="pt-4">
               <Button
                 type="submit"

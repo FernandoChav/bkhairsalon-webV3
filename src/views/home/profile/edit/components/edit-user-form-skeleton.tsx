@@ -1,6 +1,6 @@
 'use client';
 
-import { HiMail, HiPhone, HiUser } from 'react-icons/hi';
+import { HiPhone, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
 
@@ -51,16 +51,6 @@ export const EditUserFormSkeleton: FC = () => {
               <div className="text-sm font-medium">Teléfono</div>
               <div className="relative">
                 <HiPhone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-            </div>
-          </div>
-          {/* Tercera fila: Email */}
-          <div className="grid grid-cols-1 gap-4 items-start">
-            <div className="grid gap-2">
-              <div className="text-sm font-medium">Correo Electrónico</div>
-              <div className="relative">
-                <HiMail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Skeleton className="h-10 w-full" />
               </div>
             </div>

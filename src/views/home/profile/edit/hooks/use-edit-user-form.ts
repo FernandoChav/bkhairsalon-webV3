@@ -31,7 +31,6 @@ export const useEditUserForm = () => {
     defaultValues: {
       firstName: '',
       lastName: '',
-      email: '',
       phoneNumber: '',
       dateOfBirth: '',
     },
@@ -43,7 +42,6 @@ export const useEditUserForm = () => {
       form.reset({
         firstName: profile.firstName,
         lastName: profile.lastName,
-        email: profile.email,
         phoneNumber: profile.phoneNumber,
         dateOfBirth: profile.dateOfBirth,
       });
@@ -61,7 +59,6 @@ export const useEditUserForm = () => {
     return (
       watchedValues.firstName !== profile.firstName ||
       watchedValues.lastName !== profile.lastName ||
-      watchedValues.email !== profile.email ||
       watchedValues.phoneNumber !== profile.phoneNumber ||
       watchedValues.dateOfBirth !== profile.dateOfBirth
     );
