@@ -5,10 +5,6 @@ import { isValidChileanPhone } from '@/libs/phone-utils';
 export const editUserFormSchema = z.object({
   firstName: z.string().min(1, 'El nombre es requerido'),
   lastName: z.string().min(1, 'El apellido es requerido'),
-  email: z
-    .string()
-    .min(1, 'El correo electrónico es requerido')
-    .email('Por favor ingresa un correo electrónico válido'),
   phoneNumber: z
     .string()
     .min(1, 'El número de teléfono es requerido')
