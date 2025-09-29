@@ -8,18 +8,41 @@ export default withAuth(
     const { token } = req.nextauth;
 
     const protectedRoutes = ['/home'];
-
     const authRoutes = ['/login', '/register'];
 
-    if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
-      const callbackUrl = encodeURIComponent(pathname + req.nextUrl.search);
-      return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${callbackUrl}`, req.url)
-      );
+    // Función para verificar si el token es válido o puede ser refrescado
+    const isTokenValidOrRefreshable = (
+      token: { accessToken?: string } | null
+    ): boolean => {
+      if (!token?.accessToken) return false;
+
+      try {
+        const payload = JSON.parse(atob(token.accessToken.split('.')[1]));
+        const currentTime = Date.now() / 1000;
+
+        // Token es válido si no ha expirado completamente
+        // Permitir acceso si está próximo a expirar (el refresh se manejará en el cliente)
+        return payload.exp > currentTime;
+      } catch {
+        return false;
+      }
+    };
+
+    // Verificar rutas protegidas
+    if (protectedRoutes.some(route => pathname.startsWith(route))) {
+      if (!token || !isTokenValidOrRefreshable(token)) {
+        const callbackUrl = encodeURIComponent(pathname + req.nextUrl.search);
+        return NextResponse.redirect(
+          new URL(`/login?callbackUrl=${callbackUrl}`, req.url)
+        );
+      }
     }
 
-    if (token && authRoutes.some(route => pathname.startsWith(route))) {
-      return NextResponse.redirect(new URL('/home', req.url));
+    // Verificar rutas de autenticación
+    if (authRoutes.some(route => pathname.startsWith(route))) {
+      if (token && isTokenValidOrRefreshable(token)) {
+        return NextResponse.redirect(new URL('/home', req.url));
+      }
     }
 
     return NextResponse.next();
