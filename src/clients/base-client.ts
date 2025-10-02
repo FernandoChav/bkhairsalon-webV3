@@ -46,7 +46,7 @@ baseClient.interceptors.response.use(
       try {
         const session = await getSession();
         if (!session?.accessToken) {
-          throw new Error('No session found');
+          throw error;
         }
 
         const refreshResponse = await authClient.refreshToken();

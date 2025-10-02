@@ -30,10 +30,7 @@ export const LoginView: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Validate form completion
-  const isFormValid =
-    form.formState.isValid &&
-    form.getValues('email') &&
-    form.getValues('password');
+  const { isValid } = form.formState;
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -113,11 +110,11 @@ export const LoginView: FC = () => {
               type="submit"
               className={cn(
                 'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
-                isFormValid && !isLoading
+                isValid && !isLoading
                   ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
                   : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
               )}
-              disabled={!isFormValid || isLoading}
+              disabled={!isValid || isLoading}
             >
               {isLoading ? 'Entrando...' : 'Entrar'}
             </Button>
