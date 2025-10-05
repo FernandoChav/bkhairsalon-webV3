@@ -64,7 +64,7 @@ export const RegisterView: FC = () => {
             className="space-y-6"
             autoComplete="on"
           >
-            <div className="grid grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
                 name="firstName"
@@ -114,7 +114,7 @@ export const RegisterView: FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
                 name="dateOfBirth"
@@ -193,7 +193,7 @@ export const RegisterView: FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
                 name="password"
