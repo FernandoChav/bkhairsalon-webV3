@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useCallback, useState } from 'react';
@@ -16,12 +16,13 @@ export const useLoginForm = () => {
 
   const form = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     defaultValues: {
       email: '',
       password: '',
     },
   });
+  const watchedValues = useWatch({ control: form.control });
 
   const onSubmit = useCallback(
     async (data: LoginRequest) => {
@@ -56,11 +57,14 @@ export const useLoginForm = () => {
     [isLoading, form, router]
   );
 
+  const isValid = Boolean(
+    form.formState.isValid && watchedValues?.email && watchedValues?.password
+  );
+
   return {
     form,
     onSubmit,
     isLoading,
-    errors: form.formState.errors,
-    isValid: form.formState.isValid,
+    isValid,
   };
 };

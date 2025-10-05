@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AxiosError } from 'axios';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useRouter } from 'next/navigation';
@@ -37,6 +37,7 @@ export const useRegisterForm = () => {
       confirmPassword: '',
     },
   });
+  const watchedValues = useWatch({ control: form.control });
 
   const onSubmit = (data: RegisterRequest) => {
     const transformedData = {
@@ -60,11 +61,23 @@ export const useRegisterForm = () => {
     });
   };
 
+  const isValid = Boolean(
+    form.formState.isValid &&
+      watchedValues?.firstName &&
+      watchedValues?.lastName &&
+      watchedValues?.email &&
+      watchedValues?.phoneNumber &&
+      watchedValues?.dateOfBirth &&
+      watchedValues?.password &&
+      watchedValues?.confirmPassword
+  );
+
   return {
     form,
     onSubmit,
     isLoading: isPending,
     error,
     isSuccess,
+    isValid,
   };
 };

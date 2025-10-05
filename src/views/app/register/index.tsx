@@ -34,20 +34,9 @@ import { cn } from '@/libs';
 import { useRegisterForm } from './hooks';
 
 export const RegisterView: FC = () => {
-  const { form, onSubmit, isLoading } = useRegisterForm();
+  const { form, onSubmit, isLoading, isValid } = useRegisterForm();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  // Validate form completion
-  const isFormValid =
-    form.formState.isValid &&
-    form.getValues('firstName') &&
-    form.getValues('lastName') &&
-    form.getValues('email') &&
-    form.getValues('phoneNumber') &&
-    form.getValues('dateOfBirth') &&
-    form.getValues('password') &&
-    form.getValues('confirmPassword');
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -278,11 +267,11 @@ export const RegisterView: FC = () => {
                 type="submit"
                 className={cn(
                   'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
-                  isFormValid && !isLoading
+                  isValid && !isLoading
                     ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
                     : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
                 )}
-                disabled={!isFormValid || isLoading}
+                disabled={!isValid || isLoading}
               >
                 {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
               </Button>

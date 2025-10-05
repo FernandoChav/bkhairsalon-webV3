@@ -125,6 +125,7 @@ describe('RegisterView', () => {
       isLoading: false,
       error: null,
       isSuccess: false,
+      isValid: false,
     });
   });
 
@@ -185,6 +186,17 @@ describe('RegisterView', () => {
         password: 'password123',
         confirmPassword: 'password123',
       });
+
+      // Mock the hook to return isValid: true when form is valid
+      mockUseRegisterForm.mockReturnValue({
+        form: mockForm,
+        onSubmit: mockOnSubmit,
+        isLoading: false,
+        error: null,
+        isSuccess: false,
+        isValid: true,
+      });
+
       customRender(<RegisterView />);
 
       const submitButton = screen.getByRole('button', { name: 'Crear cuenta' });

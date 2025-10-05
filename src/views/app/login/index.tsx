@@ -26,11 +26,8 @@ import { cn } from '@/libs';
 import { useLoginForm } from './hooks';
 
 export const LoginView: FC = () => {
-  const { form, onSubmit, isLoading } = useLoginForm();
+  const { form, onSubmit, isLoading, isValid } = useLoginForm();
   const [showPassword, setShowPassword] = useState(false);
-
-  // Validate form completion
-  const { isValid } = form.formState;
 
   return (
     <Card className="w-full max-w-md mx-auto">
