@@ -355,18 +355,20 @@ export const LandingView: FC = () => {
           </LandingGrid>
         </div>
 
-        <div className="relative py-8 -mx-6">
+        <div className="relative py-8">
           <ScrollingMarquee
             items={brands}
             className="text-2xl md:text-3xl"
             separator="dot"
+            speed="fast"
+            fullWidth={true}
           />
         </div>
       </LandingSection>
       <LandingSection background="default" padding="lg" maxWidth="7xl">
         <SectionHeader title="Portfolio" className="mb-12 text-right" />
 
-        <LandingGrid columns={{ default: 2, md: 3, lg: 4 }} gap="md">
+        <LandingGrid columns={{ default: 1, md: 3, lg: 4 }} gap="md">
           {portfolioImages.map(image => (
             <LandingCard
               key={image.id}
@@ -414,8 +416,8 @@ export const LandingView: FC = () => {
         maxWidth="7xl"
         className="relative"
       >
-        <div className="grid md:grid-cols-2">
-          <div className="bg-primary text-primary-foreground p-12 md:p-20">
+        <div className="grid md:grid-cols-2 -mx-6 md:mx-0">
+          <div className="bg-primary text-primary-foreground p-6 md:p-20">
             <h2
               className="text-5xl md:text-6xl mb-12"
               style={{ fontFamily: 'var(--font-playfair)' }}
@@ -458,7 +460,7 @@ export const LandingView: FC = () => {
             </p>
           </div>
 
-          <div className="bg-muted p-12 md:p-20 flex flex-col justify-center items-center text-center">
+          <div className="bg-muted p-6 md:p-20 flex flex-col justify-center items-center text-center">
             <HiCalendar className="w-12 h-12 text-foreground" />
 
             <h3
