@@ -38,7 +38,7 @@ export const NavigationBar: FC = () => {
         </Link>
 
         {status === 'loading' ? null : session ? (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
