@@ -1,6 +1,6 @@
 'use client';
 
-import { FaInstagram } from 'react-icons/fa';
+import { FaInstagram, FaTiktok } from 'react-icons/fa';
 import { HiCalendar, HiChevronDown, HiLocationMarker } from 'react-icons/hi';
 
 import { FC } from 'react';
@@ -446,6 +446,16 @@ export const LandingView: FC = () => {
                     Instagram
                   </p>
                   <p className="text-lg">@banguelia_hairsalon</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300">
+                <FaTiktok className="w-5 h-5 text-primary-foreground/60 mt-1" />
+                <div>
+                  <p className="text-sm text-primary-foreground/60 mb-1">
+                    TikTok
+                  </p>
+                  <p className="text-lg">@bangelia.hairsalon</p>
                 </div>
               </div>
             </div>
