@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ReactNode } from 'react';
 
 import { useRegisterMutation } from '@/hooks/api/use-auth-client';
-import { useRegisterForm } from '@/views/register/hooks/use-register-form';
+import { useRegisterForm } from '@/views/app/register/hooks/use-register-form';
 
 // Mock de las dependencias
 vi.mock('@/hooks/api/use-auth-client');

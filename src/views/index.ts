@@ -1,6 +1,6 @@
-export { LandingView } from './landing';
-export { LoginView } from './login';
-export { RegisterView } from './register';
-export { HomeView } from './home';
-export { CreateServiceView } from './home/service/create';
-export { EditUserView } from './home/profile/edit';
+export { LandingView } from './app';
+export { LoginView } from './app/login';
+export { RegisterView } from './app/register';
+export { HomeView } from './app/home';
+export { CreateServiceView } from './app/home/service/create';
+export { EditUserView } from './app/home/profile/edit';

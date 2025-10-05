@@ -6,11 +6,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InputHTMLAttributes } from 'react';
 
 import { render as customRender } from '@/__tests__/libs/render';
-import { RegisterView } from '@/views/register';
-import { useRegisterForm } from '@/views/register/hooks/use-register-form';
+import { RegisterView } from '@/views/app/register';
+import { useRegisterForm } from '@/views/app/register/hooks/use-register-form';
 
 // Mock del hook useRegisterForm
-vi.mock('@/views/register/hooks/use-register-form');
+vi.mock('@/views/app/register/hooks/use-register-form');
 
 // Mock React Hook Form
 vi.mock('react-hook-form', async importOriginal => {
