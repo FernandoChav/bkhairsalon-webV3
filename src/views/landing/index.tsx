@@ -67,37 +67,82 @@ export const LandingView: FC = () => {
         background="default"
         padding="none"
         maxWidth="full"
-        className="relative min-h-[calc(100vh-6rem)] flex items-center justify-center overflow-hidden"
+        className="relative h-[calc(100vh-6rem)] flex items-center justify-center overflow-hidden"
       >
-        <div className="relative z-10 w-full max-w-none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center h-full px-8 lg:px-16 xl:px-24">
-            <div className="flex flex-col justify-center space-y-8">
-              <div className="h-[2px] bg-primary w-24" />
-
-              <div className="space-y-4">
+        <div className="relative z-10 w-full h-full max-w-none">
+          {/* Mobile Layout */}
+          <div className="lg:hidden h-full flex flex-col px-6 pb-8 justify-center gap-8">
+            {/* Texto */}
+            <div className="flex-shrink-0 space-y-3">
+              <div className="space-y-1">
                 <h1
-                  className="text-5xl md:text-6xl lg:text-7xl xl:text-[8rem] leading-[0.85] font-light"
+                  className="text-5xl sm:text-6xl leading-[0.85] font-light"
                   style={{ fontFamily: 'var(--font-playfair)' }}
                 >
                   <span className="block text-primary">Banguelia</span>
-                  <span className="block text-4xl md:text-5xl lg:text-6xl xl:text-[8rem] text-primary ml-8 lg:ml-12">
+                  <span className="block text-5xl sm:text-6xl text-primary ml-4">
                     Karamanos
                   </span>
                 </h1>
               </div>
 
-              <div className="ml-8 lg:ml-12 space-y-2">
-                <p className="text-sm md:text-base lg:text-lg text-muted-foreground uppercase tracking-[0.4em] font-light">
+              <div className="ml-4">
+                <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-[0.3em] font-light leading-tight">
                   Estilista & Colorista
                 </p>
-                <p className="text-sm md:text-base lg:text-lg text-muted-foreground uppercase tracking-[0.4em] font-light">
+                <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-[0.3em] font-light leading-tight">
+                  Profesional Internacional
+                </p>
+              </div>
+            </div>
+
+            {/* Imagen */}
+            <div className="flex-1 relative min-h-0">
+              <div
+                className="absolute inset-0 bg-accent hover:scale-[1.02] transition-transform duration-300"
+                style={{
+                  clipPath: 'polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)',
+                }}
+              >
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-muted-foreground text-xs sm:text-sm">
+                    Imagen Principal
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-24 items-center h-full px-16 xl:px-24">
+            {/* Texto */}
+            <div className="flex flex-col justify-center space-y-8">
+              <div className="h-[2px] bg-primary w-24" />
+
+              <div className="space-y-4">
+                <h1
+                  className="text-7xl xl:text-[8rem] leading-[0.85] font-light"
+                  style={{ fontFamily: 'var(--font-playfair)' }}
+                >
+                  <span className="block text-primary">Banguelia</span>
+                  <span className="block text-7xl xl:text-[8rem] text-primary ml-12">
+                    Karamanos
+                  </span>
+                </h1>
+              </div>
+
+              <div className="ml-12 space-y-2">
+                <p className="text-base xl:text-lg text-muted-foreground uppercase tracking-[0.4em] font-light">
+                  Estilista & Colorista
+                </p>
+                <p className="text-base xl:text-lg text-muted-foreground uppercase tracking-[0.4em] font-light">
                   Profesional Internacional
                 </p>
               </div>
 
-              <div className="ml-8 lg:ml-12 pt-4">
+              <div className="ml-12 pt-4">
                 <div className="group flex items-center space-x-4 text-primary hover:text-muted-foreground transition-colors duration-300">
-                  <span className="text-sm lg:text-base uppercase tracking-wider font-medium">
+                  <span className="text-base uppercase tracking-wider font-medium">
                     Descubre mi arte
                   </span>
                   <HiChevronDown className="w-5 h-5 rotate-[-90deg] group-hover:translate-x-3 transition-transform duration-300" />
@@ -105,7 +150,8 @@ export const LandingView: FC = () => {
               </div>
             </div>
 
-            <div className="relative h-[500px] md:h-[700px] flex items-center justify-center">
+            {/* Imagen */}
+            <div className="relative h-[700px] flex items-center justify-center">
               <div
                 className="absolute inset-0 bg-accent hover:scale-[1.02] transition-transform duration-300"
                 style={{
@@ -122,11 +168,11 @@ export const LandingView: FC = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
-          <HiChevronDown className="w-6 h-6" />
+        {/* Indicador de scroll */}
+        <div className="hidden lg:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+          <HiChevronDown className="w-6 h-6 text-primary" />
         </div>
       </LandingSection>
-
       <LandingSection
         background="primary"
         padding="xl"
@@ -154,7 +200,6 @@ export const LandingView: FC = () => {
           </p>
         </div>
       </LandingSection>
-
       <LandingSection background="default" padding="lg" maxWidth="7xl">
         <SectionHeader
           title="Trayectoria"
@@ -203,7 +248,6 @@ export const LandingView: FC = () => {
           </LandingCard>
         </LandingGrid>
       </LandingSection>
-
       <LandingSection
         background="default"
         padding="lg"
@@ -274,7 +318,6 @@ export const LandingView: FC = () => {
           </div>
         </div>
       </LandingSection>
-
       <LandingSection
         background="muted"
         padding="lg"
@@ -320,7 +363,6 @@ export const LandingView: FC = () => {
           />
         </div>
       </LandingSection>
-
       <LandingSection background="default" padding="lg" maxWidth="7xl">
         <SectionHeader title="Portfolio" className="mb-12 text-right" />
 
@@ -347,7 +389,6 @@ export const LandingView: FC = () => {
           ))}
         </LandingGrid>
       </LandingSection>
-
       <LandingSection
         background="muted"
         padding="none"
@@ -367,7 +408,6 @@ export const LandingView: FC = () => {
           />
         </div>
       </LandingSection>
-
       <LandingSection
         background="default"
         padding="xl"
