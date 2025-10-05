@@ -426,7 +426,12 @@ export const LandingView: FC = () => {
             </h2>
 
             <div className="space-y-8">
-              <div className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300">
+              <a
+                href="https://www.google.com/maps/search/Nicanor+Plaza+1070,+local+2,+Antofagasta,+Chile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+              >
                 <HiLocationMarker className="w-5 h-5 text-primary-foreground/60 mt-1" />
                 <div>
                   <p className="text-sm text-primary-foreground/60 mb-1">
@@ -437,9 +442,14 @@ export const LandingView: FC = () => {
                     Antofagasta, Chile
                   </p>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300">
+              <a
+                href="https://www.instagram.com/banguelia_hairsalon"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+              >
                 <FaInstagram className="w-5 h-5 text-primary-foreground/60 mt-1" />
                 <div>
                   <p className="text-sm text-primary-foreground/60 mb-1">
@@ -447,9 +457,14 @@ export const LandingView: FC = () => {
                   </p>
                   <p className="text-lg">@banguelia_hairsalon</p>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300">
+              <a
+                href="https://www.tiktok.com/@bangelia.hairsalon"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start space-x-4 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+              >
                 <FaTiktok className="w-5 h-5 text-primary-foreground/60 mt-1" />
                 <div>
                   <p className="text-sm text-primary-foreground/60 mb-1">
@@ -457,7 +472,7 @@ export const LandingView: FC = () => {
                   </p>
                   <p className="text-lg">@bangelia.hairsalon</p>
                 </div>
-              </div>
+              </a>
             </div>
 
             <p
