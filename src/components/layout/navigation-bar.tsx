@@ -34,7 +34,8 @@ export const NavigationBar: FC = () => {
           className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
-          BK Hair Salon
+          <span className="block sm:hidden">BK</span>
+          <span className="hidden sm:block">BK Hair Salon</span>
         </Link>
 
         {status === 'loading' ? null : session ? (
