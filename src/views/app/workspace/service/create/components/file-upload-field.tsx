@@ -30,8 +30,8 @@ export const FileUploadField: FC<FileUploadFieldProps> = ({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <FormLabel className="text-sm font-medium">
-          Fotos del Servicio
+        <FormLabel className="text-sm font-medium text-muted-foreground">
+          Fotos del Servicio (Opcional)
         </FormLabel>
         {hasFiles && (
           <Button

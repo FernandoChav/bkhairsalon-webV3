@@ -134,7 +134,7 @@ export const CreateServiceView: FC = () => {
                   Fotos del Servicio
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Agrega imágenes que muestren tu trabajo
+                  Agrega imágenes que muestren tu trabajo (opcional)
                 </p>
               </div>
 
