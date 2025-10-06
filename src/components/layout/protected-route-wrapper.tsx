@@ -3,7 +3,8 @@
 import { type ReactNode } from 'react';
 
 import { LoadingPage } from '@/components/ui';
-import { useProtectedRouteWrapper } from '@/hooks/common';
+
+import { useProtectedRouteWrapper } from './hooks';
 
 interface ProtectedRouteWrapperProps {
   children: ReactNode;

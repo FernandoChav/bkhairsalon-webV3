@@ -2,14 +2,14 @@
 
 import { FC } from 'react';
 
-import { useProgress } from '@/hooks/common';
+import { useProgressBar } from './hooks';
 
 interface ProgressBarProps {
   className?: string;
 }
 
 export const ProgressBar: FC<ProgressBarProps> = ({ className = '' }) => {
-  const { progress, isVisible } = useProgress();
+  const { progress, isVisible } = useProgressBar();
 
   if (!isVisible) return null;
 

@@ -14,7 +14,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn';
-import { useNavigationBar } from '@/hooks/common';
+
+import { useNavigationBar } from './hooks';
 
 export const NavigationBar: FC = () => {
   const { session, status, handleLogout } = useNavigationBar();

@@ -15,7 +15,7 @@ import {
   startProgressAtom,
 } from '@/atoms';
 
-export function useProgress() {
+export function useProgressBar() {
   const pathname = usePathname();
   const progress = useAtomValue(progressValueAtom);
   const isVisible = useAtomValue(progressVisibilityAtom);
