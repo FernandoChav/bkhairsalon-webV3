@@ -39,7 +39,8 @@
 - **CRÍTICO**: Todo lo que retorna un hook DEBE ser utilizado en el componente
 - **CRÍTICO**: Handlers de eventos deben seguir el patrón `handle[EventName]` en camelCase
 - **CRÍTICO**: NO usar `useState` en componentes UI - extraer a hooks custom
-- **CRÍTICO**: `'use client'` solo en la vista principal (`index.tsx`), NO en componentes internos
+- **CRÍTICO**: `'use client'` solo cuando sea absolutamente necesario (hooks, providers, componentes con interactividad)
+- **IMPORTANTE**: NO repetir `'use client'` en componentes que ya heredan la directiva de su padre
 
 ```typescript
 // ✅ CORRECTO - Computed values antes del JSX
@@ -136,7 +137,7 @@ export const LoginForm = () => {
 ##### Ejemplo de 'use client' Correcto
 
 ```typescript
-// ✅ CORRECTO - 'use client' solo en la vista principal
+// ✅ CORRECTO - 'use client' en vista principal que usa hooks
 // src/views/app/login/index.tsx
 'use client';
 
@@ -158,7 +159,7 @@ export const LoginView: FC = () => {
   );
 };
 
-// ✅ CORRECTO - Componente interno SIN 'use client'
+// ✅ CORRECTO - Componente interno SIN 'use client' (hereda del padre)
 // src/views/app/login/components/login-form.tsx
 import { FC } from 'react';
 
@@ -176,9 +177,37 @@ export const LoginForm: FC<LoginFormProps> = ({ form, handleSubmit, isLoading })
   );
 };
 
+// ✅ CORRECTO - Hook custom con 'use client' (necesario para hooks)
+// src/views/app/login/hooks/use-login-view.ts
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { useLoginMutation } from '@/hooks/api';
+
+export const useLoginView = () => {
+  const form = useForm<LoginForm>({ /* ... */ });
+  const { mutate, isPending } = useLoginMutation();
+  
+  const handleSubmit = (data: LoginForm) => {
+    mutate(data);
+  };
+
+  return { form, handleSubmit, isLoading: isPending };
+};
+
+// ✅ CORRECTO - Provider con 'use client' (necesario para context)
+// src/providers/app-next-auth-provider.tsx
+'use client';
+
+import { SessionProvider } from 'next-auth/react';
+
+export const AppNextAuthProvider = ({ children }: { children: React.ReactNode }) => {
+  return <SessionProvider>{children}</SessionProvider>;
+};
+
 // ❌ INCORRECTO - 'use client' repetitivo en componentes internos
 // src/views/app/login/components/login-form.tsx
-'use client'; // ❌ NO debe estar aquí
+'use client'; // ❌ NO necesario, ya hereda del padre
 
 import { FC } from 'react';
 
@@ -188,6 +217,16 @@ export const LoginForm: FC<LoginFormProps> = ({ form, handleSubmit, isLoading })
       {/* JSX del formulario */}
     </form>
   );
+};
+
+// ❌ INCORRECTO - 'use client' en componente que no lo necesita
+// src/components/ui/loading-spinner.tsx
+'use client'; // ❌ NO necesario, es solo presentacional
+
+import { FC } from 'react';
+
+export const LoadingSpinner: FC = () => {
+  return <div className="animate-spin">...</div>;
 };
 ```
 
@@ -624,27 +663,38 @@ export * from './auth';  // ❌ Puede causar conflictos de nombres
 - **Ejemplos**: `isOpen`, `isLoading`, `isValid`, `isSubmitting`, `isVisible`
 - **CRÍTICO**: Props booleanas también deben usar prefijo `is`
 - **Patrón para props**: `is[State]` o `is[Condition]`
+- **EXCEPCIÓN**: Variables que ya tienen significado semántico claro pueden omitir el prefijo `is`
+- **Ejemplos de excepción**: `hasServices`, `hasError`, `canSubmit`, `shouldShow`
 
 ```typescript
-// ✅ CORRECTO - Variables booleanas
+// ✅ CORRECTO - Variables booleanas con prefijo is
 const isOpen = useState(false);
 const isLoading = false;
 const isValid = form.formState.isValid;
 const isSubmitting = mutation.isPending;
+
+// ✅ CORRECTO - Variables booleanas con significado semántico claro
+const hasServices = services.length > 0;  // ✅ "has" es semánticamente claro
+const hasError = !!error;                 // ✅ "has" es semánticamente claro
+const canSubmit = form.formState.isValid; // ✅ "can" es semánticamente claro
+const shouldShow = !isLoading && hasData; // ✅ "should" es semánticamente claro
 
 // ✅ CORRECTO - Props booleanas
 <ConfirmPasswordModal
   isOpen={modal.show}           // ✅ Prefijo is
   isLoading={isSubmitting}      // ✅ Prefijo is
   isValid={form.formState.isValid}  // ✅ Prefijo is
+  hasError={!!error}            // ✅ Excepción semántica
+  canSubmit={form.formState.isValid} // ✅ Excepción semántica
   handleClose={modal.handleClose}
   handleConfirm={modal.handleConfirm}
 />
 
-// ❌ INCORRECTO - Variables booleanas sin prefijo
+// ❌ INCORRECTO - Variables booleanas sin prefijo ni significado semántico
 const open = useState(false);     // ❌ Sin prefijo is
 const loading = false;            // ❌ Sin prefijo is
 const valid = form.formState.isValid;  // ❌ Sin prefijo is
+const error = !!error;            // ❌ Confuso, debería ser hasError
 
 // ❌ INCORRECTO - Props booleanas sin prefijo
 <ConfirmPasswordModal
@@ -1084,8 +1134,8 @@ count++;
 17. **No mezclar orden en exportación de hooks** - Primero valores, luego handlers
 18. **No usar `npm`** - Este proyecto usa `yarn`
 19. **No crear hooks sobrecargados** - Un hook = un componente principal, relación 1:1
-20. **No usar variables booleanas sin prefijo `is`** - Siempre usar `is[State]` para claridad
-21. **No repetir `'use client'` en componentes internos** - Solo en la vista principal (`index.tsx`)
+20. **No usar variables booleanas sin prefijo `is`** - Siempre usar `is[State]` para claridad, excepto cuando el significado semántico es claro (`has`, `can`, `should`)
+21. **No repetir `'use client'` innecesariamente** - Solo cuando sea absolutamente necesario (hooks, providers, componentes con interactividad)
 22. **No mezclar orden en interfaces y props** - Primero valores, luego handlers
 23. **No usar `export *`** - Siempre especificar exports explícitos para claridad y tree-shaking
 
@@ -1141,8 +1191,8 @@ Antes de hacer commit, verificar:
 - [ ] ✅ Handlers siguen el patrón `handle[EventName]`
 - [ ] ✅ No hay lógica en el JSX
 - [ ] ✅ No hay `useState` en componentes UI
-- [ ] ✅ Variables booleanas usan prefijo `is`
-- [ ] ✅ `'use client'` solo en vistas principales
+- [ ] ✅ Variables booleanas usan prefijo `is` (excepto cuando el significado semántico es claro)
+- [ ] ✅ `'use client'` solo cuando sea absolutamente necesario
 - [ ] ✅ Interfaces y props ordenadas: primero valores, luego handlers
 - [ ] ✅ No hay `export *` - todos los exports son explícitos
 - [ ] ✅ `yarn lint` pasa sin errores
@@ -1162,8 +1212,8 @@ Antes de hacer commit, verificar:
 8. **Un hook = un componente principal (relación 1:1)**
 9. **Type safety siempre, `any` nunca**
 10. **Usar `yarn`, no `npm`**
-11. **Variables booleanas siempre con prefijo `is`**
-12. **`'use client'` solo en vistas principales, no en componentes internos**
+11. **Variables booleanas siempre con prefijo `is`** (excepto cuando el significado semántico es claro: `has`, `can`, `should`)
+12. **`'use client'` solo cuando sea absolutamente necesario** (hooks, providers, componentes con interactividad)
 13. **Interfaces y props: primero valores, luego handlers**
 14. **Mobile-first en todo momento**
 15. **Accesibilidad no es opcional**
