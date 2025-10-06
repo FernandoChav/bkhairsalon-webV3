@@ -46,6 +46,8 @@ export const TimeInput: FC<TimeInputProps> = ({
   const [hasInteractedWithHours, setHasInteractedWithHours] = useState(false);
   const [hasInteractedWithMinutes, setHasInteractedWithMinutes] =
     useState(false);
+  const [hasOpenedHours, setHasOpenedHours] = useState(false);
+  const [hasOpenedMinutes, setHasOpenedMinutes] = useState(false);
 
   // Sincronizar estado interno con el valor externo
   useEffect(() => {
@@ -106,29 +108,57 @@ export const TimeInput: FC<TimeInputProps> = ({
 
   const handleHourBlur = () => {
     setHasInteractedWithHours(true);
-    // Disparar validación si el usuario ha interactuado con minutos o si no hay valor completo
-    if (hasInteractedWithMinutes || value === undefined) {
+    // Solo disparar validación si el usuario ha interactuado con minutos
+    // y no hay un valor completo seleccionado
+    if (
+      hasInteractedWithMinutes &&
+      (internalHours === undefined || internalMinutes === undefined)
+    ) {
       handleBlur?.();
     }
   };
 
   const handleMinuteBlur = () => {
     setHasInteractedWithMinutes(true);
-    // Disparar validación si el usuario ha interactuado con horas o si no hay valor completo
-    if (hasInteractedWithHours || value === undefined) {
+    // Solo disparar validación si el usuario ha interactuado con horas
+    // y no hay un valor completo seleccionado
+    if (
+      hasInteractedWithHours &&
+      (internalHours === undefined || internalMinutes === undefined)
+    ) {
       handleBlur?.();
     }
   };
 
   const handleHourOpenChange = (open: boolean) => {
-    if (!open) {
-      handleHourBlur();
+    if (open) {
+      setHasOpenedHours(true);
+    } else {
+      // Marcar como interactuado
+      setHasInteractedWithHours(true);
+      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
+      if (
+        hasOpenedMinutes &&
+        (internalHours === undefined || internalMinutes === undefined)
+      ) {
+        handleBlur?.();
+      }
     }
   };
 
   const handleMinuteOpenChange = (open: boolean) => {
-    if (!open) {
-      handleMinuteBlur();
+    if (open) {
+      setHasOpenedMinutes(true);
+    } else {
+      // Marcar como interactuado
+      setHasInteractedWithMinutes(true);
+      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
+      if (
+        hasOpenedHours &&
+        (internalHours === undefined || internalMinutes === undefined)
+      ) {
+        handleBlur?.();
+      }
     }
   };
 
