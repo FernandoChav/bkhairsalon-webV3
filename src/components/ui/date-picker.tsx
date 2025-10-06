@@ -191,19 +191,22 @@ export const DatePicker = ({
         <Button
           variant="outline"
           className={cn(
-            'w-full justify-start text-left font-normal h-10 px-3 py-1 text-base md:text-sm',
+            'w-full justify-start text-left font-normal',
             'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground',
             'border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none',
             'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
             'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
             'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
             'dark:bg-input/30 cursor-pointer',
+            'flex w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base md:text-sm',
+            'data-[size=default]:h-9 data-[size=sm]:h-8',
             !value && 'text-muted-foreground',
             className
           )}
           disabled={disabled}
           name={name}
           ref={ref}
+          data-size="default"
           onBlur={() => {
             if (!isOpen) {
               onBlur?.();
