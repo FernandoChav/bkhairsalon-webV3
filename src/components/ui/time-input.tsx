@@ -1,6 +1,6 @@
 import { HiClock } from 'react-icons/hi';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
   Select,
@@ -11,13 +11,13 @@ import {
 } from '@/components/shadcn';
 
 interface TimeInputProps {
-  value?: number; // valor en minutos desde medianoche (0 = 00:00, 480 = 08:00, 1320 = 22:00)
+  value?: number;
   onChange?: (minutes: number) => void;
   onBlur?: () => void;
   className?: string;
   disabled?: boolean;
-  minHour?: number; // hora mínima (por defecto 8 = 08:00)
-  maxHour?: number; // hora máxima (por defecto 22 = 22:00)
+  minHour?: number;
+  maxHour?: number;
 }
 
 export const TimeInput: FC<TimeInputProps> = ({
@@ -29,9 +29,29 @@ export const TimeInput: FC<TimeInputProps> = ({
   minHour = 8,
   maxHour = 22,
 }) => {
-  // Convertir minutos a horas y minutos (solo si hay valor)
-  const hours = value ? Math.floor(value / 60) : undefined;
-  const minutes = value ? value % 60 : undefined;
+  // Estado interno para mantener los valores seleccionados
+  const [internalHours, setInternalHours] = useState<number | undefined>(
+    undefined
+  );
+  const [internalMinutes, setInternalMinutes] = useState<number | undefined>(
+    undefined
+  );
+
+  // Estado para rastrear si el usuario ha interactuado con cada select
+  const [hasInteractedWithHours, setHasInteractedWithHours] = useState(false);
+  const [hasInteractedWithMinutes, setHasInteractedWithMinutes] =
+    useState(false);
+
+  // Sincronizar estado interno con el valor externo
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalHours(Math.floor(value / 60));
+      setInternalMinutes(value % 60);
+    } else {
+      setInternalHours(undefined);
+      setInternalMinutes(undefined);
+    }
+  }, [value]);
 
   // Generar opciones de horas (minHour a maxHour)
   const hourOptions = Array.from(
@@ -44,16 +64,42 @@ export const TimeInput: FC<TimeInputProps> = ({
 
   const handleHourChange = (newHour: string) => {
     const hour = parseInt(newHour, 10);
-    const currentMinutes = minutes !== undefined ? minutes : 0;
-    const newValue = hour * 60 + currentMinutes;
-    onChange?.(newValue);
+    setInternalHours(hour);
+    setHasInteractedWithHours(true);
+
+    // Solo enviar el valor completo si también hay minutos seleccionados
+    if (internalMinutes !== undefined) {
+      const newValue = hour * 60 + internalMinutes;
+      onChange?.(newValue);
+    }
   };
 
   const handleMinuteChange = (newMinute: string) => {
     const minute = parseInt(newMinute, 10);
-    const currentHours = hours !== undefined ? hours : minHour;
-    const newValue = currentHours * 60 + minute;
-    onChange?.(newValue);
+    setInternalMinutes(minute);
+    setHasInteractedWithMinutes(true);
+
+    // Solo enviar el valor completo si también hay horas seleccionadas
+    if (internalHours !== undefined) {
+      const newValue = internalHours * 60 + minute;
+      onChange?.(newValue);
+    }
+  };
+
+  const handleHourBlur = () => {
+    setHasInteractedWithHours(true);
+    // Disparar validación si el usuario ha interactuado con minutos o si no hay valor completo
+    if (hasInteractedWithMinutes || value === undefined) {
+      onBlur?.();
+    }
+  };
+
+  const handleMinuteBlur = () => {
+    setHasInteractedWithMinutes(true);
+    // Disparar validación si el usuario ha interactuado con horas o si no hay valor completo
+    if (hasInteractedWithHours || value === undefined) {
+      onBlur?.();
+    }
   };
 
   return (
@@ -61,11 +107,11 @@ export const TimeInput: FC<TimeInputProps> = ({
       <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
       <div className="flex gap-2 pl-10">
         <Select
-          value={hours !== undefined ? hours.toString() : ''}
+          value={internalHours !== undefined ? internalHours.toString() : ''}
           onValueChange={handleHourChange}
           onOpenChange={open => {
             if (!open) {
-              onBlur?.();
+              handleHourBlur();
             }
           }}
           disabled={disabled}
@@ -83,11 +129,13 @@ export const TimeInput: FC<TimeInputProps> = ({
         </Select>
 
         <Select
-          value={minutes !== undefined ? minutes.toString() : ''}
+          value={
+            internalMinutes !== undefined ? internalMinutes.toString() : ''
+          }
           onValueChange={handleMinuteChange}
           onOpenChange={open => {
             if (!open) {
-              onBlur?.();
+              handleMinuteBlur();
             }
           }}
           disabled={disabled}
