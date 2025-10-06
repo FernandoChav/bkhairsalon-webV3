@@ -1,3 +1,5 @@
+'use client';
+
 import { HiClock } from 'react-icons/hi';
 
 import { FC, useEffect, useState } from 'react';
