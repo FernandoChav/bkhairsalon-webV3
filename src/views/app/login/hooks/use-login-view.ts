@@ -10,9 +10,20 @@ import { useRouter } from 'next/navigation';
 import { LoginRequest } from '@/models/requests';
 import { loginSchema } from '@/models/schemas';
 
-export const useLoginView = () => {
+interface UseLoginViewReturn {
+  // Values
+  form: ReturnType<typeof useForm<LoginRequest>>;
+  isLoading: boolean;
+  isValid: boolean;
+  isPasswordVisible: boolean;
+  // Handlers
+  handleSubmit: (data: LoginRequest) => void;
+  handlePasswordToggle: () => void;
+}
+
+export const useLoginView = (): UseLoginViewReturn => {
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const router = useRouter();
 
   const form = useForm<LoginRequest>({
@@ -59,19 +70,21 @@ export const useLoginView = () => {
   );
 
   const handlePasswordToggle = useCallback(() => {
-    setShowPassword(prev => !prev);
+    setIsPasswordVisible(prev => !prev);
   }, []);
 
-  const isValid = Boolean(
-    form.formState.isValid && watchedValues?.email && watchedValues?.password
-  );
+  const isValid =
+    form.formState.isValid &&
+    Boolean(watchedValues?.email && watchedValues?.password);
 
   return {
+    // Values
     form,
-    handleSubmit,
-    handlePasswordToggle,
     isLoading,
     isValid,
-    showPassword,
+    isPasswordVisible,
+    // Handlers
+    handleSubmit,
+    handlePasswordToggle,
   };
 };

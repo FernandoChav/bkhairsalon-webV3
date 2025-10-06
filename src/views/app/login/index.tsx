@@ -32,7 +32,7 @@ export const LoginView: FC = () => {
     handlePasswordToggle,
     isLoading,
     isValid,
-    showPassword,
+    isPasswordVisible,
   } = useLoginView();
 
   // Computed values
@@ -44,8 +44,8 @@ export const LoginView: FC = () => {
   );
   const buttonText = isLoading ? 'Entrando...' : 'Entrar';
   const isButtonDisabled = !isValid || isLoading;
-  const passwordInputType = showPassword ? 'text' : 'password';
-  const passwordToggleIcon = showPassword ? (
+  const passwordInputType = isPasswordVisible ? 'text' : 'password';
+  const passwordToggleIcon = isPasswordVisible ? (
     <HiEyeOff className="h-4 w-4" />
   ) : (
     <HiEye className="h-4 w-4" />
