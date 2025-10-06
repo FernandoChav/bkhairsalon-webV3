@@ -48,16 +48,31 @@ export const useEditUserForm = () => {
     );
   }, [watchedValues, profile]);
 
-  // Computed values
+  // Computed values - siguiendo el patrón de otros formularios
   const isFormValid = useMemo(() => {
-    return (
-      form.formState.isValid &&
-      !!form.getValues('firstName') &&
-      !!form.getValues('lastName') &&
-      !!form.getValues('phoneNumber') &&
-      !!form.getValues('dateOfBirth')
+    // Usar watchedValues que sí tiene los valores correctos
+    const formValues = watchedValues || {};
+
+    // Verificar que todos los campos tengan valores
+    const fieldChecks = {
+      firstName: !!formValues.firstName,
+      lastName: !!formValues.lastName,
+      phoneNumber: !!formValues.phoneNumber,
+      dateOfBirth: !!formValues.dateOfBirth,
+    };
+
+    const hasAllValues = Boolean(
+      fieldChecks.firstName &&
+        fieldChecks.lastName &&
+        fieldChecks.phoneNumber &&
+        fieldChecks.dateOfBirth
     );
-  }, [form]);
+
+    // Verificar que no hay errores de validación
+    const hasNoErrors = Object.keys(form.formState.errors).length === 0;
+
+    return hasAllValues && hasNoErrors;
+  }, [watchedValues, form]);
 
   const canSubmit = isFormValid && hasChanges;
 

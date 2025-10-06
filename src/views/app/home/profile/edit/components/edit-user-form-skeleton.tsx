@@ -1,6 +1,6 @@
 'use client';
 
-import { HiPhone, HiUser } from 'react-icons/hi';
+import { HiCalendar, HiPhone, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
 
@@ -30,14 +30,14 @@ export const EditUserFormSkeleton: FC = () => {
               <div className="text-sm font-medium">Nombre</div>
               <div className="relative">
                 <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-9 w-full" />
               </div>
             </div>
             <div className="grid gap-2">
               <div className="text-sm font-medium">Apellido</div>
               <div className="relative">
                 <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-9 w-full" />
               </div>
             </div>
           </div>
@@ -45,13 +45,16 @@ export const EditUserFormSkeleton: FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
             <div className="grid gap-2">
               <div className="text-sm font-medium">Fecha de Nacimiento</div>
-              <Skeleton className="h-10 w-full" />
+              <div className="relative">
+                <HiCalendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Skeleton className="h-9 w-full" />
+              </div>
             </div>
             <div className="grid gap-2">
               <div className="text-sm font-medium">Teléfono</div>
               <div className="relative">
                 <HiPhone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-9 w-full" />
               </div>
             </div>
           </div>
