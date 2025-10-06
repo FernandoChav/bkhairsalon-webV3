@@ -151,7 +151,7 @@ export const TimeInput: FC<TimeInputProps> = ({
           onOpenChange={handleHourOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 h-9">
+          <SelectTrigger className="flex-1 h-9" onBlur={handleHourBlur}>
             <SelectValue placeholder="Horas" />
           </SelectTrigger>
           <SelectContent>
@@ -169,7 +169,7 @@ export const TimeInput: FC<TimeInputProps> = ({
           onOpenChange={handleMinuteOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 h-9">
+          <SelectTrigger className="flex-1 h-9" onBlur={handleMinuteBlur}>
             <SelectValue placeholder="Minutos" />
           </SelectTrigger>
           <SelectContent>
