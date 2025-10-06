@@ -127,15 +127,13 @@ describe('RegisterView', () => {
 
     mockUseRegisterView.mockReturnValue({
       form: mockForm,
-      handleSubmit: mockOnSubmit,
       isLoading: false,
-      error: null,
-      isSuccess: false,
       isValid: false,
+      isPasswordVisible: false,
+      isConfirmPasswordVisible: false,
+      handleSubmit: mockOnSubmit,
       handlePasswordToggle: vi.fn(),
       handleConfirmPasswordToggle: vi.fn(),
-      showPassword: false,
-      showConfirmPassword: false,
     });
   });
 
@@ -200,15 +198,13 @@ describe('RegisterView', () => {
       // Mock the hook to return isValid: true when form is valid
       mockUseRegisterView.mockReturnValue({
         form: mockForm,
-        handleSubmit: mockOnSubmit,
         isLoading: false,
-        error: null,
-        isSuccess: false,
         isValid: true,
+        isPasswordVisible: false,
+        isConfirmPasswordVisible: false,
+        handleSubmit: mockOnSubmit,
         handlePasswordToggle: vi.fn(),
         handleConfirmPasswordToggle: vi.fn(),
-        showPassword: false,
-        showConfirmPassword: false,
       });
 
       customRender(<RegisterView />);

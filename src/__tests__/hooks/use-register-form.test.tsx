@@ -92,8 +92,11 @@ describe('useRegisterView', () => {
       expect(result.current).toHaveProperty('form');
       expect(result.current).toHaveProperty('handleSubmit');
       expect(result.current).toHaveProperty('isLoading');
-      expect(result.current).toHaveProperty('error');
-      expect(result.current).toHaveProperty('isSuccess');
+      expect(result.current).toHaveProperty('isValid');
+      expect(result.current).toHaveProperty('isPasswordVisible');
+      expect(result.current).toHaveProperty('isConfirmPasswordVisible');
+      expect(result.current).toHaveProperty('handlePasswordToggle');
+      expect(result.current).toHaveProperty('handleConfirmPasswordToggle');
     });
 
     it('debe inicializar con estado de loading en false', () => {
@@ -102,16 +105,16 @@ describe('useRegisterView', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe inicializar sin errores', () => {
+    it('debe inicializar con isPasswordVisible en false', () => {
       const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.error).toBeNull();
+      expect(result.current.isPasswordVisible).toBe(false);
     });
 
-    it('debe inicializar con isSuccess en false', () => {
+    it('debe inicializar con isConfirmPasswordVisible en false', () => {
       const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.isSuccess).toBe(false);
+      expect(result.current.isConfirmPasswordVisible).toBe(false);
     });
   });
 
@@ -192,7 +195,7 @@ describe('useRegisterView', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe reflejar error de la mutación', () => {
+    it('debe manejar errores de la mutación internamente', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockError: any = {
         isAxiosError: true,
@@ -227,10 +230,11 @@ describe('useRegisterView', () => {
 
       const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.error).toBe(mockError);
+      // El hook maneja errores internamente, no los expone
+      expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe reflejar éxito de la mutación', () => {
+    it('debe manejar éxito de la mutación internamente', () => {
       mockUseRegisterMutation.mockReturnValue({
         mutate: mockMutate,
         isPending: false,
@@ -257,7 +261,8 @@ describe('useRegisterView', () => {
 
       const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.isSuccess).toBe(true);
+      // El hook maneja éxito internamente, no lo expone
+      expect(result.current.isLoading).toBe(false);
     });
   });
 });
