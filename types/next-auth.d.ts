@@ -32,7 +32,7 @@ declare module 'next-auth/jwt' {
     accessToken?: string;
     exp?: number;
     refreshAttempted?: boolean;
-    Roles?: string; // El string JSON de roles del backend
+    roles?: string; // El string JSON de roles del backend
   }
 }
 

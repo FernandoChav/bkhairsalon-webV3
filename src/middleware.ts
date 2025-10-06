@@ -21,9 +21,9 @@ export async function middleware(request: NextRequest) {
 
   // Extraer roles del token
   const userRoles: UserRole[] = [];
-  if (token.Roles) {
+  if (token.roles) {
     try {
-      const rolesData = JSON.parse(token.Roles as string);
+      const rolesData = JSON.parse(token.roles as string);
       userRoles.push(
         ...rolesData.map((role: { Name: string }) => role.Name as UserRole)
       );

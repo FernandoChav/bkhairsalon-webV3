@@ -60,6 +60,11 @@ export const authOptions: NextAuthOptions = {
             const payload = JSON.parse(atob(user.accessToken.split('.')[1]));
             token.exp = payload.exp;
             token.refreshAttempted = false;
+
+            // Agregar roles al token si están presentes
+            if (payload.Roles) {
+              token.roles = payload.Roles;
+            }
           } catch {
             // Token inválido, se manejará en la validación de expiración
           }
@@ -139,6 +144,18 @@ export const authOptions: NextAuthOptions = {
         }
         if (token.email) {
           session.user.email = token.email as string;
+        }
+
+        // Agregar roles a la sesión si están en el token
+        if (token.roles) {
+          try {
+            const rolesData = JSON.parse(token.roles as string);
+            session.user.roles = rolesData.map(
+              (role: { Name: string }) => role.Name
+            );
+          } catch {
+            // Error parsing roles, se manejará silenciosamente
+          }
         }
       }
 
