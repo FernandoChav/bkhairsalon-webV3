@@ -42,7 +42,7 @@ export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
             variant="outline"
             size="sm"
             onClick={clearFiles}
-            className="text-xs h-8"
+            className="text-xs"
           >
             Limpiar todas ({filesCount})
           </Button>

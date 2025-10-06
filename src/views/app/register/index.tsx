@@ -47,7 +47,7 @@ export const RegisterView: FC = () => {
 
   // Computed values
   const buttonClassName = cn(
-    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    'w-full text-primary-foreground shadow-lg transition-all duration-300',
     isValid && !isLoading
       ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
       : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
@@ -96,7 +96,7 @@ export const RegisterView: FC = () => {
                         <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           placeholder="Tu nombre"
-                          className="pl-10 h-10"
+                          className="pl-10"
                           autoComplete="given-name"
                           {...field}
                         />
@@ -120,7 +120,7 @@ export const RegisterView: FC = () => {
                         <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           placeholder="Tu apellido"
-                          className="pl-10 h-10"
+                          className="pl-10"
                           autoComplete="family-name"
                           {...field}
                         />
@@ -144,7 +144,6 @@ export const RegisterView: FC = () => {
                     <FormControl>
                       <DatePicker
                         placeholder="Tu fecha de nacimiento"
-                        className="h-10"
                         allowFutureDates={false}
                         allowPastDates={true}
                         required={true}
@@ -173,7 +172,6 @@ export const RegisterView: FC = () => {
                         <PhoneInput
                           placeholder="+56 9 1234 5678"
                           autoComplete="tel"
-                          className="h-10"
                           {...field}
                         />
                       </div>
@@ -199,7 +197,7 @@ export const RegisterView: FC = () => {
                         <Input
                           type="email"
                           placeholder="tu@correo.com"
-                          className="pl-10 h-10"
+                          className="pl-10"
                           autoComplete="email"
                           {...field}
                         />
@@ -226,7 +224,7 @@ export const RegisterView: FC = () => {
                         <Input
                           type={passwordInputType}
                           placeholder="Mínimo 8 caracteres"
-                          className="pl-10 pr-10 h-10"
+                          className="px-10"
                           autoComplete="new-password"
                           {...field}
                         />
@@ -260,7 +258,7 @@ export const RegisterView: FC = () => {
                         <Input
                           type={confirmPasswordInputType}
                           placeholder="Repite tu contraseña"
-                          className="pl-10 pr-10 h-10"
+                          className="px-10"
                           autoComplete="new-password"
                           {...field}
                         />

@@ -60,7 +60,7 @@ export const EditUserFormSkeleton: FC = () => {
           </div>
           {/* Botón */}
           <div className="pt-4">
-            <Skeleton className="h-11 w-full" />
+            <Skeleton className="h-9 w-full" />
           </div>
         </form>
       </CardContent>

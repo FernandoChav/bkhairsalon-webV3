@@ -44,7 +44,7 @@ export const EditUserForm: FC<EditUserFormProps> = ({
       ? 'Actualizar Perfil'
       : 'Sin cambios para guardar';
   const buttonClassName = cn(
-    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    'w-full text-primary-foreground shadow-lg transition-all duration-300',
     canSubmit && !isSubmitting
       ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
       : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
@@ -80,7 +80,7 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                         <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           placeholder="Tu nombre"
-                          className="pl-10 h-10"
+                          className="pl-10"
                           autoComplete="given-name"
                           {...field}
                         />
@@ -104,7 +104,7 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                         <HiUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           placeholder="Tu apellido"
-                          className="pl-10 h-10"
+                          className="pl-10"
                           autoComplete="family-name"
                           {...field}
                         />
@@ -128,7 +128,6 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                     <FormControl>
                       <DatePicker
                         placeholder="Tu fecha de nacimiento"
-                        className="h-10"
                         allowFutureDates={false}
                         allowPastDates={true}
                         required={true}
@@ -157,7 +156,6 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                         <PhoneInput
                           placeholder="+56 9 1234 5678"
                           autoComplete="tel"
-                          className="h-10"
                           {...field}
                         />
                       </div>

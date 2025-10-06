@@ -37,7 +37,7 @@ export const LoginView: FC = () => {
 
   // Computed values
   const buttonClassName = cn(
-    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    'w-full text-primary-foreground shadow-lg transition-all duration-300',
     isValid && !isLoading
       ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
       : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
