@@ -6,7 +6,7 @@ import { ApiResponse } from '@/models/generics';
 import { CreateCategoryRequest } from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
-export const useGetCategoriesQuery = () =>
+export const useCategoriesQuery = () =>
   useQuery<CategoryResponse[], AxiosError<ApiResponse>>({
     queryKey: ['categories'],
     queryFn: async () => {
