@@ -54,7 +54,7 @@ export const DurationField: FC<DurationFieldProps> = ({
                   handleOpenChange(open, field.value, field.onBlur)
                 }
               >
-                <SelectTrigger className="w-full pl-10">
+                <SelectTrigger className="w-full pl-10" onBlur={field.onBlur}>
                   <SelectValue placeholder="Selecciona duración" />
                 </SelectTrigger>
                 <SelectContent>

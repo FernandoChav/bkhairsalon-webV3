@@ -58,7 +58,7 @@ export const CategoryField: FC<CategoryFieldProps> = ({ form, categories }) => {
                 }
                 disabled={isCategoriesDisabled}
               >
-                <SelectTrigger className="w-full pl-10">
+                <SelectTrigger className="w-full pl-10" onBlur={field.onBlur}>
                   <SelectValue placeholder={selectPlaceholder} />
                 </SelectTrigger>
                 <SelectContent>
