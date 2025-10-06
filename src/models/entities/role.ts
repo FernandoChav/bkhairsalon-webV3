@@ -1,8 +1,8 @@
 export enum UserRole {
-  ADMIN = 'Administrador',
-  STYLIST = 'Estilista',
-  RECEPTIONIST = 'Recepcionista',
-  CLIENT = 'Cliente',
+  ADMIN = 'Admin',
+  STYLIST = 'Stylist',
+  RECEPTIONIST = 'Receptionist',
+  CLIENT = 'Client',
 }
 
 export interface UserRoleData {
