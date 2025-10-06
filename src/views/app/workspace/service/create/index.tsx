@@ -3,6 +3,7 @@
 import { FC } from 'react';
 
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -10,25 +11,39 @@ import {
   CardTitle,
   Form,
 } from '@/components/shadcn';
+import { cn } from '@/libs';
 
 import {
-  ServiceCategory,
-  ServiceCommission,
-  ServiceDescription,
-  ServiceDiscount,
-  ServiceDuration,
-  ServiceEndTime,
-  ServiceFileUpload,
-  ServiceFormActions,
-  ServiceName,
-  ServicePrice,
-  ServiceStartTime,
+  CategoryField,
+  CommissionField,
+  DescriptionField,
+  DiscountField,
+  DurationField,
+  EndTimeField,
+  FileUploadField,
+  NameField,
+  PriceField,
+  StartTimeField,
 } from './components';
 import { useCreateServiceView } from './hooks';
 
 export const CreateServiceView: FC = () => {
   const { form, categories, fileUpload, validation, submission } =
     useCreateServiceView();
+
+  // Computed values for form actions
+  const isButtonDisabled = submission.isLoading || !submission.isValid;
+  const buttonText = submission.isLoading
+    ? 'Creando Servicio...'
+    : !submission.isValid
+      ? 'Completa todos los campos'
+      : 'Crear Servicio';
+  const buttonClassName = cn(
+    'w-full text-primary-foreground shadow-lg transition-all duration-300 text-sm sm:text-base',
+    submission.isValid && !submission.isLoading
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+      : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+  );
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -62,13 +77,13 @@ export const CreateServiceView: FC = () => {
               <div className="space-y-6">
                 {/* Primera fila: Categoría y Nombre */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <ServiceCategory form={form} categories={categories} />
-                  <ServiceName form={form} />
+                  <CategoryField form={form} categories={categories} />
+                  <NameField form={form} />
                 </div>
 
                 {/* Segunda fila: Descripción (ancho completo) */}
                 <div>
-                  <ServiceDescription form={form} />
+                  <DescriptionField form={form} />
                 </div>
               </div>
             </div>
@@ -85,12 +100,12 @@ export const CreateServiceView: FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                <ServiceDuration
+                <DurationField
                   form={form}
                   durationOptions={validation.durationOptions}
                 />
-                <ServiceStartTime form={form} />
-                <ServiceEndTime form={form} />
+                <StartTimeField form={form} />
+                <EndTimeField form={form} />
               </div>
             </div>
 
@@ -106,9 +121,9 @@ export const CreateServiceView: FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                <ServicePrice form={form} />
-                <ServiceCommission form={form} />
-                <ServiceDiscount form={form} />
+                <PriceField form={form} />
+                <CommissionField form={form} />
+                <DiscountField form={form} />
               </div>
             </div>
 
@@ -123,7 +138,7 @@ export const CreateServiceView: FC = () => {
                 </p>
               </div>
 
-              <ServiceFileUpload
+              <FileUploadField
                 files={fileUpload.files}
                 handleAddFiles={fileUpload.handleAddFiles}
                 handleRemoveFile={fileUpload.handleRemoveFile}
@@ -133,7 +148,13 @@ export const CreateServiceView: FC = () => {
 
             {/* Botones de acción */}
             <div className="pt-6 border-t border-border">
-              <ServiceFormActions {...submission} />
+              <Button
+                type="submit"
+                className={buttonClassName}
+                disabled={isButtonDisabled}
+              >
+                {buttonText}
+              </Button>
             </div>
           </form>
         </Form>

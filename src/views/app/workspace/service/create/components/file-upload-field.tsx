@@ -3,32 +3,29 @@ import { FC } from 'react';
 import { Button, FormLabel } from '@/components/shadcn';
 import { FileUpload } from '@/components/ui';
 
-interface ServiceFileUploadProps {
+import { useFileUploadField } from '../hooks';
+
+interface FileUploadFieldProps {
   files: File[];
   handleAddFiles: (files: FileList | File[]) => void;
   handleRemoveFile: (index: number) => void;
   handleClearFiles: () => void;
 }
 
-export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
+export const FileUploadField: FC<FileUploadFieldProps> = ({
   files,
   handleAddFiles,
   handleRemoveFile,
   handleClearFiles,
 }) => {
-  // Computed values
-  const hasFiles = files.length > 0;
-  const filesCount = files.length;
-  const maxFiles = 10;
-  const isAtMaxFiles = filesCount >= maxFiles;
-
-  const uploadTitle = isAtMaxFiles
-    ? `Límite máximo alcanzado (${maxFiles} fotos)`
-    : 'Sube fotos de tu servicio';
-
-  const uploadPlaceholder = `${filesCount}/${maxFiles} fotos subidas`;
-
-  const previewGridCols = filesCount === 1 ? '2' : '4';
+  const {
+    hasFiles,
+    filesCount,
+    maxFiles,
+    uploadTitle,
+    uploadPlaceholder,
+    previewGridCols,
+  } = useFileUploadField({ files });
 
   return (
     <div className="space-y-3">

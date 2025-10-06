@@ -12,33 +12,25 @@ import {
 import { TimeInput } from '@/components/ui';
 import { CreateServiceForm } from '@/models/schemas';
 
-interface ServiceEndTimeProps {
+import { useTimeField } from '../hooks';
+
+interface EndTimeFieldProps {
   form: UseFormReturn<CreateServiceForm>;
 }
 
-export const ServiceEndTime: FC<ServiceEndTimeProps> = ({ form }) => {
+export const EndTimeField: FC<EndTimeFieldProps> = ({ form }) => {
+  const { timeToMinutes, handleTimeChange, handleTimeBlur } = useTimeField();
+
   return (
     <FormField
       control={form.control}
       name="endTime"
       render={({ field }) => {
         // Computed values
-        const endTimeValue = field.value
-          ? parseInt(field.value.split(':')[0]) * 60 +
-            parseInt(field.value.split(':')[1])
-          : undefined;
-
-        const handleTimeChange = (minutes: number) => {
-          const hours = Math.floor(minutes / 60);
-          const mins = minutes % 60;
-          const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-          field.onChange(timeString);
-        };
-
-        const handleTimeBlur = () => {
-          // Siempre disparar validación cuando el TimeInput lo solicite
-          field.onBlur();
-        };
+        const endTimeValue = timeToMinutes(field.value || '');
+        const handleTimeChangeWrapper = (minutes: number) =>
+          field.onChange(handleTimeChange(minutes));
+        const handleTimeBlurWrapper = handleTimeBlur(field.onBlur);
 
         return (
           <FormItem>
@@ -48,8 +40,8 @@ export const ServiceEndTime: FC<ServiceEndTimeProps> = ({ form }) => {
             <FormControl>
               <TimeInput
                 value={endTimeValue}
-                handleChange={handleTimeChange}
-                handleBlur={handleTimeBlur}
+                handleChange={handleTimeChangeWrapper}
+                handleBlur={handleTimeBlurWrapper}
                 minHour={8}
                 maxHour={22}
               />

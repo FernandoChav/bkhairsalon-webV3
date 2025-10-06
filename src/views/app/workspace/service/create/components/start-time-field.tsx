@@ -12,33 +12,25 @@ import {
 import { TimeInput } from '@/components/ui';
 import { CreateServiceForm } from '@/models/schemas';
 
-interface ServiceStartTimeProps {
+import { useTimeField } from '../hooks';
+
+interface StartTimeFieldProps {
   form: UseFormReturn<CreateServiceForm>;
 }
 
-export const ServiceStartTime: FC<ServiceStartTimeProps> = ({ form }) => {
+export const StartTimeField: FC<StartTimeFieldProps> = ({ form }) => {
+  const { timeToMinutes, handleTimeChange, handleTimeBlur } = useTimeField();
+
   return (
     <FormField
       control={form.control}
       name="startTime"
       render={({ field }) => {
         // Computed values
-        const startTimeValue = field.value
-          ? parseInt(field.value.split(':')[0]) * 60 +
-            parseInt(field.value.split(':')[1])
-          : undefined;
-
-        const handleTimeChange = (minutes: number) => {
-          const hours = Math.floor(minutes / 60);
-          const mins = minutes % 60;
-          const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-          field.onChange(timeString);
-        };
-
-        const handleTimeBlur = () => {
-          // Siempre disparar validación cuando el TimeInput lo solicite
-          field.onBlur();
-        };
+        const startTimeValue = timeToMinutes(field.value || '');
+        const handleTimeChangeWrapper = (minutes: number) =>
+          field.onChange(handleTimeChange(minutes));
+        const handleTimeBlurWrapper = handleTimeBlur(field.onBlur);
 
         return (
           <FormItem>
@@ -48,8 +40,8 @@ export const ServiceStartTime: FC<ServiceStartTimeProps> = ({ form }) => {
             <FormControl>
               <TimeInput
                 value={startTimeValue}
-                handleChange={handleTimeChange}
-                handleBlur={handleTimeBlur}
+                handleChange={handleTimeChangeWrapper}
+                handleBlur={handleTimeBlurWrapper}
                 minHour={8}
                 maxHour={22}
               />

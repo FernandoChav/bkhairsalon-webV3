@@ -5,7 +5,6 @@ import { FC } from 'react';
 
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,33 +13,31 @@ import {
 } from '@/components/shadcn';
 import { CreateServiceForm } from '@/models/schemas';
 
-interface ServiceDiscountProps {
+interface NameFieldProps {
   form: UseFormReturn<CreateServiceForm>;
 }
 
-export const ServiceDiscount: FC<ServiceDiscountProps> = ({ form }) => {
+export const NameField: FC<NameFieldProps> = ({ form }) => {
   return (
     <FormField
       control={form.control}
-      name="discountId"
+      name="name"
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-medium text-muted-foreground">
-            Descuento (Opcional)
+          <FormLabel className="text-sm font-medium">
+            Nombre del Servicio
           </FormLabel>
           <FormControl>
             <div className="relative">
               <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="ID de descuento"
-                className="pl-10 border-dashed"
+                placeholder="Ej: Corte y peinado"
+                className="pl-10"
+                autoComplete="off"
                 {...field}
               />
             </div>
           </FormControl>
-          <FormDescription className="text-xs sm:text-sm text-muted-foreground">
-            ID del descuento asociado (opcional)
-          </FormDescription>
           <FormMessage />
         </FormItem>
       )}

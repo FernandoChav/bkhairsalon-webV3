@@ -18,7 +18,9 @@ import {
 import { CategoryResponse } from '@/models/responses';
 import { CreateServiceForm } from '@/models/schemas';
 
-interface ServiceCategoryProps {
+import { useCategoryField } from '../hooks';
+
+interface CategoryFieldProps {
   form: UseFormReturn<CreateServiceForm>;
   categories: {
     data: CategoryResponse[];
@@ -27,23 +29,13 @@ interface ServiceCategoryProps {
   };
 }
 
-export const ServiceCategory: FC<ServiceCategoryProps> = ({
-  form,
-  categories,
-}) => {
-  // Computed values
-  const isCategoriesLoading = categories.isLoading;
-  const hasCategoriesError = !!categories.error;
-  const hasCategories = categories.data.length > 0;
-  const isCategoriesDisabled = isCategoriesLoading;
-
-  const selectPlaceholder = isCategoriesLoading
-    ? 'Cargando categorías...'
-    : hasCategoriesError
-      ? 'Error al cargar categorías'
-      : !hasCategories
-        ? 'No hay categorías disponibles'
-        : 'Selecciona una categoría';
+export const CategoryField: FC<CategoryFieldProps> = ({ form, categories }) => {
+  const {
+    hasCategories,
+    isCategoriesDisabled,
+    selectPlaceholder,
+    categoryOptions,
+  } = useCategoryField({ categories });
 
   return (
     <FormField
@@ -67,7 +59,7 @@ export const ServiceCategory: FC<ServiceCategoryProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                   {hasCategories ? (
-                    categories.data.map(category => (
+                    categoryOptions.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         <span className="text-sm">{category.fullPath}</span>
                       </SelectItem>

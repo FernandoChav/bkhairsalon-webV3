@@ -17,25 +17,23 @@ import {
 } from '@/components/shadcn';
 import { CreateServiceForm } from '@/models/schemas';
 
-interface ServiceDurationProps {
+import { useDurationField } from '../hooks';
+
+interface DurationFieldProps {
   form: UseFormReturn<CreateServiceForm>;
   durationOptions: number[];
 }
 
-export const ServiceDuration: FC<ServiceDurationProps> = ({
+export const DurationField: FC<DurationFieldProps> = ({
   form,
   durationOptions,
 }) => {
-  // Computed values para formateo de duración
-  const formatDuration = (minutes: number): string => {
-    if (minutes === 0) return '0 minutos';
-    if (minutes < 60) return `${minutes} minutos`;
-    if (minutes === 60) return '1 hora';
-
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
-  };
+  const {
+    formatDuration,
+    getSelectValue,
+    handleValueChange,
+    handleOpenChange,
+  } = useDurationField();
 
   return (
     <FormField
@@ -48,16 +46,13 @@ export const ServiceDuration: FC<ServiceDurationProps> = ({
             <div className="relative">
               <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
               <Select
-                value={field.value ? field.value.toString() : ''}
-                onValueChange={value => {
-                  const duration = parseInt(value, 10);
-                  field.onChange(duration);
-                }}
-                onOpenChange={open => {
-                  if (!open && !field.value) {
-                    field.onBlur();
-                  }
-                }}
+                value={getSelectValue(field.value)}
+                onValueChange={value =>
+                  field.onChange(handleValueChange(value))
+                }
+                onOpenChange={open =>
+                  handleOpenChange(open, field.value, field.onBlur)
+                }
               >
                 <SelectTrigger className="w-full pl-10">
                   <SelectValue placeholder="Selecciona duración" />
