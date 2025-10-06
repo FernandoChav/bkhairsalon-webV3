@@ -70,7 +70,7 @@ export const TimeInput: FC<TimeInputProps> = ({
           }}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 !h-10">
+          <SelectTrigger className="flex-1 h-10 sm:h-11">
             <SelectValue placeholder="Horas" />
           </SelectTrigger>
           <SelectContent>
@@ -92,7 +92,7 @@ export const TimeInput: FC<TimeInputProps> = ({
           }}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 !h-10">
+          <SelectTrigger className="flex-1 h-10 sm:h-11">
             <SelectValue placeholder="Minutos" />
           </SelectTrigger>
           <SelectContent>

@@ -5,12 +5,14 @@ import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 import { Input } from '@/components/shadcn';
 import { cn } from '@/libs';
 
-interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface PhoneInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onValueChange?: (value: string) => void;
+  size?: 'sm' | 'default';
 }
 
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
-  ({ className, onValueChange, onChange, ...props }, ref) => {
+  ({ className, onValueChange, onChange, size, ...props }, ref) => {
     const [value, setValue] = useState((props.value as string) || '');
 
     const { 'aria-invalid': ariaInvalid, ...restProps } = props;
@@ -81,6 +83,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         placeholder="+56 9 1234 5678"
         maxLength={16}
         aria-invalid={ariaInvalid}
+        size={size}
         {...restProps}
       />
     );
