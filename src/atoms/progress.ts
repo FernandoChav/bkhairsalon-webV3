@@ -90,13 +90,3 @@ export const completeProgressAtom = atom(null, (get, set) => {
     set(progressVisibilityAtom, false);
   }, 500);
 });
-
-/**
- * Atom de acción para incrementar el progreso
- * Suma un valor al progreso actual
- * @param value - Valor a incrementar
- */
-export const incrementProgressAtom = atom(null, (get, set, value: number) => {
-  const current = get(progressValueAtom);
-  set(progressValueAtom, current + value);
-});
