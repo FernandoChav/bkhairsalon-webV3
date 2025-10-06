@@ -181,7 +181,7 @@ export const FileUpload: FC<FileUploadProps> = ({
                   size="sm"
                   variant="destructive"
                   onClick={handleFileRemoveWithEvent(index)}
-                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
                 >
                   <HiX className="h-3 w-3" />
                 </Button>

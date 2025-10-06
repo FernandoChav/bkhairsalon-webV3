@@ -39,7 +39,7 @@ export const FileUploadField: FC<FileUploadFieldProps> = ({
             variant="outline"
             size="sm"
             onClick={handleClearFiles}
-            className="text-xs"
+            className="text-xs cursor-pointer"
           >
             Limpiar todas ({filesCount})
           </Button>
