@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut, useSession } from 'next-auth/react';
 import { HiCog, HiLogout, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
@@ -15,10 +16,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn';
 
-import { useNavigationBar } from './hooks';
-
 export const NavigationBar: FC = () => {
-  const { session, status, handleLogout } = useNavigationBar();
+  const { data: session, status } = useSession();
+
+  const handleLogout = async () => {
+    await signOut({
+      callbackUrl: '/',
+      redirect: true,
+    });
+  };
 
   // Computed values
   const isAuthenticated = status !== 'loading' && !!session;

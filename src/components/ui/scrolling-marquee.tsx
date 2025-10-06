@@ -25,8 +25,7 @@ export const ScrollingMarquee: FC<ScrollingMarqueeProps> = ({
   direction = 'left',
   fullWidth = false,
 }) => {
-  const itemsToRender = customItems || items;
-
+  // Funciones utilitarias
   const getAnimationStyle = () => {
     const duration =
       speed === 'slow' ? '90s' : speed === 'fast' ? '25s' : '45s';
@@ -36,14 +35,6 @@ export const ScrollingMarquee: FC<ScrollingMarqueeProps> = ({
       animationDirection: direction === 'right' ? 'reverse' : 'normal',
     };
   };
-
-  const containerClasses = cn(
-    'overflow-hidden',
-    fullWidth && 'w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]',
-    className
-  );
-
-  const animatedClasses = cn('flex whitespace-nowrap will-change-transform');
 
   const renderSeparator = () => {
     if (separator === 'none') return null;
@@ -95,9 +86,19 @@ export const ScrollingMarquee: FC<ScrollingMarqueeProps> = ({
     );
   };
 
+  // Computed values
+  const itemsToRender = customItems || items;
+  const containerClasses = cn(
+    'overflow-hidden',
+    fullWidth && 'w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]',
+    className
+  );
+  const animatedClasses = cn('flex whitespace-nowrap will-change-transform');
+  const animationStyle = getAnimationStyle();
+
   return (
     <div className={containerClasses}>
-      <div className={animatedClasses} style={getAnimationStyle()}>
+      <div className={animatedClasses} style={animationStyle}>
         <div className="flex items-center flex-shrink-0">
           {itemsToRender.map((item, index) => renderItem(item, index))}
         </div>

@@ -92,17 +92,6 @@ export const completeProgressAtom = atom(null, (get, set) => {
 });
 
 /**
- * Atom de acción para resetear el progreso
- * Establece el progreso a 0 y oculta la barra
- */
-export const resetProgressAtom = atom(null, (get, set) => {
-  set(progressAtom, {
-    progress: 0,
-    isVisible: false,
-  });
-});
-
-/**
  * Atom de acción para incrementar el progreso
  * Suma un valor al progreso actual
  * @param value - Valor a incrementar

@@ -1,7 +1,7 @@
 import { useDropzone } from 'react-dropzone';
 import { HiCamera, HiPlus, HiX } from 'react-icons/hi';
 
-import { FC, useCallback } from 'react';
+import { FC, MouseEvent, useCallback } from 'react';
 
 import Image from 'next/image';
 
@@ -10,9 +10,8 @@ import { cn } from '@/libs';
 import { FileWithPreview } from '@/models/helpers';
 
 interface FileUploadProps {
+  // Valores (estado, datos, computed values)
   files: FileWithPreview[];
-  onFileAdd: (files: FileList | File[]) => void;
-  onFileRemove: (index: number) => void;
   maxFiles?: number;
   className?: string;
   accept?: string;
@@ -23,12 +22,15 @@ interface FileUploadProps {
   showPreview?: boolean;
   previewGridCols?: '2' | '3' | '4' | '5';
   disabled?: boolean;
+
+  // Handlers (funciones de manejo de eventos)
+  handleFileAdd: (files: FileList | File[]) => void;
+  handleFileRemove: (index: number) => void;
 }
 
 export const FileUpload: FC<FileUploadProps> = ({
+  // Valores primero
   files,
-  onFileAdd,
-  onFileRemove,
   maxFiles = 10,
   className,
   accept = 'image/*',
@@ -39,18 +41,43 @@ export const FileUpload: FC<FileUploadProps> = ({
   showPreview = true,
   previewGridCols = '4',
   disabled = false,
+  // Handlers después
+  handleFileAdd,
+  handleFileRemove,
 }) => {
-  const onDrop = useCallback(
+  // Handlers
+  const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        onFileAdd(acceptedFiles);
+        handleFileAdd(acceptedFiles);
       }
     },
-    [onFileAdd]
+    [handleFileAdd]
   );
 
+  const handleFileRemoveClick = (index: number) => {
+    handleFileRemove(index);
+  };
+
+  const handleAddMoreClick = () => {
+    open();
+  };
+
+  const handleFileRemoveWithEvent =
+    (index: number) => (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleFileRemoveClick(index);
+    };
+
+  const handleAddMoreWithEvent = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    handleAddMoreClick();
+  };
+
+  // Dropzone configuration
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    onDrop,
+    onDrop: handleDrop,
     accept: accept ? { [accept]: [] } : undefined,
     multiple,
     disabled: disabled || files.length >= maxFiles,
@@ -58,6 +85,7 @@ export const FileUpload: FC<FileUploadProps> = ({
     noKeyboard: false,
   });
 
+  // Computed values
   const isImageFile = accept.includes('image');
   const isAtMaxFiles = files.length >= maxFiles;
   const isDisabled = disabled || isAtMaxFiles;
@@ -86,18 +114,20 @@ export const FileUpload: FC<FileUploadProps> = ({
     '5': 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
   }[previewGridCols];
 
+  const dropzoneClassName = cn(
+    'relative border-2 border-dashed border-border rounded-lg p-8 text-center transition-colors',
+    !isDisabled && 'cursor-pointer hover:border-primary hover:bg-primary/5',
+    isDisabled && 'pointer-events-none opacity-50',
+    isDragActive && 'border-primary bg-primary/5'
+  );
+
+  const addMoreClassName = cn(
+    'aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors'
+  );
+
   return (
     <div className={cn('space-y-4', className)}>
-      <div
-        {...getRootProps()}
-        className={cn(
-          'relative border-2 border-dashed border-border rounded-lg p-8 text-center transition-colors',
-          !isDisabled &&
-            'cursor-pointer hover:border-primary hover:bg-primary/5',
-          isDisabled && 'pointer-events-none opacity-50',
-          isDragActive && 'border-primary bg-primary/5'
-        )}
-      >
+      <div {...getRootProps()} className={dropzoneClassName}>
         <input {...getInputProps()} />
 
         <div className="flex flex-col items-center space-y-3">
@@ -150,11 +180,7 @@ export const FileUpload: FC<FileUploadProps> = ({
                   type="button"
                   size="sm"
                   variant="destructive"
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onFileRemove(index);
-                  }}
+                  onClick={handleFileRemoveWithEvent(index)}
                   className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 >
                   <HiX className="h-3 w-3" />
@@ -167,11 +193,8 @@ export const FileUpload: FC<FileUploadProps> = ({
 
             {files.length < maxFiles && !disabled && (
               <div
-                onClick={e => {
-                  e.stopPropagation();
-                  open();
-                }}
-                className="aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
+                onClick={handleAddMoreWithEvent}
+                className={addMoreClassName}
               >
                 <div className="flex flex-col items-center space-y-2">
                   <HiPlus className="h-8 w-8 text-muted-foreground" />

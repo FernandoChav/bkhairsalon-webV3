@@ -7,16 +7,19 @@ import { cn } from '@/libs';
 
 interface PhoneInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  onValueChange?: (value: string) => void;
+  // Valores (estado, datos, computed values)
   size?: 'sm' | 'default';
+
+  // Handlers (funciones de manejo de eventos)
+  handleValueChange?: (value: string) => void;
 }
 
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
-  ({ className, onValueChange, onChange, size, ...props }, ref) => {
+  ({ className, handleValueChange, onChange, size, ...props }, ref) => {
+    // Estado
     const [value, setValue] = useState((props.value as string) || '');
 
-    const { 'aria-invalid': ariaInvalid, ...restProps } = props;
-
+    // Funciones utilitarias
     const formatChileanPhoneNumber = (input: string): string => {
       const cleaned = input.replace(/\D/g, '');
 
@@ -59,6 +62,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       return cleaned;
     };
 
+    // Handlers
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const formatted = formatChileanPhoneNumber(e.target.value);
       setValue(formatted);
@@ -67,16 +71,20 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         onChange(e);
       }
 
-      if (onValueChange) {
+      if (handleValueChange) {
         const rawNumber = formatted.replace(/\D/g, '');
-        onValueChange(rawNumber);
+        handleValueChange(rawNumber);
       }
     };
+
+    // Computed values
+    const { 'aria-invalid': ariaInvalid, ...restProps } = props;
+    const inputClassName = cn('pl-10', className);
 
     return (
       <Input
         type="tel"
-        className={cn('pl-10', className)}
+        className={inputClassName}
         ref={ref}
         value={value}
         onChange={handleChange}

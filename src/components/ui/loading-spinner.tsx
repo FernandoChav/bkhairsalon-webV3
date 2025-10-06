@@ -17,13 +17,11 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
     lg: 'w-12 h-12',
   };
 
-  return (
-    <div
-      className={cn(
-        'animate-spin rounded-full border-2 border-muted-foreground/20 border-t-primary',
-        sizeClasses[size],
-        className
-      )}
-    />
+  const sizeClassName = cn(
+    'animate-spin rounded-full border-2 border-muted-foreground/20 border-t-primary',
+    sizeClasses[size],
+    className
   );
+
+  return <div className={sizeClassName} />;
 };
