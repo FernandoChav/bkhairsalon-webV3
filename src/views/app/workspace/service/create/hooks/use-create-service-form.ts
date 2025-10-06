@@ -1,17 +1,47 @@
 import { useCallback } from 'react';
 
 import { CategoryResponse } from '@/models/responses';
+import { CreateServiceForm } from '@/models/schemas';
 
 import { useServiceFormData } from './use-service-form-data';
 import { useServiceFormValidation } from './use-service-form-validation';
 import { useServiceSubmission } from './use-service-submission';
 
-export const useCreateServiceView = () => {
-  const formData = useServiceFormData();
-  const validation = useServiceFormValidation(formData.form);
-  const submission = useServiceSubmission(formData.form, formData.fileUpload);
+interface UseCreateServiceViewReturn {
+  // Values
+  form: ReturnType<typeof useServiceFormData>['form'];
+  categories: {
+    data: CategoryResponse[];
+    isLoading: boolean;
+    error: ReturnType<typeof useServiceFormData>['categories']['error'];
+  };
+  fileUpload: {
+    files: File[];
+    handleAddFiles: (files: FileList | File[]) => void;
+    handleRemoveFile: (index: number) => void;
+    handleClearFiles: () => void;
+  };
+  validation: {
+    durationOptions: number[];
+    errors: ReturnType<typeof useServiceFormValidation>['errors'];
+  };
+  submission: {
+    isLoading: boolean;
+    isValid: boolean;
+    handleSubmit: (data: CreateServiceForm) => void;
+  };
+  // Handlers
+  handleResetForm: () => void;
+}
 
-  // Flatten categories and filter only final categories
+export const useCreateServiceView = (): UseCreateServiceViewReturn => {
+  const formData = useServiceFormData();
+  const validation = useServiceFormValidation({ form: formData.form });
+  const submission = useServiceSubmission({
+    form: formData.form,
+    fileUpload: formData.fileUpload,
+  });
+
   const getFinalCategories = useCallback(
     (cats: CategoryResponse[]): CategoryResponse[] => {
       const finalCats: CategoryResponse[] = [];
@@ -37,39 +67,35 @@ export const useCreateServiceView = () => {
     ? getFinalCategories(formData.categories.data)
     : [];
 
-  const resetForm = useCallback(() => {
+  const handleResetForm = useCallback(() => {
     formData.form.reset();
-    formData.fileUpload.clearFiles();
+    formData.fileUpload.handleClearFiles();
   }, [formData.form, formData.fileUpload]);
 
-  // Objetos organizados por responsabilidad
   return {
+    // Values
     form: formData.form,
-
     categories: {
       data: finalCategories,
       isLoading: formData.categories.isLoading,
       error: formData.categories.error,
     },
-
     fileUpload: {
       files: formData.fileUpload.files,
-      addFiles: formData.fileUpload.addFiles,
-      removeFile: formData.fileUpload.removeFile,
-      clearFiles: formData.fileUpload.clearFiles,
+      handleAddFiles: formData.fileUpload.handleAddFiles,
+      handleRemoveFile: formData.fileUpload.handleRemoveFile,
+      handleClearFiles: formData.fileUpload.handleClearFiles,
     },
-
     validation: {
       durationOptions: validation.durationOptions,
       errors: validation.errors,
     },
-
     submission: {
-      onSubmit: submission.onSubmit,
       isLoading: submission.isLoading,
       isValid: submission.isValid,
+      handleSubmit: submission.handleSubmit,
     },
-
-    resetForm,
+    // Handlers
+    handleResetForm,
   };
 };

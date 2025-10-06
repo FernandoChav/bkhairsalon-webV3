@@ -1,14 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { useGetCategoriesQuery } from '@/hooks/api';
+import { useCategoriesQuery } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
 import { CreateServiceForm, createServiceSchema } from '@/models/schemas';
 
-export const useServiceFormData = () => {
-  const { data: categories, isLoading, error } = useGetCategoriesQuery();
+interface UseServiceFormDataReturn {
+  // Values
+  form: ReturnType<typeof useForm<CreateServiceForm>>;
+  fileUpload: ReturnType<typeof useFileUpload>;
+  categories: {
+    data: ReturnType<typeof useCategoriesQuery>['data'];
+    isLoading: boolean;
+    error: ReturnType<typeof useCategoriesQuery>['error'];
+  };
+}
 
-  // Formulario principal
+export const useServiceFormData = (): UseServiceFormDataReturn => {
+  const { data: categories, isLoading, error } = useCategoriesQuery();
+
   const form = useForm<CreateServiceForm>({
     resolver: zodResolver(createServiceSchema),
     mode: 'onTouched',
@@ -25,10 +35,10 @@ export const useServiceFormData = () => {
     },
   });
 
-  // Hook para manejo de archivos
-  const fileUpload = useFileUpload(10);
+  const fileUpload = useFileUpload({ maxFiles: 10 });
 
   return {
+    // Values
     form,
     fileUpload,
     categories: {

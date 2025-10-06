@@ -4,23 +4,29 @@ import { useEffect } from 'react';
 
 import { CreateServiceForm } from '@/models/schemas';
 
-export const useServiceFormValidation = (
-  form: UseFormReturn<CreateServiceForm>
-) => {
-  // Generar opciones de duración de 5 en 5 minutos desde 0 hasta 300 minutos
+interface UseServiceFormValidationParams {
+  form: UseFormReturn<CreateServiceForm>;
+}
+
+interface UseServiceFormValidationReturn {
+  // Values
+  durationOptions: number[];
+  errors: UseFormReturn<CreateServiceForm>['formState']['errors'];
+}
+
+export const useServiceFormValidation = ({
+  form,
+}: UseServiceFormValidationParams): UseServiceFormValidationReturn => {
   const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
 
-  // Validación personalizada en tiempo real
   useEffect(() => {
     const subscription = form.watch((_value, { name }) => {
-      // Solo validar endTime cuando cambien los campos relacionados
       if (name === 'endTime' || name === 'startTime' || name === 'duration') {
         const startTime = form.getValues('startTime');
         const endTime = form.getValues('endTime');
         const duration = form.getValues('duration');
 
         if (startTime && endTime) {
-          // Validar que hora fin > hora inicio
           const startTimeParts = startTime.split(':').map(Number);
           const endTimeParts = endTime.split(':').map(Number);
           const startMinutes = startTimeParts[0] * 60 + startTimeParts[1];
@@ -35,7 +41,6 @@ export const useServiceFormValidation = (
             return;
           }
 
-          // Validar que el intervalo sea suficiente para la duración
           if (duration) {
             const intervalMinutes = endMinutes - startMinutes;
             if (intervalMinutes < duration) {
@@ -48,7 +53,6 @@ export const useServiceFormValidation = (
             }
           }
 
-          // Limpiar errores si todo está bien
           form.clearErrors('endTime');
         }
       }
@@ -58,6 +62,7 @@ export const useServiceFormValidation = (
   }, [form]);
 
   return {
+    // Values
     durationOptions,
     errors: form.formState.errors,
   };

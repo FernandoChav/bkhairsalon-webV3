@@ -12,19 +12,32 @@ import { CreateServiceForm } from '@/models/schemas';
 
 interface FileUploadHook {
   files: File[];
-  addFiles: (files: FileList | File[]) => void;
-  removeFile: (index: number) => void;
-  clearFiles: () => void;
+  handleAddFiles: (files: FileList | File[]) => void;
+  handleRemoveFile: (index: number) => void;
+  handleClearFiles: () => void;
 }
 
-export const useServiceSubmission = (
-  form: UseFormReturn<CreateServiceForm>,
-  fileUpload: FileUploadHook
-) => {
+interface UseServiceSubmissionParams {
+  form: UseFormReturn<CreateServiceForm>;
+  fileUpload: FileUploadHook;
+}
+
+interface UseServiceSubmissionReturn {
+  // Values
+  isLoading: boolean;
+  isValid: boolean;
+  // Handlers
+  handleSubmit: (data: CreateServiceForm) => void;
+}
+
+export const useServiceSubmission = ({
+  form,
+  fileUpload,
+}: UseServiceSubmissionParams): UseServiceSubmissionReturn => {
   const router = useRouter();
   const { mutate: createService, isPending } = useCreateServiceMutation();
 
-  const onSubmit = (data: CreateServiceForm) => {
+  const handleSubmit = (data: CreateServiceForm) => {
     const serviceRequest: CreateServiceRequest = {
       ...data,
       photos: fileUpload.files,
@@ -52,8 +65,10 @@ export const useServiceSubmission = (
   };
 
   return {
-    onSubmit,
+    // Values
     isLoading: isPending,
     isValid: form.formState.isValid && form.formState.isDirty,
+    // Handlers
+    handleSubmit,
   };
 };

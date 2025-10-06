@@ -48,8 +48,8 @@ export const ServiceStartTime: FC<ServiceStartTimeProps> = ({ form }) => {
             <FormControl>
               <TimeInput
                 value={startTimeValue}
-                onChange={handleTimeChange}
-                onBlur={handleTimeBlur}
+                handleChange={handleTimeChange}
+                handleBlur={handleTimeBlur}
                 minHour={8}
                 maxHour={22}
               />

@@ -5,16 +5,16 @@ import { FileUpload } from '@/components/ui';
 
 interface ServiceFileUploadProps {
   files: File[];
-  addFiles: (files: FileList | File[]) => void;
-  removeFile: (index: number) => void;
-  clearFiles: () => void;
+  handleAddFiles: (files: FileList | File[]) => void;
+  handleRemoveFile: (index: number) => void;
+  handleClearFiles: () => void;
 }
 
 export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
   files,
-  addFiles,
-  removeFile,
-  clearFiles,
+  handleAddFiles,
+  handleRemoveFile,
+  handleClearFiles,
 }) => {
   // Computed values
   const hasFiles = files.length > 0;
@@ -41,7 +41,7 @@ export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
             type="button"
             variant="outline"
             size="sm"
-            onClick={clearFiles}
+            onClick={handleClearFiles}
             className="text-xs"
           >
             Limpiar todas ({filesCount})
@@ -51,8 +51,6 @@ export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
 
       <FileUpload
         files={files}
-        onFileAdd={addFiles}
-        onFileRemove={removeFile}
         maxFiles={maxFiles}
         accept="image/*"
         multiple={true}
@@ -61,6 +59,8 @@ export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
         placeholder={uploadPlaceholder}
         showPreview={true}
         previewGridCols={previewGridCols}
+        handleAddFiles={handleAddFiles}
+        handleRemoveFile={handleRemoveFile}
       />
     </div>
   );

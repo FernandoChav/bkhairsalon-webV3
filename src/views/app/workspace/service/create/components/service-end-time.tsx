@@ -48,8 +48,8 @@ export const ServiceEndTime: FC<ServiceEndTimeProps> = ({ form }) => {
             <FormControl>
               <TimeInput
                 value={endTimeValue}
-                onChange={handleTimeChange}
-                onBlur={handleTimeBlur}
+                handleChange={handleTimeChange}
+                handleBlur={handleTimeBlur}
                 minHour={8}
                 maxHour={22}
               />

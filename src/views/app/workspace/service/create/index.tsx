@@ -44,7 +44,7 @@ export const CreateServiceView: FC = () => {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(submission.onSubmit)}
+            onSubmit={form.handleSubmit(submission.handleSubmit)}
             className="space-y-8"
             autoComplete="on"
           >
@@ -123,7 +123,12 @@ export const CreateServiceView: FC = () => {
                 </p>
               </div>
 
-              <ServiceFileUpload {...fileUpload} />
+              <ServiceFileUpload
+                files={fileUpload.files}
+                handleAddFiles={fileUpload.handleAddFiles}
+                handleRemoveFile={fileUpload.handleRemoveFile}
+                handleClearFiles={fileUpload.handleClearFiles}
+              />
             </div>
 
             {/* Botones de acción */}
