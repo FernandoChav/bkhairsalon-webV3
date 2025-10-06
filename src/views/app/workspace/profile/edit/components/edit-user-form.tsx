@@ -125,6 +125,8 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                     </FormLabel>
                     <FormControl>
                       <DatePicker
+                        name={field.name}
+                        value={field.value}
                         placeholder="Tu fecha de nacimiento"
                         allowFutureDates={false}
                         allowPastDates={true}
@@ -132,7 +134,8 @@ export const EditUserForm: FC<EditUserFormProps> = ({
                         maxAge={120}
                         minAge={0}
                         captionLayout="dropdown"
-                        {...field}
+                        handleChange={field.onChange}
+                        handleBlur={field.onBlur}
                       />
                     </FormControl>
                     <FormMessage />

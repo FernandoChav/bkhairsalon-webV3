@@ -49,7 +49,7 @@ export const RegisterView: FC = () => {
   const buttonClassName = cn(
     'w-full text-primary-foreground shadow-lg transition-all duration-300',
     isValid && !isLoading
-      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
       : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
   );
   const buttonText = isLoading ? 'Creando cuenta...' : 'Crear cuenta';
@@ -145,6 +145,8 @@ export const RegisterView: FC = () => {
                     </FormLabel>
                     <FormControl>
                       <DatePicker
+                        name={field.name}
+                        value={field.value}
                         placeholder="Tu fecha de nacimiento"
                         allowFutureDates={false}
                         allowPastDates={true}
@@ -152,7 +154,8 @@ export const RegisterView: FC = () => {
                         maxAge={120}
                         minAge={0}
                         captionLayout="dropdown"
-                        {...field}
+                        handleChange={field.onChange}
+                        handleBlur={field.onBlur}
                       />
                     </FormControl>
                     <FormMessage />
