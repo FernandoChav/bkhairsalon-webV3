@@ -5,9 +5,20 @@ import { useState } from 'react';
 
 import { type PasswordForm, passwordSchema } from '@/models/schemas';
 
-export const useConfirmPasswordModal = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+interface UseConfirmPasswordModalReturn {
+  // Values
+  isModalOpen: boolean;
+  isPasswordVisible: boolean;
+  form: ReturnType<typeof useForm<PasswordForm>>;
+  // Handlers
+  handlePasswordToggle: () => void;
+  handleOpenModal: () => void;
+  handleCloseModal: () => void;
+}
+
+export const useConfirmPasswordModal = (): UseConfirmPasswordModalReturn => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const form = useForm<PasswordForm>({
     resolver: zodResolver(passwordSchema),
@@ -15,24 +26,25 @@ export const useConfirmPasswordModal = () => {
     mode: 'onTouched',
   });
 
-  // Handlers
   const handlePasswordToggle = () => {
-    setShowPassword(prev => !prev);
+    setIsPasswordVisible(prev => !prev);
   };
 
   const handleOpenModal = () => {
-    setShowModal(true);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setIsModalOpen(false);
     form.reset();
   };
 
   return {
-    showModal,
-    showPassword,
+    // Values
+    isModalOpen,
+    isPasswordVisible,
     form,
+    // Handlers
     handlePasswordToggle,
     handleOpenModal,
     handleCloseModal,

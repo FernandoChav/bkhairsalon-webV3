@@ -6,7 +6,15 @@ import { useEffect, useMemo } from 'react';
 import { useUserProfileQuery } from '@/hooks/api';
 import { EditUserForm, editUserFormSchema } from '@/models/schemas';
 
-export const useEditUserForm = () => {
+interface UseEditUserFormReturn {
+  // Values
+  form: ReturnType<typeof useForm<EditUserForm>>;
+  isLoadingProfile: boolean;
+  canSubmit: boolean;
+  hasChanges: boolean;
+}
+
+export const useEditUserForm = (): UseEditUserFormReturn => {
   const { data: profile, isLoading: isLoadingProfile } = useUserProfileQuery();
 
   const form = useForm<EditUserForm>({
@@ -77,6 +85,7 @@ export const useEditUserForm = () => {
   const canSubmit = isFormValid && hasChanges;
 
   return {
+    // Values
     form,
     isLoadingProfile,
     canSubmit,
