@@ -1,6 +1,5 @@
 'use client';
 
-import { signOut, useSession } from 'next-auth/react';
 import { HiCog, HiLogout, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
@@ -15,16 +14,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn';
+import { useNavigationBar } from '@/hooks/common';
 
 export const NavigationBar: FC = () => {
-  const { data: session, status } = useSession();
+  const { session, status, handleLogout } = useNavigationBar();
 
-  const handleLogout = async () => {
-    await signOut({
-      callbackUrl: '/',
-      redirect: true,
-    });
-  };
+  // Computed values
+  const isAuthenticated = status !== 'loading' && !!session;
+  const isNotLoading = status !== 'loading';
+  const userName = session?.user?.name;
+  const userEmail = session?.user?.email;
 
   return (
     <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border/50 h-16">
@@ -38,7 +37,7 @@ export const NavigationBar: FC = () => {
           <span className="hidden sm:block">BK Hair Salon</span>
         </Link>
 
-        {status === 'loading' ? null : session ? (
+        {isNotLoading && isAuthenticated && (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
@@ -57,10 +56,10 @@ export const NavigationBar: FC = () => {
             >
               <div className="px-4 py-3">
                 <p className="text-sm font-medium text-card-foreground">
-                  {session?.user?.name}
+                  {userName}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {session?.user?.email}
+                  {userEmail}
                 </p>
               </div>
               <DropdownMenuSeparator />
@@ -83,7 +82,9 @@ export const NavigationBar: FC = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
+        )}
+
+        {isNotLoading && !isAuthenticated && (
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
