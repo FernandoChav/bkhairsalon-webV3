@@ -63,7 +63,7 @@ export const ProtectedRouteWrapper = ({
     if (status === 'authenticated' && session?.accessToken) {
       // Solo forzar logout si está completamente expirado
       if (isTokenExpired(session.accessToken)) {
-        handleSessionExpiration();
+        void handleSessionExpiration();
       }
     }
   }, [session, status]);
