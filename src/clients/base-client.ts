@@ -9,6 +9,10 @@ import { authClient } from './auth-client';
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
 
+/**
+ * Cliente base de Axios configurado para la aplicación
+ * Incluye interceptores para autenticación automática y manejo de errores
+ */
 const baseClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
@@ -40,6 +44,7 @@ baseClient.interceptors.response.use(
       _retry?: boolean;
     };
 
+    // Solo manejar errores 401 (no autorizado) y evitar reintentos infinitos
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -49,6 +54,7 @@ baseClient.interceptors.response.use(
           throw error;
         }
 
+        // Intentar renovar el token usando el refresh token
         const refreshResponse = await authClient.refreshToken();
 
         if (refreshResponse.data?.token) {

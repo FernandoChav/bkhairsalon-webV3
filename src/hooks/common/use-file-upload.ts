@@ -44,7 +44,9 @@ export const useFileUpload = (maxFiles: number = 5) => {
   }, [files]);
 
   return {
+    // Valores
     files,
+    // Handlers
     addFiles,
     removeFile,
     clearFiles,

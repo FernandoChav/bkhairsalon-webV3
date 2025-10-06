@@ -38,8 +38,10 @@ export function useProgress() {
   }, [pathname, start, complete]);
 
   return {
+    // Valores
     progress,
     isVisible,
+    // Handlers
     start,
     set,
     increment,
