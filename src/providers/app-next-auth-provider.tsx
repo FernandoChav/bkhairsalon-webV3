@@ -2,13 +2,15 @@
 
 import { SessionProvider } from 'next-auth/react';
 
-import { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 interface AppNextAuthProviderProps {
   children: ReactNode;
 }
 
-export const AppNextAuthProvider = ({ children }: AppNextAuthProviderProps) => {
+export const AppNextAuthProvider: FC<AppNextAuthProviderProps> = ({
+  children,
+}) => {
   return (
     <SessionProvider
       basePath="/api/auth"

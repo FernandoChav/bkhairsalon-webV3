@@ -2,15 +2,15 @@
 
 import { ThemeProvider } from 'next-themes';
 
-import { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 interface AppNextThemesProviderProps {
   children: ReactNode;
 }
 
-export const AppNextThemesProvider = ({
+export const AppNextThemesProvider: FC<AppNextThemesProviderProps> = ({
   children,
-}: AppNextThemesProviderProps) => {
+}) => {
   return (
     <ThemeProvider
       attribute="class"
