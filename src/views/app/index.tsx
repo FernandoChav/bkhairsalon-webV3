@@ -1,5 +1,3 @@
-'use client';
-
 import { FaInstagram, FaTiktok } from 'react-icons/fa';
 import { HiCalendar, HiChevronDown, HiLocationMarker } from 'react-icons/hi';
 
