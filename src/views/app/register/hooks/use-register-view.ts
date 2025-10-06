@@ -17,16 +17,25 @@ import { ApiResponse } from '@/models/generics';
 import type { RegisterRequest } from '@/models/requests';
 import { registerSchema } from '@/models/schemas';
 
-export const useRegisterView = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+interface UseRegisterViewReturn {
+  // Values
+  form: ReturnType<typeof useForm<RegisterRequest>>;
+  isLoading: boolean;
+  isValid: boolean;
+  isPasswordVisible: boolean;
+  isConfirmPasswordVisible: boolean;
+  // Handlers
+  handleSubmit: (data: RegisterRequest) => void;
+  handlePasswordToggle: () => void;
+  handleConfirmPasswordToggle: () => void;
+}
+
+export const useRegisterView = (): UseRegisterViewReturn => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
   const router = useRouter();
-  const {
-    mutate: register,
-    isPending,
-    error,
-    isSuccess,
-  } = useRegisterMutation();
+  const { mutate: register, isPending } = useRegisterMutation();
 
   const form = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
@@ -69,34 +78,35 @@ export const useRegisterView = () => {
   );
 
   const handlePasswordToggle = useCallback(() => {
-    setShowPassword(prev => !prev);
+    setIsPasswordVisible(prev => !prev);
   }, []);
 
   const handleConfirmPasswordToggle = useCallback(() => {
-    setShowConfirmPassword(prev => !prev);
+    setIsConfirmPasswordVisible(prev => !prev);
   }, []);
 
-  const isValid = Boolean(
+  const isValid =
     form.formState.isValid &&
+    Boolean(
       watchedValues?.firstName &&
-      watchedValues?.lastName &&
-      watchedValues?.email &&
-      watchedValues?.phoneNumber &&
-      watchedValues?.dateOfBirth &&
-      watchedValues?.password &&
-      watchedValues?.confirmPassword
-  );
+        watchedValues?.lastName &&
+        watchedValues?.email &&
+        watchedValues?.phoneNumber &&
+        watchedValues?.dateOfBirth &&
+        watchedValues?.password &&
+        watchedValues?.confirmPassword
+    );
 
   return {
+    // Values
     form,
+    isLoading: isPending,
+    isValid,
+    isPasswordVisible,
+    isConfirmPasswordVisible,
+    // Handlers
     handleSubmit,
     handlePasswordToggle,
     handleConfirmPasswordToggle,
-    isLoading: isPending,
-    error,
-    isSuccess,
-    isValid,
-    showPassword,
-    showConfirmPassword,
   };
 };

@@ -41,8 +41,8 @@ export const RegisterView: FC = () => {
     handleConfirmPasswordToggle,
     isLoading,
     isValid,
-    showPassword,
-    showConfirmPassword,
+    isPasswordVisible,
+    isConfirmPasswordVisible,
   } = useRegisterView();
 
   // Computed values
@@ -54,14 +54,16 @@ export const RegisterView: FC = () => {
   );
   const buttonText = isLoading ? 'Creando cuenta...' : 'Crear cuenta';
   const isButtonDisabled = !isValid || isLoading;
-  const passwordInputType = showPassword ? 'text' : 'password';
-  const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
-  const passwordToggleIcon = showPassword ? (
+  const passwordInputType = isPasswordVisible ? 'text' : 'password';
+  const confirmPasswordInputType = isConfirmPasswordVisible
+    ? 'text'
+    : 'password';
+  const passwordToggleIcon = isPasswordVisible ? (
     <HiEyeOff className="h-4 w-4 text-muted-foreground" />
   ) : (
     <HiEye className="h-4 w-4 text-muted-foreground" />
   );
-  const confirmPasswordToggleIcon = showConfirmPassword ? (
+  const confirmPasswordToggleIcon = isConfirmPasswordVisible ? (
     <HiEyeOff className="h-4 w-4 text-muted-foreground" />
   ) : (
     <HiEye className="h-4 w-4 text-muted-foreground" />
