@@ -24,8 +24,8 @@ interface FileUploadProps {
   disabled?: boolean;
 
   // Handlers (funciones de manejo de eventos)
-  handleFileAdd: (files: FileList | File[]) => void;
-  handleFileRemove: (index: number) => void;
+  handleAddFiles: (files: FileList | File[]) => void;
+  handleRemoveFile: (index: number) => void;
 }
 
 export const FileUpload: FC<FileUploadProps> = ({
@@ -42,21 +42,21 @@ export const FileUpload: FC<FileUploadProps> = ({
   previewGridCols = '4',
   disabled = false,
   // Handlers después
-  handleFileAdd,
-  handleFileRemove,
+  handleAddFiles,
+  handleRemoveFile,
 }) => {
   // Handlers
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        handleFileAdd(acceptedFiles);
+        handleAddFiles(acceptedFiles);
       }
     },
-    [handleFileAdd]
+    [handleAddFiles]
   );
 
   const handleFileRemoveClick = (index: number) => {
-    handleFileRemove(index);
+    handleRemoveFile(index);
   };
 
   const handleAddMoreClick = () => {
