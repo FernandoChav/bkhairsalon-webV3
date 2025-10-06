@@ -35,6 +35,7 @@ export const CategoryField: FC<CategoryFieldProps> = ({ form, categories }) => {
     isCategoriesDisabled,
     selectPlaceholder,
     categoryOptions,
+    handleOpenChange,
   } = useCategoryField({ categories });
 
   return (
@@ -52,6 +53,9 @@ export const CategoryField: FC<CategoryFieldProps> = ({ form, categories }) => {
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
+                onOpenChange={open =>
+                  handleOpenChange(open, field.value, field.onBlur)
+                }
                 disabled={isCategoriesDisabled}
               >
                 <SelectTrigger className="w-full pl-10">
