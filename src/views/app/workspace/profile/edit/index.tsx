@@ -28,11 +28,11 @@ export const EditUserView: FC = () => {
 
       <ConfirmPasswordModal
         isOpen={modal.isOpen}
+        isShowPassword={modal.isPasswordVisible}
+        form={modal.form}
         handleClose={modal.handleClose}
         handleConfirm={modal.handleConfirm}
-        isShowPassword={modal.isPasswordVisible}
         handlePasswordToggle={modal.handlePasswordToggle}
-        form={modal.form}
       />
     </>
   );

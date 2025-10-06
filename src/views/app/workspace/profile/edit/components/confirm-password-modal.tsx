@@ -22,20 +22,20 @@ import { type PasswordForm } from '@/models/schemas';
 
 interface ConfirmPasswordModalProps {
   isOpen: boolean;
+  isShowPassword: boolean;
+  form: UseFormReturn<PasswordForm>;
   handleClose: () => void;
   handleConfirm: (password: string) => void;
-  isShowPassword: boolean;
   handlePasswordToggle: () => void;
-  form: UseFormReturn<PasswordForm>;
 }
 
 export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
   isOpen,
+  isShowPassword,
+  form,
   handleClose,
   handleConfirm,
-  isShowPassword,
   handlePasswordToggle,
-  form,
 }) => {
   // Computed values
   const passwordInputType = isShowPassword ? 'text' : 'password';
