@@ -41,14 +41,14 @@ export const useEditUserMutation = () => {
             },
           });
 
-          router.push('/home');
+          router.push('/workspace');
         }
       } catch {
         queryClient.invalidateQueries({
           queryKey: ['user', 'profile'],
         });
 
-        router.push('/home');
+        router.push('/workspace');
       }
     },
   });

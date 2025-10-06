@@ -33,7 +33,7 @@ export const useServiceSubmission = (
     createService(serviceRequest, {
       onSuccess: (data: ApiResponse) => {
         toast.success(data.message);
-        router.push('/home/service');
+        router.push('/workspace/service');
       },
       onError: (error: AxiosError<unknown>) => {
         const axiosError = error as AxiosError<ApiResponse>;

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { ProtectedRouteWrapper } from '@/components/layout';
 
-export default function HomeLayout({
+export default function WorkspaceLayout({
   children,
 }: Readonly<{
   children: ReactNode;

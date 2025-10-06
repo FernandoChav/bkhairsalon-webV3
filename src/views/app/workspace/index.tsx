@@ -2,10 +2,10 @@
 
 import { FC } from 'react';
 
-import { useHomeView } from './hooks';
+import { useWorkspaceView } from './hooks';
 
-export const HomeView: FC = () => {
-  const { welcomeText } = useHomeView();
+export const WorkspaceView: FC = () => {
+  const { welcomeText } = useWorkspaceView();
 
   return (
     <div className="container mx-auto px-6 max-w-7xl">

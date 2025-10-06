@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { HomeView } from '@/views';
+import { WorkspaceView } from '@/views';
 
 export const metadata: Metadata = {
   title: 'Inicio - BK Hair Salon',
@@ -14,6 +14,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  return <HomeView />;
+export default function WorkspacePage() {
+  return <WorkspaceView />;
 }

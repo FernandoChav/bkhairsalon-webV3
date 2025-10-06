@@ -40,7 +40,7 @@ export const useLoginView = () => {
 
         if (signInResult?.ok) {
           toast.success('Bienvenido a BK Hair Salon');
-          router.push('/home');
+          router.push('/workspace');
         } else {
           if (signInResult?.error) {
             toast.error(signInResult.error);

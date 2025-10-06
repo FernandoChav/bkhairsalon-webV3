@@ -1,7 +1,7 @@
 export { LandingView } from './app';
 export { LoginView } from './app/login';
 export { RegisterView } from './app/register';
-export { HomeView } from './app/home';
-export { ServicesView } from './app/home/service';
-export { CreateServiceView } from './app/home/service/create';
-export { EditUserView } from './app/home/profile/edit';
+export { WorkspaceView } from './app/workspace';
+export { ServicesView } from './app/workspace/service';
+export { CreateServiceView } from './app/workspace/service/create';
+export { EditUserView } from './app/workspace/profile/edit';

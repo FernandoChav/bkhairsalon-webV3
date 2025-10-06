@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 
-export const useHomeView = () => {
+export const useWorkspaceView = () => {
   const { data: session } = useSession();
 
   // Computed values
