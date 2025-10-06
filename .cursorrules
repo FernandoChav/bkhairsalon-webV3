@@ -580,6 +580,23 @@ const user = data as User;
 const user = UserSchema.parse(data);
 ```
 
+### Exports Explícitos
+
+- **CRÍTICO**: NUNCA usar `export *` - siempre especificar exports explícitos
+- **Por qué**: Mejora la claridad, facilita el tree-shaking y evita conflictos de nombres
+- **Patrón**: Usar `export type { }` para tipos y `export { }` para valores
+
+```typescript
+// ✅ CORRECTO - Exports explícitos
+export type { BaseEntity } from './base';
+export type { UserRole, UserRoleData } from './role';
+export type { JWTUser } from './auth';
+
+// ❌ INCORRECTO - Export wildcard
+export * from './role';  // ❌ No especifica qué se exporta
+export * from './auth';  // ❌ Puede causar conflictos de nombres
+```
+
 ## 🎯 Convenciones de Código
 
 ### Convenciones de Nomenclatura
@@ -1070,6 +1087,7 @@ count++;
 20. **No usar variables booleanas sin prefijo `is`** - Siempre usar `is[State]` para claridad
 21. **No repetir `'use client'` en componentes internos** - Solo en la vista principal (`index.tsx`)
 22. **No mezclar orden en interfaces y props** - Primero valores, luego handlers
+23. **No usar `export *`** - Siempre especificar exports explícitos para claridad y tree-shaking
 
 ## 🛠️ Herramientas y Comandos
 
@@ -1126,6 +1144,7 @@ Antes de hacer commit, verificar:
 - [ ] ✅ Variables booleanas usan prefijo `is`
 - [ ] ✅ `'use client'` solo en vistas principales
 - [ ] ✅ Interfaces y props ordenadas: primero valores, luego handlers
+- [ ] ✅ No hay `export *` - todos los exports son explícitos
 - [ ] ✅ `yarn lint` pasa sin errores
 - [ ] ✅ `yarn type-check` pasa sin errores
 - [ ] ✅ Tests relevantes agregados/actualizados
