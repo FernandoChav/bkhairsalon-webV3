@@ -95,13 +95,13 @@ export const NavigationBar: FC = () => {
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
-              className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4"
+              className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"
               asChild
             >
               <Link href="/login">Iniciar sesión</Link>
             </Button>
             <Button
-              className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider px-4"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider px-4 cursor-pointer"
               asChild
             >
               <Link href="/register">Registrarse</Link>
