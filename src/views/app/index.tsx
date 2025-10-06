@@ -28,18 +28,78 @@ const brands = [
 ];
 
 const portfolioImages = [
-  { id: 1, variant: 'accent' as const, text: 'Foto 1' },
-  { id: 2, variant: 'primary' as const, text: 'Foto 2' },
-  { id: 3, variant: 'accent' as const, text: 'Foto 3' },
-  { id: 4, variant: 'primary' as const, text: 'Foto 4' },
-  { id: 5, variant: 'accent' as const, text: 'Foto 5' },
-  { id: 6, variant: 'primary' as const, text: 'Foto 6' },
-  { id: 7, variant: 'accent' as const, text: 'Foto 7' },
-  { id: 8, variant: 'primary' as const, text: 'Foto 8' },
-  { id: 9, variant: 'accent' as const, text: 'Foto 9' },
-  { id: 10, variant: 'primary' as const, text: 'Foto 10' },
-  { id: 11, variant: 'accent' as const, text: 'Foto 11' },
-  { id: 12, variant: 'primary' as const, text: 'Foto 12' },
+  {
+    id: 1,
+    variant: 'accent' as const,
+    text: 'Foto 1',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 2,
+    variant: 'primary' as const,
+    text: 'Foto 2',
+    textClassName: 'text-sm text-primary-foreground',
+  },
+  {
+    id: 3,
+    variant: 'accent' as const,
+    text: 'Foto 3',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 4,
+    variant: 'primary' as const,
+    text: 'Foto 4',
+    textClassName: 'text-sm text-primary-foreground',
+  },
+  {
+    id: 5,
+    variant: 'accent' as const,
+    text: 'Foto 5',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 6,
+    variant: 'primary' as const,
+    text: 'Foto 6',
+    textClassName: 'text-sm text-primary-foreground',
+  },
+  {
+    id: 7,
+    variant: 'accent' as const,
+    text: 'Foto 7',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 8,
+    variant: 'primary' as const,
+    text: 'Foto 8',
+    textClassName: 'text-sm text-primary-foreground',
+  },
+  {
+    id: 9,
+    variant: 'accent' as const,
+    text: 'Foto 9',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 10,
+    variant: 'primary' as const,
+    text: 'Foto 10',
+    textClassName: 'text-sm text-primary-foreground',
+  },
+  {
+    id: 11,
+    variant: 'accent' as const,
+    text: 'Foto 11',
+    textClassName: 'text-sm text-accent-foreground',
+  },
+  {
+    id: 12,
+    variant: 'primary' as const,
+    text: 'Foto 12',
+    textClassName: 'text-sm text-primary-foreground',
+  },
 ];
 
 const certifications = [
@@ -369,26 +429,18 @@ export const LandingView: FC = () => {
         <SectionHeader title="Portfolio" className="mb-12 text-right" />
 
         <LandingGrid columns={{ default: 1, md: 3, lg: 4 }} gap="md">
-          {portfolioImages.map(image => {
-            // Computed values
-            const textClassName =
-              image.variant === 'primary'
-                ? 'text-sm text-primary-foreground'
-                : 'text-sm text-accent-foreground';
-
-            return (
-              <LandingCard
-                key={image.id}
-                variant={image.variant}
-                className="h-80 hover:scale-105 transition-transform duration-300"
-                size="md"
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className={textClassName}>{image.text}</span>
-                </div>
-              </LandingCard>
-            );
-          })}
+          {portfolioImages.map(image => (
+            <LandingCard
+              key={image.id}
+              variant={image.variant}
+              className="h-80 hover:scale-105 transition-transform duration-300"
+              size="md"
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <span className={image.textClassName}>{image.text}</span>
+              </div>
+            </LandingCard>
+          ))}
         </LandingGrid>
       </LandingSection>
       <LandingSection
