@@ -7,27 +7,11 @@ import {
   EditUserForm,
   EditUserFormSkeleton,
 } from './components';
-import { useEditUserForm } from './hooks';
+import { useEditUserView } from './hooks';
 
 export const EditUserView: FC = () => {
-  const { form, modal, isSubmitting, isLoadingProfile, hasChanges } =
-    useEditUserForm();
-
-  // Lógica del botón en el componente
-  const isFormValid =
-    form.formState.isValid &&
-    !!form.getValues('firstName') &&
-    !!form.getValues('lastName') &&
-    !!form.getValues('phoneNumber') &&
-    !!form.getValues('dateOfBirth');
-
-  const canSubmit = isFormValid && hasChanges;
-
-  const buttonText = isSubmitting
-    ? 'Actualizando...'
-    : hasChanges
-      ? 'Actualizar Perfil'
-      : 'Sin cambios para guardar';
+  const { form, modal, isSubmitting, isLoadingProfile, canSubmit } =
+    useEditUserView();
 
   if (isLoadingProfile) {
     return <EditUserFormSkeleton />;
@@ -37,16 +21,18 @@ export const EditUserView: FC = () => {
     <>
       <EditUserForm
         form={form}
-        modal={modal}
         canSubmit={canSubmit}
         isSubmitting={isSubmitting}
-        buttonText={buttonText}
+        handleFormSubmit={modal.handleSubmit}
       />
 
       <ConfirmPasswordModal
-        open={modal.show}
-        onClose={modal.close}
-        onConfirm={modal.handleConfirm}
+        isOpen={modal.show}
+        handleClose={modal.handleClose}
+        handleConfirm={modal.handleConfirm}
+        isShowPassword={modal.showPassword}
+        handlePasswordToggle={modal.handlePasswordToggle}
+        form={modal.form}
       />
     </>
   );

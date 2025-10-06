@@ -1,8 +1,7 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { HiEye, HiEyeOff, HiLockClosed } from 'react-icons/hi';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
   Button,
@@ -19,35 +18,41 @@ import {
   FormMessage,
   Input,
 } from '@/components/shadcn';
-import { type PasswordForm, passwordSchema } from '@/models/schemas';
+import { type PasswordForm } from '@/models/schemas';
 
 interface ConfirmPasswordModalProps {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: (password: string) => void;
+  isOpen: boolean;
+  handleClose: () => void;
+  handleConfirm: (password: string) => void;
+  isShowPassword: boolean;
+  handlePasswordToggle: () => void;
+  form: UseFormReturn<PasswordForm>;
 }
 
 export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
-  open,
-  onClose,
-  onConfirm,
+  isOpen,
+  handleClose,
+  handleConfirm,
+  isShowPassword,
+  handlePasswordToggle,
+  form,
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  // Computed values
+  const passwordInputType = isShowPassword ? 'text' : 'password';
+  const passwordToggleIcon = isShowPassword ? (
+    <HiEyeOff className="h-4 w-4" />
+  ) : (
+    <HiEye className="h-4 w-4" />
+  );
 
-  const form = useForm<PasswordForm>({
-    resolver: zodResolver(passwordSchema),
-    defaultValues: { password: '' },
-    mode: 'onTouched',
-  });
-
-  const handleConfirm = (data: PasswordForm) => {
-    onConfirm(data.password);
+  const handleFormSubmit = (data: PasswordForm) => {
+    handleConfirm(data.password);
     form.reset();
-    onClose();
+    handleClose();
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Validar cambio</DialogTitle>
@@ -58,7 +63,7 @@ export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleConfirm)}
+            onSubmit={form.handleSubmit(handleFormSubmit)}
             className="space-y-4"
           >
             <FormField
@@ -71,7 +76,7 @@ export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
                     <div className="relative">
                       <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
-                        type={showPassword ? 'text' : 'password'}
+                        type={passwordInputType}
                         placeholder="Mínimo 8 caracteres"
                         className="pl-10 pr-10"
                         autoComplete="new-password"
@@ -82,13 +87,9 @@ export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
                         variant="ghost"
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
+                        onClick={handlePasswordToggle}
                       >
-                        {showPassword ? (
-                          <HiEyeOff className="h-4 w-4" />
-                        ) : (
-                          <HiEye className="h-4 w-4" />
-                        )}
+                        {passwordToggleIcon}
                       </Button>
                     </div>
                   </FormControl>
@@ -98,7 +99,7 @@ export const ConfirmPasswordModal: FC<ConfirmPasswordModalProps> = ({
             />
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
               <Button type="submit">Confirmar</Button>

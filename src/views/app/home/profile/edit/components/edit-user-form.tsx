@@ -26,24 +26,31 @@ import { EditUserForm as EditUserFormType } from '@/models/schemas';
 
 interface EditUserFormProps {
   form: UseFormReturn<EditUserFormType>;
-  modal: {
-    show: boolean;
-    handleSubmit: () => void;
-    handleConfirm: (password: string) => void;
-    close: () => void;
-  };
   canSubmit: boolean;
   isSubmitting: boolean;
-  buttonText: string;
+  handleFormSubmit: () => void;
 }
 
 export const EditUserForm: FC<EditUserFormProps> = ({
   form,
-  modal,
   canSubmit,
   isSubmitting,
-  buttonText,
+  handleFormSubmit,
 }) => {
+  // Computed values
+  const buttonText = isSubmitting
+    ? 'Actualizando...'
+    : canSubmit
+      ? 'Actualizar Perfil'
+      : 'Sin cambios para guardar';
+  const buttonClassName = cn(
+    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    canSubmit && !isSubmitting
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+      : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+  );
+  const isButtonDisabled = !canSubmit || isSubmitting;
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
@@ -55,11 +62,11 @@ export const EditUserForm: FC<EditUserFormProps> = ({
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(modal.handleSubmit)}
+            onSubmit={form.handleSubmit(handleFormSubmit)}
             className="space-y-6"
             autoComplete="on"
           >
-            <div className="grid grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
                 name="firstName"
@@ -109,7 +116,7 @@ export const EditUserForm: FC<EditUserFormProps> = ({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FormField
                 control={form.control}
                 name="dateOfBirth"
@@ -164,13 +171,8 @@ export const EditUserForm: FC<EditUserFormProps> = ({
             <div className="pt-4">
               <Button
                 type="submit"
-                className={cn(
-                  'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
-                  canSubmit && !isSubmitting
-                    ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
-                    : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
-                )}
-                disabled={!canSubmit || isSubmitting}
+                className={buttonClassName}
+                disabled={isButtonDisabled}
               >
                 {buttonText}
               </Button>

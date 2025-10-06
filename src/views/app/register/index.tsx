@@ -9,7 +9,7 @@ import {
   HiUser,
 } from 'react-icons/hi';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import Link from 'next/link';
 
@@ -31,12 +31,41 @@ import {
 import { DatePicker, PhoneInput } from '@/components/ui';
 import { cn } from '@/libs';
 
-import { useRegisterForm } from './hooks';
+import { useRegisterView } from './hooks';
 
 export const RegisterView: FC = () => {
-  const { form, onSubmit, isLoading, isValid } = useRegisterForm();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const {
+    form,
+    handleSubmit,
+    handlePasswordToggle,
+    handleConfirmPasswordToggle,
+    isLoading,
+    isValid,
+    showPassword,
+    showConfirmPassword,
+  } = useRegisterView();
+
+  // Computed values
+  const buttonClassName = cn(
+    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    isValid && !isLoading
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
+      : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+  );
+  const buttonText = isLoading ? 'Creando cuenta...' : 'Crear cuenta';
+  const isButtonDisabled = !isValid || isLoading;
+  const passwordInputType = showPassword ? 'text' : 'password';
+  const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
+  const passwordToggleIcon = showPassword ? (
+    <HiEyeOff className="h-4 w-4 text-muted-foreground" />
+  ) : (
+    <HiEye className="h-4 w-4 text-muted-foreground" />
+  );
+  const confirmPasswordToggleIcon = showConfirmPassword ? (
+    <HiEyeOff className="h-4 w-4 text-muted-foreground" />
+  ) : (
+    <HiEye className="h-4 w-4 text-muted-foreground" />
+  );
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -49,7 +78,7 @@ export const RegisterView: FC = () => {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
             autoComplete="on"
           >
@@ -195,7 +224,7 @@ export const RegisterView: FC = () => {
                       <div className="relative">
                         <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          type={showPassword ? 'text' : 'password'}
+                          type={passwordInputType}
                           placeholder="Mínimo 8 caracteres"
                           className="pl-10 pr-10 h-10"
                           autoComplete="new-password"
@@ -206,13 +235,9 @@ export const RegisterView: FC = () => {
                           variant="ghost"
                           size="sm"
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
-                          onClick={() => setShowPassword(!showPassword)}
+                          onClick={handlePasswordToggle}
                         >
-                          {showPassword ? (
-                            <HiEyeOff className="h-4 w-4 text-muted-foreground" />
-                          ) : (
-                            <HiEye className="h-4 w-4 text-muted-foreground" />
-                          )}
+                          {passwordToggleIcon}
                         </Button>
                       </div>
                     </FormControl>
@@ -233,7 +258,7 @@ export const RegisterView: FC = () => {
                       <div className="relative">
                         <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
+                          type={confirmPasswordInputType}
                           placeholder="Repite tu contraseña"
                           className="pl-10 pr-10 h-10"
                           autoComplete="new-password"
@@ -244,15 +269,9 @@ export const RegisterView: FC = () => {
                           variant="ghost"
                           size="sm"
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
-                          onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                          }
+                          onClick={handleConfirmPasswordToggle}
                         >
-                          {showConfirmPassword ? (
-                            <HiEyeOff className="h-4 w-4 text-muted-foreground" />
-                          ) : (
-                            <HiEye className="h-4 w-4 text-muted-foreground" />
-                          )}
+                          {confirmPasswordToggleIcon}
                         </Button>
                       </div>
                     </FormControl>
@@ -265,15 +284,10 @@ export const RegisterView: FC = () => {
             <div className="pt-4">
               <Button
                 type="submit"
-                className={cn(
-                  'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
-                  isValid && !isLoading
-                    ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl'
-                    : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
-                )}
-                disabled={!isValid || isLoading}
+                className={buttonClassName}
+                disabled={isButtonDisabled}
               >
-                {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+                {buttonText}
               </Button>
             </div>
           </form>

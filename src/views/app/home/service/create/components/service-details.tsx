@@ -18,13 +18,13 @@ import {
   SelectValue,
 } from '@/components/shadcn';
 import { TimeInput } from '@/components/ui';
-import { CreateServiceFormData } from '@/models/schemas';
+import { CreateServiceForm } from '@/models/schemas';
 
 interface ServiceDetailsProps {
-  form: UseFormReturn<CreateServiceFormData>;
+  form: UseFormReturn<CreateServiceForm>;
   validation: {
     durationOptions: number[];
-    errors: FieldErrors<CreateServiceFormData>;
+    errors: FieldErrors<CreateServiceForm>;
   };
 }
 
@@ -32,17 +32,26 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
   form,
   validation,
 }) => {
+  // Computed values para formateo de duración
+  const formatDuration = (minutes: number): string => {
+    if (minutes === 0) return '0 minutos';
+    if (minutes < 60) return `${minutes} minutos`;
+    if (minutes === 60) return '1 hora';
+
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4 items-start">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
         <FormField
           control={form.control}
           name="duration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">
-                Duración (minutos)
-              </FormLabel>
+              <FormLabel className="text-sm font-medium">Duración</FormLabel>
               <FormControl>
                 <div className="relative">
                   <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
@@ -58,19 +67,13 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                       }
                     }}
                   >
-                    <SelectTrigger className="pl-10 !h-10 w-full">
+                    <SelectTrigger className="w-full pl-10">
                       <SelectValue placeholder="Selecciona duración" />
                     </SelectTrigger>
                     <SelectContent>
                       {validation.durationOptions.map(minutes => (
                         <SelectItem key={minutes} value={minutes.toString()}>
-                          {minutes === 0
-                            ? '0 minutos'
-                            : minutes < 60
-                              ? `${minutes} minutos`
-                              : minutes === 60
-                                ? '1 hora'
-                                : `${Math.floor(minutes / 60)}h ${minutes % 60}m`}
+                          {formatDuration(minutes)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -95,8 +98,8 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                     type="number"
                     min="0"
                     step="0.01"
-                    placeholder="Precio del servicio"
-                    className="pl-10 h-10"
+                    placeholder="0.00"
+                    className="pl-10"
                     value={field.value ?? ''}
                     onChange={e => {
                       const value = e.target.value;
@@ -115,67 +118,77 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
         <FormField
           control={form.control}
           name="startTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium">
-                Horario de Inicio
-              </FormLabel>
-              <FormControl>
-                <TimeInput
-                  value={
-                    field.value
-                      ? parseInt(field.value.split(':')[0]) * 60 +
-                        parseInt(field.value.split(':')[1])
-                      : undefined
-                  }
-                  onChange={minutes => {
-                    const hours = Math.floor(minutes / 60);
-                    const mins = minutes % 60;
-                    const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-                    field.onChange(timeString);
-                  }}
-                  minHour={8}
-                  maxHour={22}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            // Computed values
+            const startTimeValue = field.value
+              ? parseInt(field.value.split(':')[0]) * 60 +
+                parseInt(field.value.split(':')[1])
+              : undefined;
+
+            const handleTimeChange = (minutes: number) => {
+              const hours = Math.floor(minutes / 60);
+              const mins = minutes % 60;
+              const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+              field.onChange(timeString);
+            };
+
+            return (
+              <FormItem>
+                <FormLabel className="text-sm font-medium">
+                  Horario de Inicio
+                </FormLabel>
+                <FormControl>
+                  <TimeInput
+                    value={startTimeValue}
+                    onChange={handleTimeChange}
+                    minHour={8}
+                    maxHour={22}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         <FormField
           control={form.control}
           name="endTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium">
-                Horario de Término
-              </FormLabel>
-              <FormControl>
-                <TimeInput
-                  value={
-                    field.value
-                      ? parseInt(field.value.split(':')[0]) * 60 +
-                        parseInt(field.value.split(':')[1])
-                      : undefined
-                  }
-                  onChange={minutes => {
-                    const hours = Math.floor(minutes / 60);
-                    const mins = minutes % 60;
-                    const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-                    field.onChange(timeString);
-                  }}
-                  minHour={8}
-                  maxHour={22}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            // Computed values
+            const endTimeValue = field.value
+              ? parseInt(field.value.split(':')[0]) * 60 +
+                parseInt(field.value.split(':')[1])
+              : undefined;
+
+            const handleTimeChange = (minutes: number) => {
+              const hours = Math.floor(minutes / 60);
+              const mins = minutes % 60;
+              const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+              field.onChange(timeString);
+            };
+
+            return (
+              <FormItem>
+                <FormLabel className="text-sm font-medium">
+                  Horario de Término
+                </FormLabel>
+                <FormControl>
+                  <TimeInput
+                    value={endTimeValue}
+                    onChange={handleTimeChange}
+                    minHour={8}
+                    maxHour={22}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
       </div>
 
@@ -184,9 +197,7 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
         name="commissionPercentage"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-medium">
-              Porcentaje de Comisión
-            </FormLabel>
+            <FormLabel className="text-sm font-medium">Comisión (%)</FormLabel>
             <FormControl>
               <div className="relative">
                 <HiCurrencyDollar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -195,8 +206,8 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                   min="0"
                   max="100"
                   step="0.01"
-                  placeholder="Porcentaje de comisión"
-                  className="pl-10 h-10"
+                  placeholder="0.00"
+                  className="pl-10"
                   value={field.value ?? ''}
                   onChange={e => {
                     const value = e.target.value;
@@ -209,8 +220,8 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
                 />
               </div>
             </FormControl>
-            <FormDescription>
-              Porcentaje de comisión que se aplicará a este servicio (0-100%)
+            <FormDescription className="text-xs sm:text-sm">
+              Porcentaje de comisión (0-100%)
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -223,20 +234,20 @@ export const ServiceDetails: FC<ServiceDetailsProps> = ({
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-sm font-medium">
-              ID de Descuento (Opcional)
+              Descuento (Opcional)
             </FormLabel>
             <FormControl>
               <div className="relative">
                 <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="ID de descuento (opcional)"
-                  className="pl-10 h-10"
+                  placeholder="ID de descuento"
+                  className="pl-10"
                   {...field}
                 />
               </div>
             </FormControl>
-            <FormDescription>
-              ID del descuento asociado a este servicio (opcional)
+            <FormDescription className="text-xs sm:text-sm">
+              ID del descuento asociado (opcional)
             </FormDescription>
             <FormMessage />
           </FormItem>

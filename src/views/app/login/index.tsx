@@ -2,7 +2,7 @@
 
 import { HiEye, HiEyeOff, HiLockClosed, HiMail } from 'react-icons/hi';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import Link from 'next/link';
 
@@ -23,11 +23,33 @@ import {
 } from '@/components/shadcn';
 import { cn } from '@/libs';
 
-import { useLoginForm } from './hooks';
+import { useLoginView } from './hooks';
 
 export const LoginView: FC = () => {
-  const { form, onSubmit, isLoading, isValid } = useLoginForm();
-  const [showPassword, setShowPassword] = useState(false);
+  const {
+    form,
+    handleSubmit,
+    handlePasswordToggle,
+    isLoading,
+    isValid,
+    showPassword,
+  } = useLoginView();
+
+  // Computed values
+  const buttonClassName = cn(
+    'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
+    isValid && !isLoading
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+      : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+  );
+  const buttonText = isLoading ? 'Entrando...' : 'Entrar';
+  const isButtonDisabled = !isValid || isLoading;
+  const passwordInputType = showPassword ? 'text' : 'password';
+  const passwordToggleIcon = showPassword ? (
+    <HiEyeOff className="h-4 w-4" />
+  ) : (
+    <HiEye className="h-4 w-4" />
+  );
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -40,7 +62,7 @@ export const LoginView: FC = () => {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
             autoComplete="on"
           >
@@ -77,7 +99,7 @@ export const LoginView: FC = () => {
                     <div className="relative">
                       <HiLockClosed className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
-                        type={showPassword ? 'text' : 'password'}
+                        type={passwordInputType}
                         placeholder="Tu contraseña"
                         className="pl-10 pr-10"
                         autoComplete="current-password"
@@ -88,13 +110,9 @@ export const LoginView: FC = () => {
                         variant="ghost"
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
-                        onClick={() => setShowPassword(!showPassword)}
+                        onClick={handlePasswordToggle}
                       >
-                        {showPassword ? (
-                          <HiEyeOff className="h-4 w-4" />
-                        ) : (
-                          <HiEye className="h-4 w-4" />
-                        )}
+                        {passwordToggleIcon}
                       </Button>
                     </div>
                   </FormControl>
@@ -105,15 +123,10 @@ export const LoginView: FC = () => {
 
             <Button
               type="submit"
-              className={cn(
-                'w-full text-primary-foreground shadow-lg transition-all duration-300 h-11',
-                isValid && !isLoading
-                  ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
-                  : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
-              )}
-              disabled={!isValid || isLoading}
+              className={buttonClassName}
+              disabled={isButtonDisabled}
             >
-              {isLoading ? 'Entrando...' : 'Entrar'}
+              {buttonText}
             </Button>
           </form>
         </Form>

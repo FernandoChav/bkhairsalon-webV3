@@ -3,13 +3,13 @@ import { useForm } from 'react-hook-form';
 
 import { useGetCategoriesQuery } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
-import { CreateServiceFormData, createServiceSchema } from '@/models/schemas';
+import { CreateServiceForm, createServiceSchema } from '@/models/schemas';
 
 export const useServiceFormData = () => {
   const { data: categories, isLoading, error } = useGetCategoriesQuery();
 
   // Formulario principal
-  const form = useForm<CreateServiceFormData>({
+  const form = useForm<CreateServiceForm>({
     resolver: zodResolver(createServiceSchema),
     mode: 'onTouched',
     defaultValues: {

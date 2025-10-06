@@ -1,1 +1,1 @@
-export { useRegisterForm } from './use-register-form';
+export { useRegisterView } from './use-register-view';

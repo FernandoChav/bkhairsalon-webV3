@@ -369,26 +369,26 @@ export const LandingView: FC = () => {
         <SectionHeader title="Portfolio" className="mb-12 text-right" />
 
         <LandingGrid columns={{ default: 1, md: 3, lg: 4 }} gap="md">
-          {portfolioImages.map(image => (
-            <LandingCard
-              key={image.id}
-              variant={image.variant}
-              className="h-80 hover:scale-105 transition-transform duration-300"
-              size="md"
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <span
-                  className={`text-sm ${
-                    image.variant === 'primary'
-                      ? 'text-primary-foreground'
-                      : 'text-accent-foreground'
-                  }`}
-                >
-                  {image.text}
-                </span>
-              </div>
-            </LandingCard>
-          ))}
+          {portfolioImages.map(image => {
+            // Computed values
+            const textClassName =
+              image.variant === 'primary'
+                ? 'text-sm text-primary-foreground'
+                : 'text-sm text-accent-foreground';
+
+            return (
+              <LandingCard
+                key={image.id}
+                variant={image.variant}
+                className="h-80 hover:scale-105 transition-transform duration-300"
+                size="md"
+              >
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className={textClassName}>{image.text}</span>
+                </div>
+              </LandingCard>
+            );
+          })}
         </LandingGrid>
       </LandingSection>
       <LandingSection

@@ -18,10 +18,10 @@ import {
   Textarea,
 } from '@/components/shadcn';
 import { CategoryResponse } from '@/models/responses';
-import { CreateServiceFormData } from '@/models/schemas';
+import { CreateServiceForm } from '@/models/schemas';
 
 interface ServiceBasicInfoProps {
-  form: UseFormReturn<CreateServiceFormData>;
+  form: UseFormReturn<CreateServiceForm>;
   categories: {
     data: CategoryResponse[];
     isLoading: boolean;
@@ -33,8 +33,22 @@ export const ServiceBasicInfo: FC<ServiceBasicInfoProps> = ({
   form,
   categories,
 }) => {
+  // Computed values
+  const isCategoriesLoading = categories.isLoading;
+  const hasCategoriesError = !!categories.error;
+  const hasCategories = categories.data.length > 0;
+  const isCategoriesDisabled = isCategoriesLoading;
+
+  const selectPlaceholder = isCategoriesLoading
+    ? 'Cargando categorías...'
+    : hasCategoriesError
+      ? 'Error al cargar categorías'
+      : !hasCategories
+        ? 'No hay categorías disponibles'
+        : 'Selecciona una categoría';
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 sm:space-y-5">
       <FormField
         control={form.control}
         name="name"
@@ -47,8 +61,8 @@ export const ServiceBasicInfo: FC<ServiceBasicInfoProps> = ({
               <div className="relative">
                 <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Nombre del servicio"
-                  className="pl-10 h-10"
+                  placeholder="Ej: Corte y peinado"
+                  className="pl-10"
                   autoComplete="off"
                   {...field}
                 />
@@ -69,8 +83,9 @@ export const ServiceBasicInfo: FC<ServiceBasicInfoProps> = ({
               <div className="relative">
                 <HiDocumentText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Textarea
-                  placeholder="Descripción del servicio"
-                  className="pl-10 min-h-[40px]"
+                  placeholder="Describe los detalles del servicio..."
+                  className="pl-10 resize-none"
+                  rows={2}
                   {...field}
                 />
               </div>
@@ -90,23 +105,13 @@ export const ServiceBasicInfo: FC<ServiceBasicInfoProps> = ({
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
-                disabled={categories.isLoading}
+                disabled={isCategoriesDisabled}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue
-                    placeholder={
-                      categories.isLoading
-                        ? 'Cargando categorías...'
-                        : categories.error
-                          ? 'Error al cargar categorías'
-                          : categories.data.length === 0
-                            ? 'No hay categorías disponibles'
-                            : 'Selecciona una categoría'
-                    }
-                  />
+                  <SelectValue placeholder={selectPlaceholder} />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.data.length > 0 ? (
+                  {hasCategories ? (
                     categories.data.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         <span className="text-sm">{category.fullPath}</span>

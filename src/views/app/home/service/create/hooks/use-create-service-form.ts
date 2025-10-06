@@ -6,7 +6,7 @@ import { useServiceFormData } from './use-service-form-data';
 import { useServiceFormValidation } from './use-service-form-validation';
 import { useServiceSubmission } from './use-service-submission';
 
-export const useCreateServiceForm = () => {
+export const useCreateServiceView = () => {
   const formData = useServiceFormData();
   const validation = useServiceFormValidation(formData.form);
   const submission = useServiceSubmission(formData.form, formData.fileUpload);

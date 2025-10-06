@@ -25,7 +25,7 @@ export const EditUserFormSkeleton: FC = () => {
       <CardContent>
         <form className="space-y-6" autoComplete="on">
           {/* Primera fila: Nombre y Apellido */}
-          <div className="grid grid-cols-2 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
             <div className="grid gap-2">
               <div className="text-sm font-medium">Nombre</div>
               <div className="relative">
@@ -42,7 +42,7 @@ export const EditUserFormSkeleton: FC = () => {
             </div>
           </div>
           {/* Segunda fila: Fecha de Nacimiento y Teléfono */}
-          <div className="grid grid-cols-2 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
             <div className="grid gap-2">
               <div className="text-sm font-medium">Fecha de Nacimiento</div>
               <Skeleton className="h-10 w-full" />

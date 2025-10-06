@@ -10,8 +10,9 @@ import { useRouter } from 'next/navigation';
 import { LoginRequest } from '@/models/requests';
 import { loginSchema } from '@/models/schemas';
 
-export const useLoginForm = () => {
+export const useLoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm<LoginRequest>({
@@ -24,7 +25,7 @@ export const useLoginForm = () => {
   });
   const watchedValues = useWatch({ control: form.control });
 
-  const onSubmit = useCallback(
+  const handleSubmit = useCallback(
     async (data: LoginRequest) => {
       if (isLoading) return;
 
@@ -57,14 +58,20 @@ export const useLoginForm = () => {
     [isLoading, form, router]
   );
 
+  const handlePasswordToggle = useCallback(() => {
+    setShowPassword(prev => !prev);
+  }, []);
+
   const isValid = Boolean(
     form.formState.isValid && watchedValues?.email && watchedValues?.password
   );
 
   return {
     form,
-    onSubmit,
+    handleSubmit,
+    handlePasswordToggle,
     isLoading,
     isValid,
+    showPassword,
   };
 };

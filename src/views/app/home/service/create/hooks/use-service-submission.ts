@@ -8,7 +8,7 @@ import { useCreateServiceMutation } from '@/hooks/api';
 import { extractValidationMessages, isValidationError } from '@/libs';
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest } from '@/models/requests';
-import { CreateServiceFormData } from '@/models/schemas';
+import { CreateServiceForm } from '@/models/schemas';
 
 interface FileUploadHook {
   files: File[];
@@ -18,13 +18,13 @@ interface FileUploadHook {
 }
 
 export const useServiceSubmission = (
-  form: UseFormReturn<CreateServiceFormData>,
+  form: UseFormReturn<CreateServiceForm>,
   fileUpload: FileUploadHook
 ) => {
   const router = useRouter();
   const { mutate: createService, isPending } = useCreateServiceMutation();
 
-  const onSubmit = (data: CreateServiceFormData) => {
+  const onSubmit = (data: CreateServiceForm) => {
     const serviceRequest: CreateServiceRequest = {
       ...data,
       photos: fileUpload.files,

@@ -1,28 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { AxiosError } from 'axios';
 import { useForm, useWatch } from 'react-hook-form';
-import { toast } from 'sonner';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { useEditUserMutation, useUserProfileQuery } from '@/hooks/api';
-import {
-  extractValidationMessages,
-  formatPhoneNumber,
-  isValidationError,
-} from '@/libs';
-import { ApiResponse } from '@/models/generics';
-import {
-  EditUserForm,
-  editUserFormSchema,
-  passwordSchema,
-} from '@/models/schemas';
+import { useUserProfileQuery } from '@/hooks/api';
+import { EditUserForm, editUserFormSchema } from '@/models/schemas';
 
 export const useEditUserForm = () => {
-  const [showModal, setShowModal] = useState(false);
-
-  const { mutate: editUser, isPending } = useEditUserMutation();
-
   const { data: profile, isLoading: isLoadingProfile } = useUserProfileQuery();
 
   const form = useForm<EditUserForm>({
@@ -64,66 +48,23 @@ export const useEditUserForm = () => {
     );
   }, [watchedValues, profile]);
 
-  // Función para ejecutar el submit con contraseña (solo lógica de negocio)
-  const submitWithPassword = (data: EditUserForm, password: string) => {
-    const parsedPassword = passwordSchema.safeParse({ password });
+  // Computed values
+  const isFormValid = useMemo(() => {
+    return (
+      form.formState.isValid &&
+      !!form.getValues('firstName') &&
+      !!form.getValues('lastName') &&
+      !!form.getValues('phoneNumber') &&
+      !!form.getValues('dateOfBirth')
+    );
+  }, [form]);
 
-    if (!parsedPassword.success) {
-      return;
-    }
-
-    // Transformar datos antes de enviar
-    const transformedData = {
-      ...data,
-      phoneNumber: formatPhoneNumber(data.phoneNumber),
-      dateOfBirth: data.dateOfBirth,
-      currentPassword: parsedPassword.data.password,
-    };
-
-    editUser(transformedData, {
-      onSuccess: (data: ApiResponse) => {
-        toast.success(data.message);
-      },
-      onError: (error: AxiosError<ApiResponse>) => {
-        if (isValidationError(error)) {
-          const validationMessages = extractValidationMessages(error);
-          validationMessages.forEach(message => {
-            toast.error(message);
-          });
-        }
-      },
-    });
-  };
-
-  // Función para manejar el submit del formulario
-  const handleFormSubmit = () => {
-    if (hasChanges) {
-      setShowModal(true);
-    } else {
-      toast.info('No hay cambios para guardar');
-    }
-  };
-
-  // Función para manejar la confirmación del modal
-  const handleConfirmSubmit = (password: string) => {
-    const formData = form.getValues();
-    submitWithPassword(formData, password);
-    setShowModal(false);
-  };
-
-  // Función para cerrar el modal
-  const closeModal = () => setShowModal(false);
+  const canSubmit = isFormValid && hasChanges;
 
   return {
     form,
-    modal: {
-      show: showModal,
-      handleSubmit: handleFormSubmit,
-      handleConfirm: handleConfirmSubmit,
-      close: closeModal,
-    },
-    isSubmitting: isPending,
     isLoadingProfile,
+    canSubmit,
     hasChanges,
   };
 };

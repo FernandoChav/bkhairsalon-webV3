@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
-import { Button } from '@/components/shadcn';
-import { FormLabel } from '@/components/shadcn';
+import { Button, FormLabel } from '@/components/shadcn';
 import { FileUpload } from '@/components/ui';
 
 interface ServiceFileUploadProps {
@@ -17,40 +16,51 @@ export const ServiceFileUpload: FC<ServiceFileUploadProps> = ({
   removeFile,
   clearFiles,
 }) => {
+  // Computed values
+  const hasFiles = files.length > 0;
+  const filesCount = files.length;
+  const maxFiles = 10;
+  const isAtMaxFiles = filesCount >= maxFiles;
+
+  const uploadTitle = isAtMaxFiles
+    ? `Límite máximo alcanzado (${maxFiles} fotos)`
+    : 'Sube fotos de tu servicio';
+
+  const uploadPlaceholder = `${filesCount}/${maxFiles} fotos subidas`;
+
+  const previewGridCols = filesCount === 1 ? '2' : '4';
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
         <FormLabel className="text-sm font-medium">
           Fotos del Servicio
         </FormLabel>
-        {files.length > 0 && (
+        {hasFiles && (
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={clearFiles}
-            className="text-xs"
+            className="text-xs h-8"
           >
-            Limpiar todas
+            Limpiar todas ({filesCount})
           </Button>
         )}
       </div>
+
       <FileUpload
         files={files}
         onFileAdd={addFiles}
         onFileRemove={removeFile}
-        maxFiles={10}
+        maxFiles={maxFiles}
         accept="image/*"
         multiple={true}
-        title={
-          files.length >= 10
-            ? 'Límite máximo alcanzado (10 fotos)'
-            : 'Sube fotos de tu servicio'
-        }
+        title={uploadTitle}
         description="Arrastra las imágenes aquí o haz clic para seleccionar"
-        placeholder={`${files.length}/10 fotos subidas`}
+        placeholder={uploadPlaceholder}
         showPreview={true}
-        previewGridCols="4"
+        previewGridCols={previewGridCols}
       />
     </div>
   );

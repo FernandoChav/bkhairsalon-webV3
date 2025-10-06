@@ -2,10 +2,10 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { useEffect } from 'react';
 
-import { CreateServiceFormData } from '@/models/schemas';
+import { CreateServiceForm } from '@/models/schemas';
 
 export const useServiceFormValidation = (
-  form: UseFormReturn<CreateServiceFormData>
+  form: UseFormReturn<CreateServiceForm>
 ) => {
   // Generar opciones de duración de 5 en 5 minutos desde 0 hasta 300 minutos
   const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
