@@ -1,5 +1,3 @@
-'use client';
-
 import { HiCalendar, HiPhone, HiUser } from 'react-icons/hi';
 
 import { FC } from 'react';
