@@ -1,140 +1,195 @@
 'use client';
 
-import type { FC } from 'react';
+import { HiPlus, HiSearch } from 'react-icons/hi';
 
-import Image from 'next/image';
+import { FC, useState } from 'react';
 
-import { useServicesView } from './hooks';
+import {
+  Button,
+  Input,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/shadcn';
+import { useCategoriesQuery } from '@/hooks/api';
+import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
-export const ServicesView: FC = () => {
-  const { data, isLoading, error } = useServicesView();
+import {
+  CategoryCard,
+  CategoryDetailsSheet,
+  CreateCategoryModal,
+  CreateServiceModal,
+  ServiceDetailsSheet,
+} from './components';
 
-  // Computed values
-  const services = data?.data || [];
-  const hasServices = services.length > 0;
-  const servicesCount = services.length;
-  const hasError = !!error;
-  const errorMessage = error ? 'Error al cargar los servicios' : null;
+export const ServiceView: FC = () => {
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useCategoriesQuery(true, true); // includeSubCategories=true, includeServices=true
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryResponse | null>(null);
+  const [isCategorySheetOpen, setIsCategorySheetOpen] = useState(false);
+  const [selectedService, setSelectedService] =
+    useState<ServiceResponse | null>(null);
+  const [isServiceSheetOpen, setIsServiceSheetOpen] = useState(false);
+  const [isCreateServiceModalOpen, setIsCreateServiceModalOpen] =
+    useState(false);
+  const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] =
+    useState(false);
+  const [selectedParentCategory, setSelectedParentCategory] =
+    useState<CategoryResponse | null>(null);
 
-  // Loading state
-  if (isLoading) {
+  const handleCategoryClick = (category: CategoryResponse) => {
+    setSelectedCategory(category);
+    setIsCategorySheetOpen(true);
+  };
+
+  const handleServiceClick = (service: ServiceResponse) => {
+    setSelectedService(service);
+    setIsServiceSheetOpen(true);
+  };
+
+  const handleCreateService = (category: CategoryResponse) => {
+    // TODO: Usar la categoría seleccionada para pre-seleccionar en el formulario
+    console.log('Creating service for category:', category.name);
+    setIsCreateServiceModalOpen(true);
+  };
+
+  const handleCreateCategory = () => {
+    setSelectedParentCategory(null);
+    setIsCreateCategoryModalOpen(true);
+  };
+
+  const handleCreateSubcategory = (parentCategory: CategoryResponse) => {
+    setSelectedParentCategory(parentCategory);
+    setIsCreateCategoryModalOpen(true);
+  };
+
+  const hasCategories = categories.length > 0;
+
+  // Show loading state while fetching categories
+  if (categoriesLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Cargando servicios...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Cargando categorías...</p>
           </div>
         </div>
       </div>
     );
   }
 
-  // Error state
-  if (hasError) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-destructive text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-semibold mb-2">Error</h2>
-            <p className="text-muted-foreground">{errorMessage}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Empty state
-  if (!hasServices) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-muted-foreground text-6xl mb-4">📋</div>
-            <h2 className="text-2xl font-semibold mb-2">No hay servicios</h2>
+  return (
+    <div className="container mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight mb-2">
+              Gestionar Servicios
+            </h1>
             <p className="text-muted-foreground">
-              Aún no se han creado servicios. ¡Crea el primero!
+              Organiza tus servicios por categorías para una mejor gestión
             </p>
           </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={handleCreateCategory}
+              >
+                <HiPlus className="h-4 w-4" />
+                Nueva Categoría
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Crear nueva categoría para organizar servicios</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
-    );
-  }
 
-  // Main content
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Servicios</h1>
-        <p className="text-muted-foreground">
-          Lista de todos los servicios disponibles ({servicesCount} servicios)
-        </p>
-      </div>
+      {/* Search Bar */}
+      {hasCategories && (
+        <div className="relative mb-4">
+          <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar categorías o servicios..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map(service => (
-          <div
-            key={service.id}
-            className="bg-card border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-          >
-            {/* Imagen del servicio */}
-            {service.images.length > 0 && (
-              <div className="relative h-48 w-full">
-                <Image
-                  src={service.images[0]}
-                  alt={service.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-            )}
+      {/* Categories List */}
+      {hasCategories ? (
+        <div className="space-y-3">
+          {categories.map(category => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onCategoryClick={handleCategoryClick}
+              onServiceClick={handleServiceClick}
+              onCreateService={handleCreateService}
+              onCreateSubcategory={handleCreateSubcategory}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <h3 className="text-lg font-semibold mb-2">No hay categorías</h3>
+          <p className="text-muted-foreground mb-4">
+            Crea tu primera categoría para comenzar a organizar tus servicios
+          </p>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={handleCreateCategory}
+              >
+                <HiPlus className="h-4 w-4" />
+                Crear Primera Categoría
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Crear tu primera categoría para organizar servicios</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      )}
 
-            <div className="p-6">
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                {service.description && (
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {service.description}
-                  </p>
-                )}
-              </div>
+      {/* Details Sheets */}
+      <CategoryDetailsSheet
+        category={selectedCategory}
+        isOpen={isCategorySheetOpen}
+        onClose={() => setIsCategorySheetOpen(false)}
+      />
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Precio:</span>
-                  <span className="font-semibold text-primary">
-                    ${service.price.toLocaleString()}
-                  </span>
-                </div>
+      <ServiceDetailsSheet
+        service={selectedService}
+        isOpen={isServiceSheetOpen}
+        onClose={() => setIsServiceSheetOpen(false)}
+      />
 
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Duración:
-                  </span>
-                  <span className="font-medium">
-                    {service.durationInMinutes < 60
-                      ? `${service.durationInMinutes} min`
-                      : `${Math.floor(service.durationInMinutes / 60)}h ${service.durationInMinutes % 60}m`}
-                  </span>
-                </div>
+      {/* Create Service Modal */}
+      <CreateServiceModal
+        isOpen={isCreateServiceModalOpen}
+        onClose={() => setIsCreateServiceModalOpen(false)}
+      />
 
-                {service.images.length > 1 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Fotos:
-                    </span>
-                    <span className="font-medium text-primary">
-                      +{service.images.length - 1} más
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Create Category Modal */}
+      <CreateCategoryModal
+        isOpen={isCreateCategoryModalOpen}
+        onClose={() => {
+          setIsCreateCategoryModalOpen(false);
+          setSelectedParentCategory(null);
+        }}
+        parentCategory={selectedParentCategory}
+        categories={categories}
+      />
     </div>
   );
 };

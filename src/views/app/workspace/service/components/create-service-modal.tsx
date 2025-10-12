@@ -1,0 +1,646 @@
+import {
+  HiClock,
+  HiCurrencyDollar,
+  HiDocumentText,
+  HiTag,
+} from 'react-icons/hi';
+
+import { FC, useCallback, useMemo } from 'react';
+
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Textarea,
+} from '@/components/shadcn';
+import { FileUpload, TimeInput } from '@/components/ui';
+import { cn } from '@/libs';
+
+import { useCreateService } from '../hooks';
+
+interface CreateServiceModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const CreateServiceModal: FC<CreateServiceModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const { form, categories, fileUpload, validation, submission } =
+    useCreateService({ onSuccess: onClose });
+
+  // Category Field Logic
+  const isCategoriesLoading = categories.isLoading;
+  const hasCategoriesError = !!categories.error;
+  const hasCategories = categories.data.length > 0;
+  const isCategoriesDisabled = isCategoriesLoading;
+
+  const selectPlaceholder = useMemo(() => {
+    if (isCategoriesLoading) return 'Cargando categorías...';
+    if (hasCategoriesError) return 'Error al cargar categorías';
+    if (!hasCategories) return 'No hay categorías disponibles';
+    return 'Selecciona una categoría';
+  }, [isCategoriesLoading, hasCategoriesError, hasCategories]);
+
+  const categoryOptions = useMemo(() => {
+    return categories.data || [];
+  }, [categories.data]);
+
+  const handleCategoryOpenChange = useCallback(
+    (
+      open: boolean,
+      currentValue: string | undefined,
+      onBlur: () => void
+    ): void => {
+      if (!open && !currentValue) {
+        onBlur();
+      }
+    },
+    []
+  );
+
+  // Duration Field Logic
+  const formatDuration = useCallback((minutes: number): string => {
+    if (minutes === 0) return '0 minutos';
+    if (minutes < 60) return `${minutes} minutos`;
+    if (minutes === 60) return '1 hora';
+
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
+  }, []);
+
+  const getDurationSelectValue = useCallback(
+    (value: number | undefined): string => {
+      return value ? value.toString() : '';
+    },
+    []
+  );
+
+  const handleDurationValueChange = useCallback((value: string): number => {
+    return parseInt(value, 10);
+  }, []);
+
+  const handleDurationOpenChange = useCallback(
+    (
+      open: boolean,
+      currentValue: number | undefined,
+      onBlur: () => void
+    ): void => {
+      if (!open && !currentValue) {
+        onBlur();
+      }
+    },
+    []
+  );
+
+  // Time Field Logic
+  const timeToMinutes = useCallback(
+    (timeString: string): number | undefined => {
+      if (!timeString) return undefined;
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return hours * 60 + minutes;
+    },
+    []
+  );
+
+  const handleTimeChange = useCallback((minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  }, []);
+
+  const handleTimeBlur = useCallback((onBlur: () => void) => {
+    return () => {
+      onBlur();
+    };
+  }, []);
+
+  // Number Field Logic
+  const displayValue = useCallback((value: number | undefined): string => {
+    return value?.toString() ?? '';
+  }, []);
+
+  const handleNumberChange = useCallback(
+    (value: string): number | undefined => {
+      return value === '' ? undefined : parseFloat(value);
+    },
+    []
+  );
+
+  // File Upload Field Logic
+  const hasFiles = fileUpload.files.length > 0;
+  const filesCount = fileUpload.files.length;
+  const maxFiles = 10;
+  const isAtMaxFiles = filesCount >= maxFiles;
+
+  const uploadTitle = useMemo(() => {
+    return isAtMaxFiles
+      ? `Límite máximo alcanzado (${maxFiles} fotos)`
+      : 'Sube fotos de tu servicio';
+  }, [isAtMaxFiles, maxFiles]);
+
+  const uploadPlaceholder = useMemo(() => {
+    return `${filesCount}/${maxFiles} fotos subidas`;
+  }, [filesCount, maxFiles]);
+
+  const previewGridCols = useMemo((): '2' | '3' | '4' | '5' => {
+    return filesCount === 1 ? '2' : '4';
+  }, [filesCount]);
+
+  // Computed values for form actions
+  const isButtonDisabled = submission.isLoading || !submission.isValid;
+  const buttonText = submission.isLoading
+    ? 'Creando Servicio...'
+    : !submission.isValid
+      ? 'Completa todos los campos'
+      : 'Crear Servicio';
+  const buttonClassName = cn(
+    'w-full text-primary-foreground shadow-lg transition-all duration-300 text-sm sm:text-base',
+    submission.isValid && !submission.isLoading
+      ? 'bg-primary hover:bg-primary/90 hover:scale-[1.02] hover:shadow-xl cursor-pointer'
+      : 'bg-muted-foreground/20 cursor-not-allowed text-muted-foreground'
+  );
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="!max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-border">
+        <DialogTitle className="sr-only">Crear Nuevo Servicio</DialogTitle>
+        <DialogDescription className="sr-only">
+          Completa la información para agregar un nuevo servicio a tu catálogo
+        </DialogDescription>
+        <Card className="w-full border-0 shadow-none">
+          <CardHeader>
+            <CardTitle className="text-2xl sm:text-3xl">
+              Crear Nuevo Servicio
+            </CardTitle>
+            <CardDescription className="text-sm sm:text-base">
+              Completa la información para agregar un nuevo servicio a tu
+              catálogo
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(submission.handleSubmit)}
+                className="space-y-8"
+                autoComplete="on"
+              >
+                {/* Sección 1: Identidad del Servicio */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Información del Servicio
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Define la identidad y descripción de tu servicio
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Primera fila: Categoría y Nombre */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                      {/* Category Field */}
+                      <FormField
+                        control={form.control}
+                        name="categoryId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium">
+                              Categoría del Servicio
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                                <Select
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                  onOpenChange={open =>
+                                    handleCategoryOpenChange(
+                                      open,
+                                      field.value,
+                                      field.onBlur
+                                    )
+                                  }
+                                  disabled={isCategoriesDisabled}
+                                >
+                                  <SelectTrigger
+                                    className="w-full pl-10"
+                                    onBlur={field.onBlur}
+                                  >
+                                    <SelectValue
+                                      placeholder={selectPlaceholder}
+                                    />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {hasCategories ? (
+                                      categoryOptions.map(category => (
+                                        <SelectItem
+                                          key={category.id}
+                                          value={category.id}
+                                        >
+                                          <span className="text-sm">
+                                            {category.fullPath}
+                                          </span>
+                                        </SelectItem>
+                                      ))
+                                    ) : (
+                                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                                        No hay categorías disponibles
+                                      </div>
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Name Field */}
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium">
+                              Nombre del Servicio
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                  placeholder="Ej: Corte y peinado"
+                                  className="pl-10"
+                                  autoComplete="off"
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Segunda fila: Descripción (ancho completo) */}
+                    <div>
+                      {/* Description Field */}
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium">
+                              Descripción
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <HiDocumentText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Textarea
+                                  placeholder="Describe los detalles del servicio..."
+                                  className="pl-10 resize-none"
+                                  rows={3}
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sección 2: Tiempo y Disponibilidad */}
+                <div className="space-y-6">
+                  <div className="border-t border-border pt-6">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Tiempo y Disponibilidad
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Configura la duración y horarios de atención
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                    {/* Duration Field */}
+                    <FormField
+                      control={form.control}
+                      name="duration"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Duración
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                              <Select
+                                value={getDurationSelectValue(field.value)}
+                                onValueChange={value =>
+                                  field.onChange(
+                                    handleDurationValueChange(value)
+                                  )
+                                }
+                                onOpenChange={open =>
+                                  handleDurationOpenChange(
+                                    open,
+                                    field.value,
+                                    field.onBlur
+                                  )
+                                }
+                              >
+                                <SelectTrigger
+                                  className="w-full pl-10"
+                                  onBlur={field.onBlur}
+                                >
+                                  <SelectValue placeholder="Selecciona duración" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {validation.durationOptions.map(minutes => (
+                                    <SelectItem
+                                      key={minutes}
+                                      value={minutes.toString()}
+                                    >
+                                      {formatDuration(minutes)}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Start Time Field */}
+                    <FormField
+                      control={form.control}
+                      name="startTime"
+                      render={({ field }) => {
+                        // Computed values
+                        const startTimeValue = timeToMinutes(field.value || '');
+                        const handleTimeChangeWrapper = (minutes: number) =>
+                          field.onChange(handleTimeChange(minutes));
+                        const handleTimeBlurWrapper = handleTimeBlur(
+                          field.onBlur
+                        );
+
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium">
+                              Horario de Inicio
+                            </FormLabel>
+                            <FormControl>
+                              <TimeInput
+                                value={startTimeValue}
+                                handleChange={handleTimeChangeWrapper}
+                                handleBlur={handleTimeBlurWrapper}
+                                minHour={8}
+                                maxHour={22}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+
+                    {/* End Time Field */}
+                    <FormField
+                      control={form.control}
+                      name="endTime"
+                      render={({ field }) => {
+                        // Computed values
+                        const endTimeValue = timeToMinutes(field.value || '');
+                        const handleTimeChangeWrapper = (minutes: number) =>
+                          field.onChange(handleTimeChange(minutes));
+                        const handleTimeBlurWrapper = handleTimeBlur(
+                          field.onBlur
+                        );
+
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium">
+                              Horario de Término
+                            </FormLabel>
+                            <FormControl>
+                              <TimeInput
+                                value={endTimeValue}
+                                handleChange={handleTimeChangeWrapper}
+                                handleBlur={handleTimeBlurWrapper}
+                                minHour={8}
+                                maxHour={22}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Sección 3: Aspectos Financieros */}
+                <div className="space-y-6">
+                  <div className="border-t border-border pt-6">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Configuración Financiera
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Establece precios y comisiones del servicio
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                    {/* Price Field */}
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Precio ($)
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <HiCurrencyDollar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <Input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                className="pl-10"
+                                value={displayValue(field.value)}
+                                onChange={e =>
+                                  field.onChange(
+                                    handleNumberChange(e.target.value)
+                                  )
+                                }
+                                onBlur={field.onBlur}
+                                name={field.name}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Commission Field */}
+                    <FormField
+                      control={form.control}
+                      name="commissionPercentage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Comisión (%)
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <HiCurrencyDollar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <Input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                placeholder="0.00"
+                                className="pl-10"
+                                value={displayValue(field.value)}
+                                onChange={e =>
+                                  field.onChange(
+                                    handleNumberChange(e.target.value)
+                                  )
+                                }
+                                onBlur={field.onBlur}
+                                name={field.name}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormDescription className="text-xs sm:text-sm">
+                            Porcentaje de comisión (0-100%)
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Discount Field */}
+                    <FormField
+                      control={form.control}
+                      name="discountId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-muted-foreground">
+                            Descuento (Opcional)
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <Input
+                                placeholder="ID de descuento"
+                                className="pl-10 border-dashed"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormDescription className="text-xs sm:text-sm text-muted-foreground">
+                            ID del descuento asociado (opcional)
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Sección 4: Recursos Visuales */}
+                <div className="space-y-6">
+                  <div className="border-t border-border pt-6">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Fotos del Servicio
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Agrega imágenes que muestren tu trabajo (opcional)
+                    </p>
+                  </div>
+
+                  {/* File Upload Field */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <FormLabel className="text-sm font-medium text-muted-foreground">
+                        Fotos del Servicio (Opcional)
+                      </FormLabel>
+                      {hasFiles && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={fileUpload.handleClearFiles}
+                          className="text-xs cursor-pointer"
+                        >
+                          Limpiar todas ({filesCount})
+                        </Button>
+                      )}
+                    </div>
+
+                    <FileUpload
+                      files={fileUpload.files}
+                      maxFiles={maxFiles}
+                      accept="image/*"
+                      multiple={true}
+                      title={uploadTitle}
+                      description="Arrastra las imágenes aquí o haz clic para seleccionar"
+                      placeholder={uploadPlaceholder}
+                      showPreview={true}
+                      previewGridCols={previewGridCols}
+                      handleAddFiles={fileUpload.handleAddFiles}
+                      handleRemoveFile={fileUpload.handleRemoveFile}
+                    />
+                  </div>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="pt-6 border-t border-border">
+                  <Button
+                    type="submit"
+                    className={buttonClassName}
+                    disabled={isButtonDisabled}
+                  >
+                    {buttonText}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </DialogContent>
+    </Dialog>
+  );
+};
