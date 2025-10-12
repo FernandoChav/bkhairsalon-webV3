@@ -6,11 +6,17 @@ import { ApiResponse } from '@/models/generics';
 import { CreateCategoryRequest } from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
-export const useCategoriesQuery = () =>
+export const useCategoriesQuery = (
+  includeSubCategories: boolean = true,
+  includeServices: boolean = true
+) =>
   useQuery<CategoryResponse[], AxiosError<ApiResponse>>({
-    queryKey: ['categories'],
+    queryKey: ['categories', includeSubCategories, includeServices],
     queryFn: async () => {
-      const response = await categoryClient.getAll();
+      const response = await categoryClient.getAll(
+        includeSubCategories,
+        includeServices
+      );
       return response.data || [];
     },
   });
