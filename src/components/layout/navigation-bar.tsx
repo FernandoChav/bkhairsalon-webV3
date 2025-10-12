@@ -26,6 +26,12 @@ export const NavigationBar: FC = () => {
     });
   };
 
+  // Computed values
+  const isAuthenticated = status !== 'loading' && !!session;
+  const isNotLoading = status !== 'loading';
+  const userName = session?.user?.name;
+  const userEmail = session?.user?.email;
+
   return (
     <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border/50 h-16">
       <div className="container mx-auto px-6 h-full flex justify-between items-center">
@@ -34,11 +40,12 @@ export const NavigationBar: FC = () => {
           className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >
-          BK Hair Salon
+          <span className="block sm:hidden">BK</span>
+          <span className="hidden sm:block">BK Hair Salon</span>
         </Link>
 
-        {status === 'loading' ? null : session ? (
-          <DropdownMenu>
+        {isNotLoading && isAuthenticated && (
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -56,16 +63,16 @@ export const NavigationBar: FC = () => {
             >
               <div className="px-4 py-3">
                 <p className="text-sm font-medium text-card-foreground">
-                  {session?.user?.name}
+                  {userName}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {session?.user?.email}
+                  {userEmail}
                 </p>
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href="/home/profile/edit"
+                  href="/workspace/profile/edit"
                   className="cursor-pointer flex items-center space-x-2 focus:bg-accent focus:text-accent-foreground"
                 >
                   <HiCog className="h-4 w-4" />
@@ -82,17 +89,19 @@ export const NavigationBar: FC = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
+        )}
+
+        {isNotLoading && !isAuthenticated && (
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
-              className="h-10 text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4"
+              className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"
               asChild
             >
               <Link href="/login">Iniciar sesión</Link>
             </Button>
             <Button
-              className="h-10 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider px-4"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wider px-4 cursor-pointer"
               asChild
             >
               <Link href="/register">Registrarse</Link>

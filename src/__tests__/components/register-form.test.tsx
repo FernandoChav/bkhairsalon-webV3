@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,18 +5,20 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InputHTMLAttributes } from 'react';
 
 import { render as customRender } from '@/__tests__/libs/render';
-import { RegisterView } from '@/views/register';
-import { useRegisterForm } from '@/views/register/hooks/use-register-form';
+import { RegisterView } from '@/views/app/register';
+import { useRegisterView } from '@/views/app/register/hooks/use-register-view';
 
-// Mock del hook useRegisterForm
-vi.mock('@/views/register/hooks/use-register-form');
+// Mock del hook useRegisterView
+vi.mock('@/views/app/register/hooks/use-register-view');
 
 // Mock React Hook Form
 vi.mock('react-hook-form', async importOriginal => {
   const actual = await importOriginal();
   return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(actual as any),
     useForm: vi.fn(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Controller: ({ render }: any) => {
       const field = {
         onChange: vi.fn(),
@@ -27,6 +28,7 @@ vi.mock('react-hook-form', async importOriginal => {
       };
       return render({ field });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     FormProvider: ({ children }: any) => children,
     useFormContext: vi.fn(() => ({
       formState: { errors: {} },
@@ -36,10 +38,11 @@ vi.mock('react-hook-form', async importOriginal => {
   };
 });
 
-const mockUseRegisterForm = vi.mocked(useRegisterForm);
+const mockUseRegisterView = vi.mocked(useRegisterView);
 
 // Mock de los componentes de UI
 vi.mock('@/components/ui/date-picker', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DatePicker: ({ onChange, placeholder }: any) => (
     <input
       data-testid="date-picker"
@@ -68,6 +71,7 @@ vi.mock('react-icons/hi', () => ({
 
 // Mock de next/link
 vi.mock('next/link', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
@@ -76,7 +80,9 @@ vi.mock('next/link', () => ({
 }));
 
 describe('RegisterView', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mockForm: any = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleSubmit: vi.fn(callback => (e: any) => {
       e?.preventDefault?.();
       callback({
@@ -119,12 +125,15 @@ describe('RegisterView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockUseRegisterForm.mockReturnValue({
+    mockUseRegisterView.mockReturnValue({
       form: mockForm,
-      onSubmit: mockOnSubmit,
       isLoading: false,
-      error: null,
-      isSuccess: false,
+      isValid: false,
+      isPasswordVisible: false,
+      isConfirmPasswordVisible: false,
+      handleSubmit: mockOnSubmit,
+      handlePasswordToggle: vi.fn(),
+      handleConfirmPasswordToggle: vi.fn(),
     });
   });
 
@@ -185,6 +194,19 @@ describe('RegisterView', () => {
         password: 'password123',
         confirmPassword: 'password123',
       });
+
+      // Mock the hook to return isValid: true when form is valid
+      mockUseRegisterView.mockReturnValue({
+        form: mockForm,
+        isLoading: false,
+        isValid: true,
+        isPasswordVisible: false,
+        isConfirmPasswordVisible: false,
+        handleSubmit: mockOnSubmit,
+        handlePasswordToggle: vi.fn(),
+        handleConfirmPasswordToggle: vi.fn(),
+      });
+
       customRender(<RegisterView />);
 
       const submitButton = screen.getByRole('button', { name: 'Crear cuenta' });

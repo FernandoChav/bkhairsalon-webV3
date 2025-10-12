@@ -2,13 +2,13 @@
 
 import { Toaster } from 'sonner';
 
-import { type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 interface AppSonnerProviderProps {
   children: ReactNode;
 }
 
-export const AppSonnerProvider = ({ children }: AppSonnerProviderProps) => {
+export const AppSonnerProvider: FC<AppSonnerProviderProps> = ({ children }) => {
   return (
     <>
       {children}

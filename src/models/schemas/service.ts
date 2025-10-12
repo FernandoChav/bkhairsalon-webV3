@@ -32,4 +32,4 @@ export const createServiceSchema = z.object({
   photos: z.array(z.instanceof(File)).optional(),
 });
 
-export type CreateServiceFormData = z.infer<typeof createServiceSchema>;
+export type CreateServiceForm = z.infer<typeof createServiceSchema>;

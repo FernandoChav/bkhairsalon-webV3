@@ -1,93 +1,52 @@
-import { withAuth } from 'next-auth/middleware';
+import { getToken } from 'next-auth/jwt';
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default withAuth(
-  function middleware(req) {
-    const { pathname } = req.nextUrl;
-    const { token } = req.nextauth;
+import { PUBLIC_ROUTES, getDefaultRoute, hasRouteAccess } from '@/libs/routes';
+import { UserRole } from '@/models/entities';
 
-    const protectedRoutes = ['/home'];
-    const authRoutes = ['/login', '/register'];
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-    // Función para verificar si el token es válido o puede ser refrescado
-    const isTokenValidOrRefreshable = (
-      token: { accessToken?: string } | null
-    ): boolean => {
-      if (!token?.accessToken) return false;
+  // Obtener token JWT
+  const token = await getToken({ req: request });
 
-      try {
-        const payload = JSON.parse(atob(token.accessToken.split('.')[1]));
-        const currentTime = Date.now() / 1000;
-
-        // Token es válido si no ha expirado completamente
-        // Permitir acceso si está próximo a expirar (el refresh se manejará en el cliente)
-        return payload.exp > currentTime;
-      } catch {
-        return false;
-      }
-    };
-
-    // Verificar rutas protegidas
-    if (protectedRoutes.some(route => pathname.startsWith(route))) {
-      if (!token || !isTokenValidOrRefreshable(token)) {
-        const callbackUrl = encodeURIComponent(pathname + req.nextUrl.search);
-        return NextResponse.redirect(
-          new URL(`/login?callbackUrl=${callbackUrl}`, req.url)
-        );
-      }
+  if (!token) {
+    // Usuario no autenticado - solo permitir rutas públicas
+    if (!PUBLIC_ROUTES.includes(pathname as (typeof PUBLIC_ROUTES)[number])) {
+      return NextResponse.redirect(new URL('/login', request.url));
     }
-
-    // Verificar rutas de autenticación
-    if (authRoutes.some(route => pathname.startsWith(route))) {
-      if (token && isTokenValidOrRefreshable(token)) {
-        return NextResponse.redirect(new URL('/home', req.url));
-      }
-    }
-
     return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ req }) => {
-        const { pathname } = req.nextUrl;
-
-        const alwaysAllowedPaths = [
-          '/',
-          '/about',
-          '/services',
-          '/contact',
-          '/login',
-          '/register',
-        ];
-
-        if (
-          pathname.startsWith('/api/auth') ||
-          pathname.startsWith('/_next') ||
-          pathname.startsWith('/favicon') ||
-          pathname.includes('.well-known') ||
-          alwaysAllowedPaths.some(
-            path => pathname === path || pathname.startsWith(path + '/')
-          )
-        ) {
-          return true;
-        }
-
-        return true;
-      },
-    },
   }
-);
+
+  // Extraer roles del token
+  const userRoles: UserRole[] = [];
+  if (token.roles) {
+    try {
+      const rolesData = JSON.parse(token.roles as string);
+      userRoles.push(
+        ...rolesData.map((role: { Name: string }) => role.Name as UserRole)
+      );
+    } catch (error) {
+      console.error('Error parsing roles from token:', error);
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
+
+  // Verificar acceso a la ruta
+  if (!hasRouteAccess(userRoles, pathname)) {
+    // Redirigir a la ruta por defecto del usuario
+    const defaultRoute = getDefaultRoute(userRoles);
+    return NextResponse.redirect(new URL(defaultRoute, request.url));
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)',
+    '/workspace/:path*',
+    // Futuras rutas (descomentar cuando las crees):
+    // '/client/:path*',
   ],
 };

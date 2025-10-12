@@ -16,10 +16,8 @@ import {
 import { cn } from '@/libs';
 
 export interface DatePickerProps {
+  // Valores (estado, datos, computed values)
   value?: string;
-  onChange?: (date: string | undefined) => void;
-  onBlur?: () => void;
-
   name?: string;
   ref?: Ref<HTMLButtonElement>;
   placeholder?: string;
@@ -39,12 +37,15 @@ export interface DatePickerProps {
   required?: boolean;
   allowFutureDates?: boolean;
   allowPastDates?: boolean;
+
+  // Handlers (funciones de manejo de eventos)
+  handleChange?: (date: string | undefined) => void;
+  handleBlur?: () => void;
 }
 
 export const DatePicker = ({
+  // Valores primero
   value,
-  onChange,
-  onBlur,
   name,
   ref,
   placeholder = 'Seleccionar fecha',
@@ -64,22 +65,32 @@ export const DatePicker = ({
   required = false,
   allowFutureDates = false,
   allowPastDates = true,
+  // Handlers después
+  handleChange,
+  handleBlur,
 }: DatePickerProps) => {
+  // Estado
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
-  const parseStringToDate = (dateString: string): Date | undefined => {
+  // Funciones utilitarias
+  const parseDateString = (dateString: string): Date | undefined => {
     if (!dateString) return undefined;
     const date = parseISO(dateString);
     return isValid(date) ? date : undefined;
   };
 
-  const formatDateToString = (date: Date): string => {
+  const formatDateToISOString = (date: Date): string => {
     return format(date, 'yyyy-MM-dd');
   };
 
-  const selectedDate = parseStringToDate(value || '');
+  const formatDisplayDate = (dateString: string) => {
+    const date = parseDateString(dateString);
+    if (!date) return '';
+    return format(date, dateFormat);
+  };
 
+  // Funciones de cálculo
   const getMinDate = (): Date => {
     if (minDate) return minDate;
 
@@ -148,14 +159,22 @@ export const DatePicker = ({
     return getMaxDate().getFullYear();
   };
 
+  const isDateDisabled = (date: Date): boolean => {
+    const minDateValue = getMinDate();
+    const maxDateValue = getMaxDate();
+
+    return date < minDateValue || date > maxDateValue;
+  };
+
+  // Handlers
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
-      const formattedDate = formatDateToString(date);
-      onChange?.(formattedDate);
+      const formattedDate = formatDateToISOString(date);
+      handleChange?.(formattedDate);
       setIsOpen(false);
       setHasBeenOpened(false);
     } else {
-      onChange?.(undefined);
+      handleChange?.(undefined);
     }
   };
 
@@ -166,23 +185,53 @@ export const DatePicker = ({
       setHasBeenOpened(true);
     } else if (!open) {
       if (hasBeenOpened && !selectedDate && required) {
-        onBlur?.();
+        handleBlur?.();
       }
       setHasBeenOpened(false);
     }
   };
 
-  const formatDisplayDate = (dateString: string) => {
-    const date = parseStringToDate(dateString);
-    if (!date) return '';
-    return format(date, dateFormat);
+  const handleBlurInternal = () => {
+    if (!isOpen) {
+      handleBlur?.();
+    }
   };
 
-  const isDateDisabled = (date: Date): boolean => {
-    const min = getMinDate();
-    const max = getMaxDate();
+  // Computed values
+  const selectedDate = parseDateString(value || '');
+  const displayDate = selectedDate ? formatDisplayDate(value || '') : '';
+  const fromYearValue = getFromYear();
+  const toYearValue = getToYear();
+  const buttonText = selectedDate ? displayDate : placeholder;
+  const buttonClassName = cn(
+    'w-full justify-start text-left font-normal',
+    'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground',
+    'border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none',
+    'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+    'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+    'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+    'dark:bg-input/30 cursor-pointer',
+    'flex w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base md:text-sm',
+    'data-[size=default]:h-9 data-[size=sm]:h-8',
+    !value && 'text-muted-foreground',
+    className
+  );
 
-    return date < min || date > max;
+  // Formatters
+  const formatMonthDropdown = (date: Date) => {
+    const monthName = date.toLocaleDateString(locale.code, {
+      month: 'long',
+    });
+    return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+  };
+
+  const formatYearDropdown = (date: Date) => {
+    return date.getFullYear().toString();
+  };
+
+  const formatters = {
+    formatMonthDropdown,
+    formatYearDropdown,
   };
 
   return (
@@ -190,28 +239,15 @@ export const DatePicker = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn(
-            'w-full justify-start text-left font-normal h-10 px-3 py-1 text-base md:text-sm',
-            'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground',
-            'border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none',
-            'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
-            'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-            'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-            'dark:bg-input/30 cursor-pointer',
-            !value && 'text-muted-foreground',
-            className
-          )}
+          className={buttonClassName}
           disabled={disabled}
           name={name}
           ref={ref}
-          onBlur={() => {
-            if (!isOpen) {
-              onBlur?.();
-            }
-          }}
+          data-size="default"
+          onBlur={handleBlurInternal}
         >
           <HiCalendar className="mr-2 h-4 w-4" />
-          {selectedDate ? formatDisplayDate(value || '') : placeholder}
+          {buttonText}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -226,21 +262,11 @@ export const DatePicker = ({
           locale={locale}
           initialFocus
           captionLayout={captionLayout}
-          fromYear={getFromYear()}
-          toYear={getToYear()}
+          fromYear={fromYearValue}
+          toYear={toYearValue}
           showOutsideDays={showOutsideDays}
           fixedWeeks={fixedWeeks}
-          formatters={{
-            formatMonthDropdown: (date: Date) => {
-              const monthName = date.toLocaleDateString(locale.code, {
-                month: 'long',
-              });
-              return monthName.charAt(0).toUpperCase() + monthName.slice(1);
-            },
-            formatYearDropdown: (date: Date) => {
-              return date.getFullYear().toString();
-            },
-          }}
+          formatters={formatters}
         />
       </PopoverContent>
     </Popover>

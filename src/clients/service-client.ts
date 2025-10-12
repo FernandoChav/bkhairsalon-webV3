@@ -4,7 +4,16 @@ import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
+/**
+ * Cliente para operaciones de servicios
+ * Maneja la creación y obtención de servicios
+ */
 class ServiceClient {
+  /**
+   * Crea un nuevo servicio con fotos
+   * @param data - Datos del servicio a crear
+   * @returns Respuesta de la API con el servicio creado
+   */
   async createService(
     data: CreateServiceRequest
   ): Promise<ApiResponse<ServiceResponse>> {
@@ -41,6 +50,10 @@ class ServiceClient {
     return response.data;
   }
 
+  /**
+   * Obtiene todos los servicios públicos disponibles
+   * @returns Respuesta de la API con lista de servicios públicos
+   */
   async getAll(): Promise<ApiResponse<PublicServiceResponse[]>> {
     const response =
       await baseClient.get<ApiResponse<PublicServiceResponse[]>>('/service');

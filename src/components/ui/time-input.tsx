@@ -1,6 +1,8 @@
+'use client';
+
 import { HiClock } from 'react-icons/hi';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
   Select,
@@ -11,94 +13,199 @@ import {
 } from '@/components/shadcn';
 
 interface TimeInputProps {
-  value?: number; // valor en minutos desde medianoche (0 = 00:00, 480 = 08:00, 1320 = 22:00)
-  onChange?: (minutes: number) => void;
-  onBlur?: () => void;
+  // Valores (estado, datos, computed values)
+  value?: number;
   className?: string;
   disabled?: boolean;
-  minHour?: number; // hora mínima (por defecto 8 = 08:00)
-  maxHour?: number; // hora máxima (por defecto 22 = 22:00)
+  minHour?: number;
+  maxHour?: number;
+
+  // Handlers (funciones de manejo de eventos)
+  handleChange?: (minutes: number) => void;
+  handleBlur?: () => void;
 }
 
 export const TimeInput: FC<TimeInputProps> = ({
+  // Valores primero
   value,
-  onChange,
-  onBlur,
   className = '',
   disabled = false,
   minHour = 8,
   maxHour = 22,
+  // Handlers después
+  handleChange,
+  handleBlur,
 }) => {
-  // Convertir minutos a horas y minutos (solo si hay valor)
-  const hours = value ? Math.floor(value / 60) : undefined;
-  const minutes = value ? value % 60 : undefined;
-
-  // Generar opciones de horas (minHour a maxHour)
-  const hourOptions = Array.from(
-    { length: maxHour - minHour + 1 },
-    (_, i) => minHour + i
+  // Estado
+  const [internalHours, setInternalHours] = useState<number | undefined>(
+    undefined
   );
+  const [internalMinutes, setInternalMinutes] = useState<number | undefined>(
+    undefined
+  );
+  const [hasInteractedWithHours, setHasInteractedWithHours] = useState(false);
+  const [hasInteractedWithMinutes, setHasInteractedWithMinutes] =
+    useState(false);
+  const [hasOpenedHours, setHasOpenedHours] = useState(false);
+  const [hasOpenedMinutes, setHasOpenedMinutes] = useState(false);
 
-  // Generar opciones de minutos (0, 5, 10, ..., 55)
-  const minuteOptions = Array.from({ length: 12 }, (_, i) => i * 5);
+  // Sincronizar estado interno con el valor externo
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalHours(Math.floor(value / 60));
+      setInternalMinutes(value % 60);
+    } else {
+      setInternalHours(undefined);
+      setInternalMinutes(undefined);
+    }
+  }, [value]);
 
+  // Funciones utilitarias
+  const generateHourOptions = () => {
+    return Array.from({ length: maxHour - minHour + 1 }, (_, i) => {
+      const hour = minHour + i;
+      return {
+        value: hour.toString(),
+        text: `${hour.toString().padStart(2, '0')}h`,
+      };
+    });
+  };
+
+  const generateMinuteOptions = () => {
+    return Array.from({ length: 12 }, (_, i) => {
+      const minute = i * 5;
+      return {
+        value: minute.toString(),
+        text: `${minute.toString().padStart(2, '0')}m`,
+      };
+    });
+  };
+
+  // Handlers
   const handleHourChange = (newHour: string) => {
     const hour = parseInt(newHour, 10);
-    const currentMinutes = minutes !== undefined ? minutes : 0;
-    const newValue = hour * 60 + currentMinutes;
-    onChange?.(newValue);
+    setInternalHours(hour);
+    setHasInteractedWithHours(true);
+
+    // Solo enviar el valor completo si también hay minutos seleccionados
+    if (internalMinutes !== undefined) {
+      const newValue = hour * 60 + internalMinutes;
+      handleChange?.(newValue);
+    }
   };
 
   const handleMinuteChange = (newMinute: string) => {
     const minute = parseInt(newMinute, 10);
-    const currentHours = hours !== undefined ? hours : minHour;
-    const newValue = currentHours * 60 + minute;
-    onChange?.(newValue);
+    setInternalMinutes(minute);
+    setHasInteractedWithMinutes(true);
+
+    // Solo enviar el valor completo si también hay horas seleccionadas
+    if (internalHours !== undefined) {
+      const newValue = internalHours * 60 + minute;
+      handleChange?.(newValue);
+    }
   };
 
+  const handleHourBlur = () => {
+    setHasInteractedWithHours(true);
+    // Solo disparar validación si el usuario ha interactuado con minutos
+    // y no hay un valor completo seleccionado
+    if (
+      hasInteractedWithMinutes &&
+      (internalHours === undefined || internalMinutes === undefined)
+    ) {
+      handleBlur?.();
+    }
+  };
+
+  const handleMinuteBlur = () => {
+    setHasInteractedWithMinutes(true);
+    // Solo disparar validación si el usuario ha interactuado con horas
+    // y no hay un valor completo seleccionado
+    if (
+      hasInteractedWithHours &&
+      (internalHours === undefined || internalMinutes === undefined)
+    ) {
+      handleBlur?.();
+    }
+  };
+
+  const handleHourOpenChange = (open: boolean) => {
+    if (open) {
+      setHasOpenedHours(true);
+    } else {
+      // Marcar como interactuado
+      setHasInteractedWithHours(true);
+      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
+      if (
+        hasOpenedMinutes &&
+        (internalHours === undefined || internalMinutes === undefined)
+      ) {
+        handleBlur?.();
+      }
+    }
+  };
+
+  const handleMinuteOpenChange = (open: boolean) => {
+    if (open) {
+      setHasOpenedMinutes(true);
+    } else {
+      // Marcar como interactuado
+      setHasInteractedWithMinutes(true);
+      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
+      if (
+        hasOpenedHours &&
+        (internalHours === undefined || internalMinutes === undefined)
+      ) {
+        handleBlur?.();
+      }
+    }
+  };
+
+  // Computed values
+  const hourOptions = generateHourOptions();
+  const minuteOptions = generateMinuteOptions();
+  const containerClassName = `relative ${className}`;
+  const hoursValue =
+    internalHours !== undefined ? internalHours.toString() : '';
+  const minutesValue =
+    internalMinutes !== undefined ? internalMinutes.toString() : '';
+
   return (
-    <div className={`relative ${className}`}>
+    <div className={containerClassName}>
       <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
       <div className="flex gap-2 pl-10">
         <Select
-          value={hours !== undefined ? hours.toString() : ''}
+          value={hoursValue}
           onValueChange={handleHourChange}
-          onOpenChange={open => {
-            if (!open) {
-              onBlur?.();
-            }
-          }}
+          onOpenChange={handleHourOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 !h-10">
+          <SelectTrigger className="flex-1 h-9" onBlur={handleHourBlur}>
             <SelectValue placeholder="Horas" />
           </SelectTrigger>
           <SelectContent>
             {hourOptions.map(hour => (
-              <SelectItem key={hour} value={hour.toString()}>
-                {hour.toString().padStart(2, '0')}h
+              <SelectItem key={hour.value} value={hour.value}>
+                {hour.text}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <Select
-          value={minutes !== undefined ? minutes.toString() : ''}
+          value={minutesValue}
           onValueChange={handleMinuteChange}
-          onOpenChange={open => {
-            if (!open) {
-              onBlur?.();
-            }
-          }}
+          onOpenChange={handleMinuteOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 !h-10">
+          <SelectTrigger className="flex-1 h-9" onBlur={handleMinuteBlur}>
             <SelectValue placeholder="Minutos" />
           </SelectTrigger>
           <SelectContent>
             {minuteOptions.map(minute => (
-              <SelectItem key={minute} value={minute.toString()}>
-                {minute.toString().padStart(2, '0')}m
+              <SelectItem key={minute.value} value={minute.value}>
+                {minute.text}
               </SelectItem>
             ))}
           </SelectContent>

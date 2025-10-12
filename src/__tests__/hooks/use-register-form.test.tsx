@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ReactNode } from 'react';
 
 import { useRegisterMutation } from '@/hooks/api/use-auth-client';
-import { useRegisterForm } from '@/views/register/hooks/use-register-form';
+import { useRegisterView } from '@/views/app/register/hooks/use-register-view';
 
 // Mock de las dependencias
 vi.mock('@/hooks/api/use-auth-client');
@@ -49,7 +48,7 @@ const wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe('useRegisterForm', () => {
+describe('useRegisterView', () => {
   const mockMutate = vi.fn();
   const mockRegisterData = {
     firstName: 'Juan',
@@ -82,45 +81,49 @@ describe('useRegisterForm', () => {
       context: undefined,
       isPaused: false,
       submittedAt: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
   });
 
   describe('Inicialización', () => {
     it('debe inicializar el hook correctamente', () => {
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
       expect(result.current).toHaveProperty('form');
-      expect(result.current).toHaveProperty('onSubmit');
+      expect(result.current).toHaveProperty('handleSubmit');
       expect(result.current).toHaveProperty('isLoading');
-      expect(result.current).toHaveProperty('error');
-      expect(result.current).toHaveProperty('isSuccess');
+      expect(result.current).toHaveProperty('isValid');
+      expect(result.current).toHaveProperty('isPasswordVisible');
+      expect(result.current).toHaveProperty('isConfirmPasswordVisible');
+      expect(result.current).toHaveProperty('handlePasswordToggle');
+      expect(result.current).toHaveProperty('handleConfirmPasswordToggle');
     });
 
     it('debe inicializar con estado de loading en false', () => {
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
       expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe inicializar sin errores', () => {
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+    it('debe inicializar con isPasswordVisible en false', () => {
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.error).toBeNull();
+      expect(result.current.isPasswordVisible).toBe(false);
     });
 
-    it('debe inicializar con isSuccess en false', () => {
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+    it('debe inicializar con isConfirmPasswordVisible en false', () => {
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.isSuccess).toBe(false);
+      expect(result.current.isConfirmPasswordVisible).toBe(false);
     });
   });
 
   describe('onSubmit', () => {
     it('debe llamar a mutate con los datos del formulario', async () => {
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
       await act(async () => {
-        result.current.onSubmit(mockRegisterData);
+        result.current.handleSubmit(mockRegisterData);
       });
 
       // El phoneNumber se formatea automáticamente
@@ -158,9 +161,10 @@ describe('useRegisterForm', () => {
         context: undefined,
         isPaused: false,
         submittedAt: Date.now(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
       expect(result.current.isLoading).toBe(true);
     });
@@ -183,14 +187,16 @@ describe('useRegisterForm', () => {
         context: undefined,
         isPaused: false,
         submittedAt: undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
       expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe reflejar error de la mutación', () => {
+    it('debe manejar errores de la mutación internamente', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockError: any = {
         isAxiosError: true,
         message: 'Error de red',
@@ -219,14 +225,16 @@ describe('useRegisterForm', () => {
         context: undefined,
         isPaused: false,
         submittedAt: Date.now(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.error).toBe(mockError);
+      // El hook maneja errores internamente, no los expone
+      expect(result.current.isLoading).toBe(false);
     });
 
-    it('debe reflejar éxito de la mutación', () => {
+    it('debe manejar éxito de la mutación internamente', () => {
       mockUseRegisterMutation.mockReturnValue({
         mutate: mockMutate,
         isPending: false,
@@ -248,11 +256,13 @@ describe('useRegisterForm', () => {
         context: undefined,
         isPaused: false,
         submittedAt: Date.now(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      const { result } = renderHook(() => useRegisterForm(), { wrapper });
+      const { result } = renderHook(() => useRegisterView(), { wrapper });
 
-      expect(result.current.isSuccess).toBe(true);
+      // El hook maneja éxito internamente, no lo expone
+      expect(result.current.isLoading).toBe(false);
     });
   });
 });

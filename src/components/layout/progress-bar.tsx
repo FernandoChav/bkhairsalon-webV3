@@ -1,15 +1,40 @@
 'use client';
 
-import { FC } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 
-import { useProgress } from '@/hooks/common';
+import { FC, useEffect } from 'react';
+
+import { usePathname } from 'next/navigation';
+
+import {
+  completeProgressAtom,
+  progressValueAtom,
+  progressVisibilityAtom,
+  startProgressAtom,
+} from '@/atoms';
 
 interface ProgressBarProps {
   className?: string;
 }
 
 export const ProgressBar: FC<ProgressBarProps> = ({ className = '' }) => {
-  const { progress, isVisible } = useProgress();
+  const pathname = usePathname();
+  const progress = useAtomValue(progressValueAtom);
+  const isVisible = useAtomValue(progressVisibilityAtom);
+  const start = useSetAtom(startProgressAtom);
+  const complete = useSetAtom(completeProgressAtom);
+
+  useEffect(() => {
+    start(100);
+
+    const timer = setTimeout(() => {
+      complete();
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [pathname, start, complete]);
 
   if (!isVisible) return null;
 

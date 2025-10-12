@@ -3,8 +3,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
-import { useEffect } from 'react';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 import { LoadingPage } from '@/components/ui';
 
@@ -45,31 +44,32 @@ export const ProtectedRouteWrapper = ({
     });
   };
 
+  // Función para manejar errores de autenticación
+  const handleAuthError = () => {
+    toast.error('Error de autenticación', {
+      description:
+        'No se pudo renovar tu sesión. Por favor, inicia sesión nuevamente.',
+      duration: 5000,
+    });
+
+    signOut({
+      callbackUrl: '/login',
+      redirect: true,
+    });
+  };
+
   // Validar sesión cuando cambie - solo actuar si está completamente expirado
   useEffect(() => {
     if (status === 'authenticated' && session?.accessToken) {
       // Solo forzar logout si está completamente expirado
       if (isTokenExpired(session.accessToken)) {
-        handleSessionExpiration();
+        void handleSessionExpiration();
       }
     }
   }, [session, status]);
 
   // Listener para errores de autenticación desde el BaseClient
   useEffect(() => {
-    const handleAuthError = () => {
-      toast.error('Error de autenticación', {
-        description:
-          'No se pudo renovar tu sesión. Por favor, inicia sesión nuevamente.',
-        duration: 5000,
-      });
-
-      signOut({
-        callbackUrl: '/login',
-        redirect: true,
-      });
-    };
-
     // Escuchar eventos de error de autenticación
     window.addEventListener('auth-error', handleAuthError);
 
@@ -78,7 +78,10 @@ export const ProtectedRouteWrapper = ({
     };
   }, []);
 
-  if (status === 'loading') {
+  // Computed values
+  const isLoading = status === 'loading';
+
+  if (isLoading) {
     return <LoadingPage message={loadingMessage} />;
   }
 

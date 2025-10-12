@@ -1,3 +1,8 @@
+/**
+ * Formatea un número de teléfono chileno al formato internacional estándar
+ * @param phone - Número de teléfono en cualquier formato
+ * @returns Número formateado con prefijo +56 o +569
+ */
 export const formatPhoneNumber = (phone: string): string => {
   const cleaned = phone.replace(/\D/g, '');
 
@@ -20,6 +25,11 @@ export const formatPhoneNumber = (phone: string): string => {
   return cleaned;
 };
 
+/**
+ * Valida si un número de teléfono es un formato chileno válido
+ * @param phone - Número de teléfono a validar
+ * @returns true si el formato es válido para Chile, false en caso contrario
+ */
 export const isValidChileanPhone = (phone: string): boolean => {
   const cleaned = phone.replace(/\D/g, '');
 

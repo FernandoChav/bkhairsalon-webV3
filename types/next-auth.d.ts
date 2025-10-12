@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DefaultSession } from 'next-auth';
 
+import { UserRole } from '@/models/entities';
+
 declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -10,6 +12,7 @@ declare module 'next-auth' {
     user: {
       /** The user's unique identifier */
       id?: string;
+      roles?: UserRole[];
     } & DefaultSession['user'];
   }
 
@@ -19,6 +22,7 @@ declare module 'next-auth' {
    */
   interface User {
     accessToken?: string;
+    roles?: UserRole[];
   }
 }
 
@@ -28,6 +32,7 @@ declare module 'next-auth/jwt' {
     accessToken?: string;
     exp?: number;
     refreshAttempted?: boolean;
+    roles?: string; // El string JSON de roles del backend
   }
 }
 
