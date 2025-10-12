@@ -31,6 +31,7 @@ export const ROUTE_ACCESS_CONFIG = {
     UserRole.ADMIN,
     UserRole.STYLIST,
     UserRole.RECEPTIONIST,
+    UserRole.CLIENT,
   ],
   '/workspace/service': [
     UserRole.ADMIN,
