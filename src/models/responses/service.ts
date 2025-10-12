@@ -6,10 +6,13 @@ export interface ServiceResponse {
   price: number;
   startTime: string;
   endTime: string;
+  sortOrder: number;
   commissionPercentage: number;
+  categoryId: string;
   categoryName: string;
   images: string[];
   createdAt: string;
+  updatedAt: string;
   createdBy: string;
 }
 
