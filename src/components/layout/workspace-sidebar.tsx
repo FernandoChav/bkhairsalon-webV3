@@ -1,6 +1,6 @@
 'use client';
 
-import { HiCollection, HiScissors } from 'react-icons/hi';
+import { HiScissors } from 'react-icons/hi';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -18,11 +18,6 @@ import {
 } from '@/components/shadcn';
 
 const navigationItems = [
-  {
-    title: 'Categorías',
-    href: '/workspace/category',
-    icon: HiCollection,
-  },
   {
     title: 'Servicios',
     href: '/workspace/service',

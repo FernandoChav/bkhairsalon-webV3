@@ -32,17 +32,11 @@ export const ROUTE_ACCESS_CONFIG = {
     UserRole.STYLIST,
     UserRole.RECEPTIONIST,
   ],
-  '/workspace/category': [
-    UserRole.ADMIN,
-    UserRole.STYLIST,
-    UserRole.RECEPTIONIST,
-  ],
   '/workspace/service': [
     UserRole.ADMIN,
     UserRole.STYLIST,
     UserRole.RECEPTIONIST,
   ],
-  '/workspace/service/create': [UserRole.ADMIN, UserRole.STYLIST],
 } as const;
 
 // Función para verificar acceso
