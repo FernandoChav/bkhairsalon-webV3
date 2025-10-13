@@ -6,8 +6,6 @@ import { toast } from 'sonner';
 
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { useCategoriesQuery, useCreateServiceMutation } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
 import { extractValidationMessages, isValidationError } from '@/libs';
@@ -18,6 +16,7 @@ import { CreateServiceForm, createServiceSchema } from '@/models/schemas';
 
 interface UseCreateServiceParams {
   onSuccess?: () => void;
+  selectedCategory: CategoryResponse;
 }
 
 interface UseCreateServiceReturn {
@@ -51,8 +50,8 @@ interface UseCreateServiceReturn {
 
 export const useCreateService = ({
   onSuccess,
-}: UseCreateServiceParams = {}): UseCreateServiceReturn => {
-  const router = useRouter();
+  selectedCategory,
+}: UseCreateServiceParams): UseCreateServiceReturn => {
   const queryClient = useQueryClient();
   const {
     data: categories,
@@ -84,6 +83,15 @@ export const useCreateService = ({
 
   // Duration options
   const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
+
+  // Establecer la categoría pre-seleccionada en el formulario
+  useEffect(() => {
+    form.setValue('categoryId', selectedCategory.id, {
+      shouldValidate: false,
+      shouldDirty: false,
+      shouldTouch: false,
+    });
+  }, [selectedCategory.id, form]);
 
   // Form validation logic
   useEffect(() => {
@@ -154,8 +162,8 @@ export const useCreateService = ({
           if (category.isFinal) {
             finalCats.push(category);
           }
-          if (category.subCategories && category.subCategories.length > 0) {
-            traverse(category.subCategories);
+          if (category.subcategories && category.subcategories.length > 0) {
+            traverse(category.subcategories);
           }
         });
       };

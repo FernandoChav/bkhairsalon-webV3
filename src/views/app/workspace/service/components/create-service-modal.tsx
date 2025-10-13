@@ -35,50 +35,25 @@ import {
 } from '@/components/shadcn';
 import { FileUpload, TimeInput } from '@/components/ui';
 import { cn } from '@/libs';
+import { CategoryResponse } from '@/models/responses';
 
 import { useCreateService } from '../hooks';
 
 interface CreateServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
+  selectedCategory: CategoryResponse;
 }
 
 export const CreateServiceModal: FC<CreateServiceModalProps> = ({
   isOpen,
   onClose,
+  selectedCategory,
 }) => {
-  const { form, categories, fileUpload, validation, submission } =
-    useCreateService({ onSuccess: onClose });
-
-  // Category Field Logic
-  const isCategoriesLoading = categories.isLoading;
-  const hasCategoriesError = !!categories.error;
-  const hasCategories = categories.data.length > 0;
-  const isCategoriesDisabled = isCategoriesLoading;
-
-  const selectPlaceholder = useMemo(() => {
-    if (isCategoriesLoading) return 'Cargando categorías...';
-    if (hasCategoriesError) return 'Error al cargar categorías';
-    if (!hasCategories) return 'No hay categorías disponibles';
-    return 'Selecciona una categoría';
-  }, [isCategoriesLoading, hasCategoriesError, hasCategories]);
-
-  const categoryOptions = useMemo(() => {
-    return categories.data || [];
-  }, [categories.data]);
-
-  const handleCategoryOpenChange = useCallback(
-    (
-      open: boolean,
-      currentValue: string | undefined,
-      onBlur: () => void
-    ): void => {
-      if (!open && !currentValue) {
-        onBlur();
-      }
-    },
-    []
-  );
+  const { form, fileUpload, validation, submission } = useCreateService({
+    onSuccess: onClose,
+    selectedCategory,
+  });
 
   // Duration Field Logic
   const formatDuration = useCallback((minutes: number): string => {
@@ -196,8 +171,10 @@ export const CreateServiceModal: FC<CreateServiceModalProps> = ({
               Crear Nuevo Servicio
             </CardTitle>
             <CardDescription className="text-sm sm:text-base">
-              Completa la información para agregar un nuevo servicio a tu
-              catálogo
+              Completa la información para agregar un nuevo servicio a{' '}
+              <span className="font-semibold text-foreground">
+                {selectedCategory.name}
+              </span>
             </CardDescription>
           </CardHeader>
 
@@ -220,66 +197,8 @@ export const CreateServiceModal: FC<CreateServiceModalProps> = ({
                   </div>
 
                   <div className="space-y-6">
-                    {/* Primera fila: Categoría y Nombre */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                      {/* Category Field */}
-                      <FormField
-                        control={form.control}
-                        name="categoryId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm font-medium">
-                              Categoría del Servicio
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <HiTag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
-                                <Select
-                                  value={field.value}
-                                  onValueChange={field.onChange}
-                                  onOpenChange={open =>
-                                    handleCategoryOpenChange(
-                                      open,
-                                      field.value,
-                                      field.onBlur
-                                    )
-                                  }
-                                  disabled={isCategoriesDisabled}
-                                >
-                                  <SelectTrigger
-                                    className="w-full pl-10"
-                                    onBlur={field.onBlur}
-                                  >
-                                    <SelectValue
-                                      placeholder={selectPlaceholder}
-                                    />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {hasCategories ? (
-                                      categoryOptions.map(category => (
-                                        <SelectItem
-                                          key={category.id}
-                                          value={category.id}
-                                        >
-                                          <span className="text-sm">
-                                            {category.fullPath}
-                                          </span>
-                                        </SelectItem>
-                                      ))
-                                    ) : (
-                                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                                        No hay categorías disponibles
-                                      </div>
-                                    )}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
+                    {/* Nombre del Servicio */}
+                    <div className="grid grid-cols-1 gap-6 items-start">
                       {/* Name Field */}
                       <FormField
                         control={form.control}

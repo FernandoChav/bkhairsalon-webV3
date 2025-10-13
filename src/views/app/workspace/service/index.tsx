@@ -24,7 +24,7 @@ import {
 
 export const ServiceView: FC = () => {
   const { data: categories = [], isLoading: categoriesLoading } =
-    useCategoriesQuery(true, true); // includeSubCategories=true, includeServices=true
+    useCategoriesQuery(true, true); // includeSubcategories=true, includeServices=true
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryResponse | null>(null);
@@ -38,6 +38,8 @@ export const ServiceView: FC = () => {
     useState(false);
   const [selectedParentCategory, setSelectedParentCategory] =
     useState<CategoryResponse | null>(null);
+  const [selectedServiceCategory, setSelectedServiceCategory] =
+    useState<CategoryResponse | null>(null);
 
   const handleCategoryClick = (category: CategoryResponse) => {
     setSelectedCategory(category);
@@ -50,8 +52,7 @@ export const ServiceView: FC = () => {
   };
 
   const handleCreateService = (category: CategoryResponse) => {
-    // TODO: Usar la categoría seleccionada para pre-seleccionar en el formulario
-    console.log('Creating service for category:', category.name);
+    setSelectedServiceCategory(category);
     setIsCreateServiceModalOpen(true);
   };
 
@@ -63,6 +64,16 @@ export const ServiceView: FC = () => {
   const handleCreateSubcategory = (parentCategory: CategoryResponse) => {
     setSelectedParentCategory(parentCategory);
     setIsCreateCategoryModalOpen(true);
+  };
+
+  const handleCloseCreateCategoryModal = () => {
+    setIsCreateCategoryModalOpen(false);
+    setSelectedParentCategory(null);
+  };
+
+  const handleCloseCreateServiceModal = () => {
+    setIsCreateServiceModalOpen(false);
+    setSelectedServiceCategory(null);
   };
 
   const hasCategories = categories.length > 0;
@@ -175,18 +186,18 @@ export const ServiceView: FC = () => {
       />
 
       {/* Create Service Modal */}
-      <CreateServiceModal
-        isOpen={isCreateServiceModalOpen}
-        onClose={() => setIsCreateServiceModalOpen(false)}
-      />
+      {selectedServiceCategory && (
+        <CreateServiceModal
+          isOpen={isCreateServiceModalOpen}
+          onClose={handleCloseCreateServiceModal}
+          selectedCategory={selectedServiceCategory}
+        />
+      )}
 
       {/* Create Category Modal */}
       <CreateCategoryModal
         isOpen={isCreateCategoryModalOpen}
-        onClose={() => {
-          setIsCreateCategoryModalOpen(false);
-          setSelectedParentCategory(null);
-        }}
+        onClose={handleCloseCreateCategoryModal}
         parentCategory={selectedParentCategory}
         categories={categories}
       />
