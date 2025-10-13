@@ -18,11 +18,6 @@ interface UseCreateCategoryParams {
 interface UseCreateCategoryReturn {
   // Values
   form: ReturnType<typeof useForm<CreateCategoryForm>>;
-  categories: {
-    data: CategoryResponse[];
-    isLoading: boolean;
-    error: unknown;
-  };
   submission: {
     isLoading: boolean;
     isValid: boolean;
@@ -48,61 +43,34 @@ export const useCreateCategory = ({
     defaultValues: {
       name: '',
       description: '',
-      parentCategoryId: parentCategory?.id,
+      parentCategoryId: undefined,
     },
   });
 
-  // Get all categories (flattened tree structure)
-  const getAllCategories = useCallback(
-    (cats: CategoryResponse[]): CategoryResponse[] => {
-      const allCats: CategoryResponse[] = [];
-
-      const traverse = (categories: CategoryResponse[]) => {
-        categories.forEach(category => {
-          allCats.push(category);
-          if (category.subCategories && category.subCategories.length > 0) {
-            traverse(category.subCategories);
-          }
-        });
-      };
-
-      traverse(cats);
-      return allCats;
-    },
-    []
-  );
-
-  const parentCategories = getAllCategories(categories);
-
-  // Actualizar el formulario cuando cambie la categoría padre
+  // Establecer el parentCategoryId internamente cuando cambie la categoría padre
   useEffect(() => {
-    console.log('useEffect - parentCategory:', parentCategory);
-    console.log('useEffect - parentCategory?.id:', parentCategory?.id);
-    form.setValue('parentCategoryId', parentCategory?.id);
+    form.setValue('parentCategoryId', parentCategory?.id, {
+      shouldValidate: false,
+      shouldDirty: false,
+      shouldTouch: false,
+    });
   }, [parentCategory?.id, form]);
 
   // Submit handler with real API call
   const handleSubmit = useCallback(
     (data: CreateCategoryForm) => {
-      console.log('Datos del formulario antes de procesar:', data);
-      console.log(
-        'Valor actual del formulario parentCategoryId:',
-        form.getValues('parentCategoryId')
-      );
-
-      // Asegurar que undefined se mantenga como undefined para el backend
+      // Asegurar que el parentCategoryId correcto se envíe
       const requestData = {
-        ...data,
-        parentCategoryId: data.parentCategoryId || undefined,
+        name: data.name,
+        description: data.description,
+        parentCategoryId: parentCategory?.id || undefined,
       };
 
       // Prevent double submission
       if (createCategoryMutation.isPending) {
-        console.log('Mutation already in progress, skipping...');
         return;
       }
 
-      console.log('Enviando datos al backend:', requestData);
       createCategoryMutation.mutate(requestData, {
         onSuccess: () => {
           toast.success('Categoría creada exitosamente');
@@ -121,7 +89,7 @@ export const useCreateCategory = ({
         },
       });
     },
-    [createCategoryMutation, form, queryClient, onSuccess]
+    [createCategoryMutation, form, queryClient, onSuccess, parentCategory?.id]
   );
 
   // Reset form handler
@@ -132,11 +100,6 @@ export const useCreateCategory = ({
   return {
     // Values
     form,
-    categories: {
-      data: parentCategories,
-      isLoading: false,
-      error: null,
-    },
     submission: {
       isLoading: createCategoryMutation.isPending,
       isValid: form.formState.isValid && form.formState.isDirty,

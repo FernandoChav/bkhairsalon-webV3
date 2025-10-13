@@ -1,8 +1,8 @@
 'use client';
 
-import { HiDocumentText, HiFolder, HiTag } from 'react-icons/hi';
+import { HiDocumentText, HiTag } from 'react-icons/hi';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useEffect } from 'react';
 
 import {
   Button,
@@ -17,17 +17,11 @@ import {
   DialogTitle,
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
   Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Textarea,
 } from '@/components/shadcn';
 import { cn } from '@/libs';
@@ -48,54 +42,30 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
   parentCategory,
   categories = [],
 }) => {
-  const {
-    form,
-    categories: parentCategories,
-    submission,
-  } = useCreateCategory({
+  const { form, submission, handleResetForm } = useCreateCategory({
     parentCategory,
     onSuccess: onClose,
     categories,
   });
 
-  // Category Field Logic
-  const isCategoriesLoading = parentCategories.isLoading;
-  const hasCategoriesError = !!parentCategories.error;
-  const hasCategories = parentCategories.data.length > 0;
-  const isCategoriesDisabled = isCategoriesLoading;
+  // Resetear el formulario cuando se cierre el modal
+  useEffect(() => {
+    if (!isOpen) {
+      handleResetForm();
+    }
+  }, [isOpen, handleResetForm]);
 
-  const selectPlaceholder = useMemo(() => {
-    if (isCategoriesLoading) return 'Cargando categorías...';
-    if (hasCategoriesError) return 'Error al cargar categorías';
-    if (!hasCategories) return 'Sin categoría padre (categoría raíz)';
-    return 'Selecciona una categoría padre (opcional)';
-  }, [isCategoriesLoading, hasCategoriesError, hasCategories]);
-
-  const handleCategoryOpenChange = useCallback(
-    (
-      open: boolean,
-      currentValue: string | undefined,
-      onBlur: () => void
-    ): void => {
-      if (!open && !currentValue) {
-        onBlur();
-      }
-    },
-    []
-  );
-
-  const handleCategoryValueChange = useCallback(
-    (value: string) => (value === 'none' ? undefined : value),
-    []
-  );
+  // Determinar el tipo de categoría que se está creando
+  const isSubcategory = !!parentCategory;
+  const categoryType = isSubcategory ? 'Subcategoría' : 'Categoría';
 
   // Computed values for form actions
   const isButtonDisabled = submission.isLoading || !submission.isValid;
   const buttonText = submission.isLoading
-    ? 'Creando Categoría...'
+    ? `Creando ${categoryType}...`
     : !submission.isValid
       ? 'Completa todos los campos'
-      : 'Crear Categoría';
+      : `Crear ${categoryType}`;
   const buttonClassName = cn(
     'w-full text-primary-foreground shadow-lg transition-all duration-300 text-sm sm:text-base',
     submission.isValid && !submission.isLoading
@@ -106,18 +76,29 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="!max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-border">
-        <DialogTitle className="sr-only">Crear Nueva Categoría</DialogTitle>
+        <DialogTitle className="sr-only">
+          Crear Nueva {categoryType}
+        </DialogTitle>
         <DialogDescription className="sr-only">
-          Completa la información para agregar una nueva categoría
+          Completa la información para agregar una nueva{' '}
+          {categoryType.toLowerCase()}
         </DialogDescription>
         <Card className="w-full border-0 shadow-none">
           <CardHeader>
             <CardTitle className="text-2xl sm:text-3xl">
-              Crear Nueva Categoría
+              Crear Nueva {categoryType}
             </CardTitle>
             <CardDescription className="text-sm sm:text-base">
-              Completa la información para agregar una nueva categoría a tu
-              catálogo
+              {isSubcategory ? (
+                <>
+                  Se creará como subcategoría de{' '}
+                  <span className="font-semibold text-foreground">
+                    {parentCategory.name}
+                  </span>
+                </>
+              ) : (
+                'Se creará como categoría raíz'
+              )}
             </CardDescription>
           </CardHeader>
 
@@ -128,28 +109,28 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
                 className="space-y-8"
                 autoComplete="on"
               >
-                {/* Sección 1: Información Básica */}
+                {/* Sección: Información Básica */}
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
-                      Información de la Categoría
+                      Información de la {categoryType}
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Define la identidad y descripción de tu categoría
+                      Define la identidad y descripción de tu{' '}
+                      {categoryType.toLowerCase()}
                     </p>
                   </div>
 
                   <div className="space-y-6">
-                    {/* Primera fila: Nombre */}
+                    {/* Nombre */}
                     <div>
-                      {/* Name Field */}
                       <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-sm font-medium">
-                              Nombre de la Categoría
+                              Nombre de la {categoryType}
                             </FormLabel>
                             <FormControl>
                               <div className="relative">
@@ -168,9 +149,8 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
                       />
                     </div>
 
-                    {/* Segunda fila: Descripción (ancho completo) */}
+                    {/* Descripción */}
                     <div>
-                      {/* Description Field */}
                       <FormField
                         control={form.control}
                         name="description"
@@ -198,92 +178,7 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
                   </div>
                 </div>
 
-                {/* Sección 2: Configuración de Jerarquía */}
-                <div className="space-y-6">
-                  <div className="border-t border-border pt-6">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Configuración de Jerarquía
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Establece la estructura y organización de la categoría
-                    </p>
-                  </div>
-
-                  <div>
-                    {/* Parent Category Field */}
-                    <FormField
-                      control={form.control}
-                      name="parentCategoryId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium">
-                            Categoría Padre (Opcional)
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <HiFolder className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
-                              <Select
-                                value={field.value || 'none'}
-                                onValueChange={value =>
-                                  field.onChange(
-                                    handleCategoryValueChange(value)
-                                  )
-                                }
-                                onOpenChange={open =>
-                                  handleCategoryOpenChange(
-                                    open,
-                                    field.value,
-                                    field.onBlur
-                                  )
-                                }
-                                disabled={isCategoriesDisabled}
-                              >
-                                <SelectTrigger
-                                  className="w-full pl-10"
-                                  onBlur={field.onBlur}
-                                >
-                                  <SelectValue
-                                    placeholder={selectPlaceholder}
-                                  />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="none">
-                                    <span className="text-sm text-muted-foreground">
-                                      Sin categoría padre (categoría raíz)
-                                    </span>
-                                  </SelectItem>
-                                  {hasCategories ? (
-                                    parentCategories.data.map(category => (
-                                      <SelectItem
-                                        key={category.id}
-                                        value={category.id}
-                                      >
-                                        <span className="text-sm">
-                                          {category.fullPath}
-                                        </span>
-                                      </SelectItem>
-                                    ))
-                                  ) : (
-                                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                                      No hay categorías padre disponibles
-                                    </div>
-                                  )}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </FormControl>
-                          <FormDescription className="text-xs sm:text-sm">
-                            Selecciona una categoría padre para crear una
-                            subcategoría
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                {/* Botones de acción */}
+                {/* Botón de acción */}
                 <div className="pt-6">
                   <Button
                     type="submit"
