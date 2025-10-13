@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/models/generics';
-import { CreateServiceRequest } from '@/models/requests';
+import { CreateServiceRequest, UpdateServiceRequest } from '@/models/requests';
 import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
@@ -40,6 +40,54 @@ class ServiceClient {
 
     const response = await baseClient.post<ApiResponse<ServiceResponse>>(
       '/service',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  }
+
+  /**
+   * Actualiza un servicio existente
+   * @param id - ID del servicio a actualizar
+   * @param data - Datos del servicio a actualizar
+   * @returns Respuesta de la API con el servicio actualizado
+   */
+  async updateService(
+    id: string,
+    data: UpdateServiceRequest
+  ): Promise<ApiResponse<ServiceResponse>> {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('duration', data.duration.toString());
+    formData.append('price', data.price.toString());
+    formData.append('startTime', data.startTime);
+    formData.append('endTime', data.endTime);
+    formData.append(
+      'commissionPercentage',
+      data.commissionPercentage.toString()
+    );
+    if (data.discountId) {
+      formData.append('discountId', data.discountId);
+    }
+    if (data.keepPhotoIds) {
+      formData.append('keepPhotoIds', JSON.stringify(data.keepPhotoIds));
+    }
+    if (data.deletePhotoIds) {
+      formData.append('deletePhotoIds', JSON.stringify(data.deletePhotoIds));
+    }
+    if (data.newPhotos) {
+      data.newPhotos.forEach(photo => {
+        formData.append('newPhotos', photo);
+      });
+    }
+
+    const response = await baseClient.put<ApiResponse<ServiceResponse>>(
+      `/service/${id}`,
       formData,
       {
         headers: {

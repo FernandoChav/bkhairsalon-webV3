@@ -22,11 +22,13 @@ import { ServiceResponse } from '@/models/responses';
 interface ServiceCardProps {
   service: ServiceResponse;
   onServiceClick?: (service: ServiceResponse) => void;
+  onEditService?: (service: ServiceResponse) => void;
 }
 
 export const ServiceCard: FC<ServiceCardProps> = ({
   service,
   onServiceClick,
+  onEditService,
 }) => {
   return (
     <Card className="group shadow-none hover:shadow-lg hover:border-border/80 transition-all">
@@ -79,6 +81,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
                   variant="ghost"
                   size="sm"
                   className="h-7 w-7 p-0 cursor-pointer"
+                  onClick={() => onEditService?.(service)}
                 >
                   <HiPencil className="h-3 w-3" />
                 </Button>

@@ -21,6 +21,7 @@ import {
   CreateServiceModal,
   EditCategoryModal,
   ServiceDetailsSheet,
+  UpdateServiceModal,
 } from './components';
 
 export const ServiceView: FC = () => {
@@ -45,6 +46,10 @@ export const ServiceView: FC = () => {
   const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
   const [selectedEditCategory, setSelectedEditCategory] =
     useState<CategoryResponse | null>(null);
+  const [isUpdateServiceModalOpen, setIsUpdateServiceModalOpen] =
+    useState(false);
+  const [selectedUpdateService, setSelectedUpdateService] =
+    useState<ServiceResponse | null>(null);
 
   const handleCategoryClick = (category: CategoryResponse) => {
     setSelectedCategory(category);
@@ -89,6 +94,17 @@ export const ServiceView: FC = () => {
   const handleCloseEditCategoryModal = () => {
     setIsEditCategoryModalOpen(false);
     setSelectedEditCategory(null);
+  };
+
+  const handleEditService = (service: ServiceResponse) => {
+    setSelectedUpdateService(service);
+    setIsUpdateServiceModalOpen(true);
+    setIsServiceSheetOpen(false); // Cerrar el sheet de detalles
+  };
+
+  const handleCloseUpdateServiceModal = () => {
+    setIsUpdateServiceModalOpen(false);
+    setSelectedUpdateService(null);
   };
 
   const hasCategories = categories.length > 0;
@@ -162,6 +178,7 @@ export const ServiceView: FC = () => {
               onCreateService={handleCreateService}
               onCreateSubcategory={handleCreateSubcategory}
               onEditCategory={handleEditCategory}
+              onEditService={handleEditService}
             />
           ))}
         </div>
@@ -224,6 +241,15 @@ export const ServiceView: FC = () => {
         onClose={handleCloseEditCategoryModal}
         category={selectedEditCategory}
       />
+
+      {/* Update Service Modal */}
+      {selectedUpdateService && (
+        <UpdateServiceModal
+          isOpen={isUpdateServiceModalOpen}
+          onClose={handleCloseUpdateServiceModal}
+          service={selectedUpdateService}
+        />
+      )}
     </div>
   );
 };

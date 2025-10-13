@@ -36,6 +36,7 @@ interface CategoryCardProps {
   onCreateService?: (category: CategoryResponse) => void;
   onCreateSubcategory?: (category: CategoryResponse) => void;
   onEditCategory?: (category: CategoryResponse) => void;
+  onEditService?: (service: ServiceResponse) => void;
 }
 
 export const CategoryCard: FC<CategoryCardProps> = ({
@@ -46,6 +47,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   onCreateService,
   onCreateSubcategory,
   onEditCategory,
+  onEditService,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -230,6 +232,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     key={service.id}
                     service={service}
                     onServiceClick={onServiceClick}
+                    onEditService={onEditService}
                   />
                 ))}
               </div>
@@ -258,6 +261,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     onCreateService={onCreateService}
                     onCreateSubcategory={onCreateSubcategory}
                     onEditCategory={onEditCategory}
+                    onEditService={onEditService}
                   />
                 ))}
               </div>
