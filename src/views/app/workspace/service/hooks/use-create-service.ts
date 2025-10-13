@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useGetAllCategoryQuery, useCreateServiceMutation } from '@/hooks/api';
+import { useCreateServiceMutation } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
 import { extractValidationMessages, isValidationError } from '@/libs';
 import { ApiResponse } from '@/models/generics';
@@ -22,11 +22,6 @@ interface UseCreateServiceParams {
 interface UseCreateServiceReturn {
   // Values
   form: ReturnType<typeof useForm<CreateServiceForm>>;
-  categories: {
-    data: CategoryResponse[];
-    isLoading: boolean;
-    error: unknown;
-  };
   fileUpload: {
     files: File[];
     handleAddFiles: (files: FileList | File[]) => void;
@@ -44,8 +39,6 @@ interface UseCreateServiceReturn {
     isValid: boolean;
     handleSubmit: (data: CreateServiceForm) => void;
   };
-  // Handlers
-  handleResetForm: () => void;
 }
 
 export const useCreateService = ({
@@ -53,11 +46,6 @@ export const useCreateService = ({
   selectedCategory,
 }: UseCreateServiceParams): UseCreateServiceReturn => {
   const queryClient = useQueryClient();
-  const {
-    data: categories,
-    isLoading: categoriesLoading,
-    error: categoriesError,
-  } = useGetAllCategoryQuery();
   const { mutate: createService, isPending } = useCreateServiceMutation();
   const isProcessingRef = useRef(false);
 
@@ -152,30 +140,6 @@ export const useCreateService = ({
     return () => subscription.unsubscribe();
   }, [form]);
 
-  // Get final categories
-  const getFinalCategories = useCallback(
-    (cats: CategoryResponse[]): CategoryResponse[] => {
-      const finalCats: CategoryResponse[] = [];
-
-      const traverse = (categories: CategoryResponse[]) => {
-        categories.forEach(category => {
-          if (category.isFinal) {
-            finalCats.push(category);
-          }
-          if (category.subcategories && category.subcategories.length > 0) {
-            traverse(category.subcategories);
-          }
-        });
-      };
-
-      traverse(cats);
-      return finalCats;
-    },
-    []
-  );
-
-  const finalCategories = categories ? getFinalCategories(categories) : [];
-
   // Submit handler
   const handleSubmit = useCallback(
     (data: CreateServiceForm) => {
@@ -213,20 +177,9 @@ export const useCreateService = ({
     [createService, fileUpload.files, queryClient, onSuccess]
   );
 
-  // Reset form handler
-  const handleResetForm = useCallback(() => {
-    form.reset();
-    fileUpload.handleClearFiles();
-  }, [form, fileUpload]);
-
   return {
     // Values
     form,
-    categories: {
-      data: finalCategories,
-      isLoading: categoriesLoading,
-      error: categoriesError,
-    },
     fileUpload: {
       files: fileUpload.files,
       handleAddFiles: fileUpload.handleAddFiles,
@@ -242,7 +195,5 @@ export const useCreateService = ({
       isValid: form.formState.isValid && form.formState.isDirty,
       handleSubmit,
     },
-    // Handlers
-    handleResetForm,
   };
 };
