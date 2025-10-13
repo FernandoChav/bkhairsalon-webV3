@@ -1,4 +1,4 @@
-import { BaseEntity } from './base';
+import { BaseEntity } from './base-entity';
 import { Service } from './service';
 
 export interface Category extends BaseEntity {
@@ -11,6 +11,6 @@ export interface Category extends BaseEntity {
   sortOrder: number;
   parentCategoryId?: string;
   parentCategory?: Category;
-  subCategories?: Category[];
+  subcategories?: Category[];
   services?: Service[];
 }
