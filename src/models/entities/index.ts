@@ -1,5 +1,4 @@
 export type { BaseEntity } from './base-entity';
-export { UserRole, type UserRoleData } from './role';
-export type { JWTUser } from './auth';
+export { UserRole } from './role';
 export type { Category } from './category';
 export type { Service } from './service';
