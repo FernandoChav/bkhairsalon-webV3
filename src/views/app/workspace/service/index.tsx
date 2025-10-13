@@ -19,12 +19,14 @@ import {
   CategoryDetailsSheet,
   CreateCategoryModal,
   CreateServiceModal,
+  EditCategoryModal,
   ServiceDetailsSheet,
 } from './components';
 
 export const ServiceView: FC = () => {
   const { data: categories = [], isLoading: categoriesLoading } =
     useCategoriesQuery(true, true); // includeSubcategories=true, includeServices=true
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryResponse | null>(null);
@@ -39,6 +41,9 @@ export const ServiceView: FC = () => {
   const [selectedParentCategory, setSelectedParentCategory] =
     useState<CategoryResponse | null>(null);
   const [selectedServiceCategory, setSelectedServiceCategory] =
+    useState<CategoryResponse | null>(null);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [selectedEditCategory, setSelectedEditCategory] =
     useState<CategoryResponse | null>(null);
 
   const handleCategoryClick = (category: CategoryResponse) => {
@@ -66,6 +71,11 @@ export const ServiceView: FC = () => {
     setIsCreateCategoryModalOpen(true);
   };
 
+  const handleEditCategory = (category: CategoryResponse) => {
+    setSelectedEditCategory(category);
+    setIsEditCategoryModalOpen(true);
+  };
+
   const handleCloseCreateCategoryModal = () => {
     setIsCreateCategoryModalOpen(false);
     setSelectedParentCategory(null);
@@ -74,6 +84,11 @@ export const ServiceView: FC = () => {
   const handleCloseCreateServiceModal = () => {
     setIsCreateServiceModalOpen(false);
     setSelectedServiceCategory(null);
+  };
+
+  const handleCloseEditCategoryModal = () => {
+    setIsEditCategoryModalOpen(false);
+    setSelectedEditCategory(null);
   };
 
   const hasCategories = categories.length > 0;
@@ -146,6 +161,7 @@ export const ServiceView: FC = () => {
               onServiceClick={handleServiceClick}
               onCreateService={handleCreateService}
               onCreateSubcategory={handleCreateSubcategory}
+              onEditCategory={handleEditCategory}
             />
           ))}
         </div>
@@ -200,6 +216,13 @@ export const ServiceView: FC = () => {
         onClose={handleCloseCreateCategoryModal}
         parentCategory={selectedParentCategory}
         categories={categories}
+      />
+
+      {/* Edit Category Modal */}
+      <EditCategoryModal
+        isOpen={isEditCategoryModalOpen}
+        onClose={handleCloseEditCategoryModal}
+        category={selectedEditCategory}
       />
     </div>
   );

@@ -35,6 +35,7 @@ interface CategoryCardProps {
   onServiceClick?: (service: ServiceResponse) => void;
   onCreateService?: (category: CategoryResponse) => void;
   onCreateSubcategory?: (category: CategoryResponse) => void;
+  onEditCategory?: (category: CategoryResponse) => void;
 }
 
 export const CategoryCard: FC<CategoryCardProps> = ({
@@ -44,6 +45,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   onServiceClick,
   onCreateService,
   onCreateSubcategory,
+  onEditCategory,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -186,6 +188,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     variant="ghost"
                     size="sm"
                     className="h-8 w-8 p-0 cursor-pointer"
+                    onClick={() => onEditCategory?.(category)}
                   >
                     <HiPencil className="h-4 w-4" />
                   </Button>
@@ -254,6 +257,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     onServiceClick={onServiceClick}
                     onCreateService={onCreateService}
                     onCreateSubcategory={onCreateSubcategory}
+                    onEditCategory={onEditCategory}
                   />
                 ))}
               </div>

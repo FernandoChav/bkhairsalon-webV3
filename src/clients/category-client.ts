@@ -1,5 +1,8 @@
 import { ApiResponse } from '@/models/generics';
-import { CreateCategoryRequest } from '@/models/requests';
+import {
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+} from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
@@ -42,8 +45,24 @@ class CategoryClient {
    * @returns Respuesta de la API con resultado de la creación
    */
   async create(data: CreateCategoryRequest): Promise<ApiResponse> {
-    console.log('Cliente enviando al backend:', data);
     const response = await baseClient.post<ApiResponse>('/category', data);
+    return response.data;
+  }
+
+  /**
+   * Actualiza una categoría existente
+   * @param id - ID de la categoría a actualizar
+   * @param data - Datos de la categoría a actualizar
+   * @returns Respuesta de la API con resultado de la actualización
+   */
+  async update(
+    id: string,
+    data: UpdateCategoryRequest
+  ): Promise<ApiResponse<CategoryResponse>> {
+    const response = await baseClient.put<ApiResponse<CategoryResponse>>(
+      `/category/${id}`,
+      data
+    );
     return response.data;
   }
 }

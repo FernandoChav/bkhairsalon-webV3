@@ -4,3 +4,4 @@ export { CategoryDetailsSheet } from './category-details-sheet';
 export { ServiceDetailsSheet } from './service-details-sheet';
 export { CreateServiceModal } from './create-service-modal';
 export { CreateCategoryModal } from './create-category-modal';
+export { EditCategoryModal } from './edit-category-modal';

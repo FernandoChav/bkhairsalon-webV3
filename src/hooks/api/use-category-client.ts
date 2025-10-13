@@ -3,7 +3,10 @@ import type { AxiosError } from 'axios';
 
 import { categoryClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
-import { CreateCategoryRequest } from '@/models/requests';
+import {
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+} from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
 export const useCategoriesQuery = (
@@ -17,6 +20,7 @@ export const useCategoriesQuery = (
         includeSubcategories,
         includeServices
       );
+
       return response.data || [];
     },
   });
@@ -24,4 +28,13 @@ export const useCategoriesQuery = (
 export const useCreateCategoryMutation = () =>
   useMutation<ApiResponse, AxiosError<ApiResponse>, CreateCategoryRequest>({
     mutationFn: categoryClient.create,
+  });
+
+export const useUpdateCategoryMutation = () =>
+  useMutation<
+    ApiResponse<CategoryResponse>,
+    AxiosError<ApiResponse>,
+    { id: string; data: UpdateCategoryRequest }
+  >({
+    mutationFn: ({ id, data }) => categoryClient.update(id, data),
   });

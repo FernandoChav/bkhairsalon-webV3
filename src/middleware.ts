@@ -27,8 +27,7 @@ export async function middleware(request: NextRequest) {
       userRoles.push(
         ...rolesData.map((role: { Name: string }) => role.Name as UserRole)
       );
-    } catch (error) {
-      console.error('Error parsing roles from token:', error);
+    } catch {
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }

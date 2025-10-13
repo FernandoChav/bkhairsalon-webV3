@@ -3,3 +3,8 @@ export interface CreateCategoryRequest {
   description?: string;
   parentCategoryId?: string;
 }
+
+export interface UpdateCategoryRequest {
+  name: string;
+  description: string;
+}
