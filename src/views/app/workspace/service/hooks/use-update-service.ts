@@ -169,6 +169,10 @@ export const useUpdateService = ({
     (data: UpdateServiceForm) => {
       const serviceRequest: UpdateServiceRequest = {
         ...data,
+        commissionPercentage:
+          typeof data.commissionPercentage === 'string'
+            ? parseFloat(data.commissionPercentage) || 0
+            : data.commissionPercentage,
         newPhotos: fileUpload.files,
       };
 

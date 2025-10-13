@@ -56,9 +56,16 @@ export const updateServiceSchema = z.object({
       'La hora de fin debe tener el formato HH:mm'
     ),
   commissionPercentage: z
-    .number({ message: 'El porcentaje de comisión es requerido' })
-    .min(0, 'El porcentaje de comisión no puede ser negativo')
-    .max(100, 'El porcentaje de comisión no puede ser mayor a 100'),
+    .union([
+      z
+        .number()
+        .min(0, 'El porcentaje de comisión no puede ser negativo')
+        .max(100, 'El porcentaje de comisión no puede ser mayor a 100'),
+      z.literal(''),
+    ])
+    .refine(val => val !== '', {
+      message: 'El porcentaje de comisión es requerido',
+    }),
   discountId: z.string().optional(),
   keepPhotoIds: z.array(z.string()).optional(),
   deletePhotoIds: z.array(z.string()).optional(),

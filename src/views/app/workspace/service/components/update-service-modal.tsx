@@ -127,16 +127,17 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
   }, []);
 
   // Number Field Logic
-  const displayValue = useCallback((value: number | undefined): string => {
-    return value?.toString() ?? '';
-  }, []);
-
-  const handleNumberChange = useCallback(
-    (value: string): number | undefined => {
-      return value === '' ? undefined : parseFloat(value);
+  const displayValue = useCallback(
+    (value: number | string | undefined): string => {
+      if (value === undefined || value === '') return '';
+      return value.toString();
     },
     []
   );
+
+  const handleNumberChange = useCallback((value: string): number | string => {
+    return value === '' ? '' : parseFloat(value);
+  }, []);
 
   // File Upload Field Logic
   const hasFiles = fileUpload.files.length > 0;
