@@ -48,7 +48,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
                 {/* Price Badge */}
                 <Badge variant="outline" className="text-xs">
                   <HiCurrencyDollar className="h-3 w-3 mr-0.5" />$
-                  {(service.price / 1000).toFixed(0)}k
+                  {service.price.toLocaleString()}
                 </Badge>
 
                 {/* Duration Badge */}
