@@ -157,7 +157,7 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-sm font-medium">
-                              Descripción (Opcional)
+                              Descripción
                             </FormLabel>
                             <FormControl>
                               <div className="relative">
