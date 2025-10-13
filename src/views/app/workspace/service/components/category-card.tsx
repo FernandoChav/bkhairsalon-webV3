@@ -47,7 +47,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const hasSubcategories = (category.subCategories?.length ?? 0) > 0;
+  const hasSubcategories = (category.subcategories?.length ?? 0) > 0;
   const hasServices = (category.services?.length ?? 0) > 0;
   const canExpand = hasSubcategories || hasServices;
 
@@ -57,7 +57,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   return (
     <div className="space-y-2" style={{ marginLeft: `${indentLevel}px` }}>
       {/* Category Card */}
-      <Card className="group hover:shadow-xs hover:border-border/80 transition-all">
+      <Card className="group shadow-none hover:shadow-lg hover:border-border/80 transition-all">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             {/* Left Section */}
@@ -103,7 +103,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     {hasSubcategories && (
                       <Badge variant="secondary" className="text-xs">
                         <HiFolder className="h-3 w-3 mr-1" />
-                        {category.subCategories?.length} subcategorías
+                        {category.subcategories?.length} subcategorías
                       </Badge>
                     )}
                     {/* TODO: Implementar cuando se agreguen servicios a CategoryResponse */}
@@ -121,16 +121,12 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     {category.description}
                   </p>
                 )}
-
-                <p className="text-xs text-muted-foreground">
-                  {category.fullPath}
-                </p>
               </div>
             </div>
 
             {/* Right Section - Actions */}
             <div className="flex items-center gap-1">
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DropdownMenuTrigger asChild>
@@ -235,10 +231,10 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     Subcategorías:
                   </h4>
                 )}
-                {category.subCategories?.map(subCategory => (
+                {category.subcategories?.map(subcategory => (
                   <CategoryCard
-                    key={subCategory.id}
-                    category={subCategory}
+                    key={subcategory.id}
+                    category={subcategory}
                     level={level + 1}
                     onCategoryClick={onCategoryClick}
                     onServiceClick={onServiceClick}

@@ -29,7 +29,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
   onServiceClick,
 }) => {
   return (
-    <Card className="group hover:shadow-xs hover:border-border/80 transition-all">
+    <Card className="group shadow-none hover:shadow-lg hover:border-border/80 transition-all">
       <CardContent className="p-3">
         <div className="flex items-center justify-between">
           {/* Left Section */}
