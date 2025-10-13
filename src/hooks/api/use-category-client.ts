@@ -9,7 +9,7 @@ import {
 } from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
-export const useCategoriesQuery = (
+export const useGetAllCategoryQuery = (
   includeSubcategories: boolean = true,
   includeServices: boolean = true
 ) =>

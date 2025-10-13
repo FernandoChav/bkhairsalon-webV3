@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/shadcn';
-import { useCategoriesQuery } from '@/hooks/api';
+import { useGetAllCategoryQuery } from '@/hooks/api';
 import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
 import {
@@ -25,7 +25,7 @@ import {
 
 export const ServiceView: FC = () => {
   const { data: categories = [], isLoading: categoriesLoading } =
-    useCategoriesQuery(true, true); // includeSubcategories=true, includeServices=true
+    useGetAllCategoryQuery(true, true); // includeSubcategories=true, includeServices=true
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =

@@ -6,7 +6,7 @@ import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest } from '@/models/requests';
 import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
 
-export const useServicesQuery = () =>
+export const useGetAllServiceQuery = () =>
   useQuery<ApiResponse<PublicServiceResponse[]>, AxiosError>({
     queryKey: ['services', 'public'],
     queryFn: serviceClient.getAll,

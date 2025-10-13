@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useCategoriesQuery, useCreateServiceMutation } from '@/hooks/api';
+import { useGetAllCategoryQuery, useCreateServiceMutation } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
 import { extractValidationMessages, isValidationError } from '@/libs';
 import { ApiResponse } from '@/models/generics';
@@ -57,7 +57,7 @@ export const useCreateService = ({
     data: categories,
     isLoading: categoriesLoading,
     error: categoriesError,
-  } = useCategoriesQuery();
+  } = useGetAllCategoryQuery();
   const { mutate: createService, isPending } = useCreateServiceMutation();
   const isProcessingRef = useRef(false);
 

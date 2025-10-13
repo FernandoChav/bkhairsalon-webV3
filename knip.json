@@ -6,7 +6,10 @@
     "tailwind.config.*",
     "postcss.config.*"
   ],
-  "project": ["src/**/*.{js,ts,jsx,tsx}", "!src/**/*.d.ts"],
+  "project": [
+    "src/**/*.{js,ts,jsx,tsx}",
+    "!src/**/*.d.ts"
+  ],
   "ignore": [
     "**/*.d.ts",
     "**/*.config.*",
@@ -18,6 +21,7 @@
     "src/components/shadcn/**"
   ],
   "ignoreDependencies": [
+    "qs",
     "lint-staged",
     "eslint-config-next",
     "tailwindcss-animate",
