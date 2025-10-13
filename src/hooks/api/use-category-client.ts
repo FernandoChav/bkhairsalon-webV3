@@ -7,14 +7,14 @@ import { CreateCategoryRequest } from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
 export const useCategoriesQuery = (
-  includeSubCategories: boolean = true,
+  includeSubcategories: boolean = true,
   includeServices: boolean = true
 ) =>
   useQuery<CategoryResponse[], AxiosError<ApiResponse>>({
-    queryKey: ['categories', includeSubCategories, includeServices],
+    queryKey: ['categories', includeSubcategories, includeServices],
     queryFn: async () => {
       const response = await categoryClient.getAll(
-        includeSubCategories,
+        includeSubcategories,
         includeServices
       );
       return response.data || [];

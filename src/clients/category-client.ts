@@ -11,18 +11,18 @@ import { baseClient } from './base-client';
 class CategoryClient {
   /**
    * Obtiene todas las categorías disponibles
-   * @param includeSubCategories - Incluir subcategorías en la respuesta
+   * @param includeSubcategories - Incluir subcategorías en la respuesta
    * @param includeServices - Incluir servicios en la respuesta
    * @returns Respuesta de la API con lista de categorías
    */
   async getAll(
-    includeSubCategories: boolean = false,
+    includeSubcategories: boolean = false,
     includeServices: boolean = false
   ): Promise<ApiResponse<CategoryResponse[]>> {
     const params = new URLSearchParams();
 
-    if (includeSubCategories) {
-      params.append('includeSubCategories', 'true');
+    if (includeSubcategories) {
+      params.append('includeSubcategories', 'true');
     }
 
     if (includeServices) {
