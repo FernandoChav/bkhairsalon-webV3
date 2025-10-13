@@ -74,10 +74,10 @@ class ServiceClient {
     if (data.discountId) {
       formData.append('discountId', data.discountId);
     }
-    if (data.keepPhotoIds) {
+    if (data.keepPhotoIds && data.keepPhotoIds.length > 0) {
       formData.append('keepPhotoIds', JSON.stringify(data.keepPhotoIds));
     }
-    if (data.deletePhotoIds) {
+    if (data.deletePhotoIds && data.deletePhotoIds.length > 0) {
       formData.append('deletePhotoIds', JSON.stringify(data.deletePhotoIds));
     }
     if (data.newPhotos) {
