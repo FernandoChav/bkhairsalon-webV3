@@ -51,6 +51,21 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   const hasServices = (category.services?.length ?? 0) > 0;
   const canExpand = hasSubcategories || hasServices;
 
+  // Function to count services recursively (current category + all subcategories)
+  const getTotalServicesCount = (cat: CategoryResponse): number => {
+    let count = cat.services?.length ?? 0;
+
+    if (cat.subcategories && cat.subcategories.length > 0) {
+      count += cat.subcategories.reduce((total, subcategory) => {
+        return total + getTotalServicesCount(subcategory);
+      }, 0);
+    }
+
+    return count;
+  };
+
+  const totalServicesCount = getTotalServicesCount(category);
+
   // Calcular indentación
   const indentLevel = level * 24;
 
@@ -106,13 +121,12 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                         {category.subcategories?.length} subcategorías
                       </Badge>
                     )}
-                    {/* TODO: Implementar cuando se agreguen servicios a CategoryResponse */}
-                    {/* {hasServices && (
+                    {totalServicesCount > 0 && (
                       <Badge variant="secondary" className="text-xs">
                         <HiScissors className="h-3 w-3 mr-1" />
-                        {category.services?.length} servicios
+                        {totalServicesCount} servicios
                       </Badge>
-                    )} */}
+                    )}
                   </div>
                 </div>
 
