@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn';
+import { getDefaultRoute } from '@/libs/routes';
 
 export const NavigationBar: FC = () => {
   const { data: session, status } = useSession();
@@ -31,12 +32,14 @@ export const NavigationBar: FC = () => {
   const isNotLoading = status !== 'loading';
   const userName = session?.user?.name;
   const userEmail = session?.user?.email;
+  const userRoles = session?.user?.roles || [];
+  const defaultRoute = getDefaultRoute(userRoles);
 
   return (
     <nav className="fixed w-full bg-background/95 backdrop-blur-sm z-50 shadow-sm top-0 border-b border-border/50 h-16">
       <div className="container mx-auto px-6 h-full flex justify-between items-center">
         <Link
-          href="/"
+          href={defaultRoute}
           className="text-2xl font-light text-foreground cursor-pointer hover:text-primary transition-colors duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           style={{ fontFamily: 'var(--font-playfair)' }}
         >

@@ -2,7 +2,7 @@
 
 import { HiClock } from 'react-icons/hi';
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import {
   Select,
@@ -13,175 +13,81 @@ import {
 } from '@/components/shadcn';
 
 interface TimeInputProps {
-  // Valores (estado, datos, computed values)
   value?: number;
   className?: string;
   disabled?: boolean;
   minHour?: number;
   maxHour?: number;
-
-  // Handlers (funciones de manejo de eventos)
   handleChange?: (minutes: number) => void;
   handleBlur?: () => void;
 }
 
 export const TimeInput: FC<TimeInputProps> = ({
-  // Valores primero
   value,
   className = '',
   disabled = false,
   minHour = 8,
   maxHour = 22,
-  // Handlers después
   handleChange,
   handleBlur,
 }) => {
-  // Estado
-  const [internalHours, setInternalHours] = useState<number | undefined>(
-    undefined
-  );
-  const [internalMinutes, setInternalMinutes] = useState<number | undefined>(
-    undefined
-  );
-  const [hasInteractedWithHours, setHasInteractedWithHours] = useState(false);
-  const [hasInteractedWithMinutes, setHasInteractedWithMinutes] =
-    useState(false);
-  const [hasOpenedHours, setHasOpenedHours] = useState(false);
-  const [hasOpenedMinutes, setHasOpenedMinutes] = useState(false);
+  // Derive hours and minutes directly from value prop
+  const hours =
+    value !== undefined && !isNaN(value) && value >= 0
+      ? Math.floor(value / 60)
+      : undefined;
 
-  // Sincronizar estado interno con el valor externo
-  useEffect(() => {
-    if (value !== undefined) {
-      setInternalHours(Math.floor(value / 60));
-      setInternalMinutes(value % 60);
-    } else {
-      setInternalHours(undefined);
-      setInternalMinutes(undefined);
-    }
-  }, [value]);
+  const minutes =
+    value !== undefined && !isNaN(value) && value >= 0 ? value % 60 : undefined;
 
-  // Funciones utilitarias
-  const generateHourOptions = () => {
-    return Array.from({ length: maxHour - minHour + 1 }, (_, i) => {
-      const hour = minHour + i;
-      return {
-        value: hour.toString(),
-        text: `${hour.toString().padStart(2, '0')}h`,
-      };
-    });
-  };
+  // Generate options
+  const hourOptions = Array.from({ length: maxHour - minHour + 1 }, (_, i) => {
+    const hour = minHour + i;
+    return {
+      value: hour.toString(),
+      text: `${hour.toString().padStart(2, '0')}h`,
+    };
+  });
 
-  const generateMinuteOptions = () => {
-    return Array.from({ length: 12 }, (_, i) => {
-      const minute = i * 5;
-      return {
-        value: minute.toString(),
-        text: `${minute.toString().padStart(2, '0')}m`,
-      };
-    });
-  };
+  const minuteOptions = Array.from({ length: 12 }, (_, i) => {
+    const minute = i * 5;
+    return {
+      value: minute.toString(),
+      text: `${minute.toString().padStart(2, '0')}m`,
+    };
+  });
 
-  // Handlers
+  // Handlers - Allow partial selection with default values
   const handleHourChange = (newHour: string) => {
     const hour = parseInt(newHour, 10);
-    setInternalHours(hour);
-    setHasInteractedWithHours(true);
-
-    // Solo enviar el valor completo si también hay minutos seleccionados
-    if (internalMinutes !== undefined) {
-      const newValue = hour * 60 + internalMinutes;
-      handleChange?.(newValue);
-    }
+    // If minutes not selected yet, default to 0
+    const mins = minutes !== undefined ? minutes : 0;
+    const newValue = hour * 60 + mins;
+    handleChange?.(newValue);
   };
 
   const handleMinuteChange = (newMinute: string) => {
     const minute = parseInt(newMinute, 10);
-    setInternalMinutes(minute);
-    setHasInteractedWithMinutes(true);
-
-    // Solo enviar el valor completo si también hay horas seleccionadas
-    if (internalHours !== undefined) {
-      const newValue = internalHours * 60 + minute;
-      handleChange?.(newValue);
-    }
+    // If hours not selected yet, default to minHour
+    const hrs = hours !== undefined ? hours : minHour;
+    const newValue = hrs * 60 + minute;
+    handleChange?.(newValue);
   };
 
-  const handleHourBlur = () => {
-    setHasInteractedWithHours(true);
-    // Solo disparar validación si el usuario ha interactuado con minutos
-    // y no hay un valor completo seleccionado
-    if (
-      hasInteractedWithMinutes &&
-      (internalHours === undefined || internalMinutes === undefined)
-    ) {
-      handleBlur?.();
-    }
-  };
-
-  const handleMinuteBlur = () => {
-    setHasInteractedWithMinutes(true);
-    // Solo disparar validación si el usuario ha interactuado con horas
-    // y no hay un valor completo seleccionado
-    if (
-      hasInteractedWithHours &&
-      (internalHours === undefined || internalMinutes === undefined)
-    ) {
-      handleBlur?.();
-    }
-  };
-
-  const handleHourOpenChange = (open: boolean) => {
-    if (open) {
-      setHasOpenedHours(true);
-    } else {
-      // Marcar como interactuado
-      setHasInteractedWithHours(true);
-      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
-      if (
-        hasOpenedMinutes &&
-        (internalHours === undefined || internalMinutes === undefined)
-      ) {
-        handleBlur?.();
-      }
-    }
-  };
-
-  const handleMinuteOpenChange = (open: boolean) => {
-    if (open) {
-      setHasOpenedMinutes(true);
-    } else {
-      // Marcar como interactuado
-      setHasInteractedWithMinutes(true);
-      // Validar solo si ambos selectores han sido abiertos y no hay valor completo
-      if (
-        hasOpenedHours &&
-        (internalHours === undefined || internalMinutes === undefined)
-      ) {
-        handleBlur?.();
-      }
-    }
-  };
-
-  // Computed values
-  const hourOptions = generateHourOptions();
-  const minuteOptions = generateMinuteOptions();
-  const containerClassName = `relative ${className}`;
-  const hoursValue =
-    internalHours !== undefined ? internalHours.toString() : '';
-  const minutesValue =
-    internalMinutes !== undefined ? internalMinutes.toString() : '';
+  // Convert to string for Select component
+  const hoursValue = hours !== undefined ? hours.toString() : '';
+  const minutesValue = minutes !== undefined ? minutes.toString() : '';
 
   return (
-    <div className={containerClassName}>
+    <div className={`relative ${className}`}>
       <HiClock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
       <div className="flex gap-2 pl-10">
         <Select
           value={hoursValue}
           onValueChange={handleHourChange}
-          onOpenChange={handleHourOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 h-9" onBlur={handleHourBlur}>
+          <SelectTrigger className="flex-1 h-9" onBlur={handleBlur}>
             <SelectValue placeholder="Horas" />
           </SelectTrigger>
           <SelectContent>
@@ -196,10 +102,9 @@ export const TimeInput: FC<TimeInputProps> = ({
         <Select
           value={minutesValue}
           onValueChange={handleMinuteChange}
-          onOpenChange={handleMinuteOpenChange}
           disabled={disabled}
         >
-          <SelectTrigger className="flex-1 h-9" onBlur={handleMinuteBlur}>
+          <SelectTrigger className="flex-1 h-9" onBlur={handleBlur}>
             <SelectValue placeholder="Minutos" />
           </SelectTrigger>
           <SelectContent>

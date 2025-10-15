@@ -1,17 +1,22 @@
-import { useDropzone } from 'react-dropzone';
-import { HiCamera, HiPlus, HiX } from 'react-icons/hi';
+'use client';
 
-import { FC, MouseEvent, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { HiCamera, HiPlus, HiTrash, HiX } from 'react-icons/hi';
+
+import { FC, MouseEvent, useCallback, useEffect } from 'react';
 
 import Image from 'next/image';
 
 import { Button } from '@/components/shadcn';
 import { cn } from '@/libs';
 import { FileWithPreview } from '@/models/helpers';
+import { PhotoResponse } from '@/models/responses';
 
 interface FileUploadProps {
   // Valores (estado, datos, computed values)
   files: FileWithPreview[];
+  existingPhotos?: PhotoResponse[];
+  markedForDeletion?: string[]; // URLs de fotos marcadas para eliminación
   maxFiles?: number;
   className?: string;
   accept?: string;
@@ -26,11 +31,22 @@ interface FileUploadProps {
   // Handlers (funciones de manejo de eventos)
   handleAddFiles: (files: FileList | File[]) => void;
   handleRemoveFile: (index: number) => void;
+  handleMarkExistingForDeletion?: (photoUrl: string) => void;
+  handleUnmarkExistingForDeletion?: (photoUrl: string) => void;
+
+  // Callback para notificar cambios en el conteo
+  onCountChange?: (counts: {
+    total: number;
+    existing: number;
+    new: number;
+  }) => void;
 }
 
 export const FileUpload: FC<FileUploadProps> = ({
   // Valores primero
   files,
+  existingPhotos = [],
+  markedForDeletion = [],
   maxFiles = 10,
   className,
   accept = 'image/*',
@@ -44,6 +60,9 @@ export const FileUpload: FC<FileUploadProps> = ({
   // Handlers después
   handleAddFiles,
   handleRemoveFile,
+  handleMarkExistingForDeletion,
+  handleUnmarkExistingForDeletion,
+  onCountChange,
 }) => {
   // Handlers
   const handleDrop = useCallback(
@@ -75,20 +94,36 @@ export const FileUpload: FC<FileUploadProps> = ({
     handleAddMoreClick();
   };
 
+  // Handler para imágenes existentes
+  const handleExistingImageClick = (photoUrl: string) => {
+    if (!handleMarkExistingForDeletion || !handleUnmarkExistingForDeletion)
+      return;
+
+    if (markedForDeletion.includes(photoUrl)) {
+      handleUnmarkExistingForDeletion(photoUrl);
+    } else {
+      handleMarkExistingForDeletion(photoUrl);
+    }
+  };
+
+  // Computed values
+  const isImageFile = accept.includes('image');
+  const visibleExistingPhotos = existingPhotos.filter(
+    photo => !markedForDeletion.includes(photo.url)
+  );
+  const totalItems = files.length + visibleExistingPhotos.length;
+  const isAtMaxFiles = totalItems >= maxFiles;
+  const isDisabled = disabled || isAtMaxFiles;
+
   // Dropzone configuration
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop: handleDrop,
     accept: accept ? { [accept]: [] } : undefined,
     multiple,
-    disabled: disabled || files.length >= maxFiles,
+    disabled: disabled || isAtMaxFiles,
     noClick: false,
     noKeyboard: false,
   });
-
-  // Computed values
-  const isImageFile = accept.includes('image');
-  const isAtMaxFiles = files.length >= maxFiles;
-  const isDisabled = disabled || isAtMaxFiles;
 
   // Default texts based on file type
   const defaultTitle = isImageFile
@@ -104,8 +139,8 @@ export const FileUpload: FC<FileUploadProps> = ({
     : 'Arrastra los archivos aquí o haz clic para seleccionar';
 
   const defaultPlaceholder = isImageFile
-    ? `${files.length}/${maxFiles} fotos subidas`
-    : `${files.length}/${maxFiles} archivos subidos`;
+    ? `${totalItems}/${maxFiles} fotos (${visibleExistingPhotos.length} existentes, ${files.length} nuevas)`
+    : `${totalItems}/${maxFiles} archivos (${visibleExistingPhotos.length} existentes, ${files.length} nuevos)`;
 
   const gridColsClass = {
     '2': 'grid-cols-2',
@@ -124,6 +159,29 @@ export const FileUpload: FC<FileUploadProps> = ({
   const addMoreClassName = cn(
     'aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors'
   );
+
+  const imageContainerClassName = cn(
+    'relative aspect-square rounded-lg overflow-hidden bg-muted'
+  );
+
+  const existingImageClassName = (photoUrl: string) =>
+    cn(
+      'relative aspect-square rounded-lg overflow-hidden bg-muted',
+      markedForDeletion.includes(photoUrl)
+        ? 'ring-2 ring-destructive ring-offset-2 opacity-60'
+        : ''
+    );
+
+  // Notificar cambios en el conteo
+  useEffect(() => {
+    if (onCountChange) {
+      onCountChange({
+        total: totalItems,
+        existing: visibleExistingPhotos.length,
+        new: files.length,
+      });
+    }
+  }, [totalItems, visibleExistingPhotos.length, files.length, onCountChange]);
 
   return (
     <div className={cn('space-y-4', className)}>
@@ -147,65 +205,119 @@ export const FileUpload: FC<FileUploadProps> = ({
           </div>
         </div>
 
-        {showPreview && files.length > 0 && (
-          <div className={cn('grid gap-4 mt-6', gridColsClass)}>
-            {files.map((file, index) => (
-              <div
-                key={index}
-                className="relative group"
-                onClick={e => e.stopPropagation()}
-              >
-                <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
-                  {isImageFile && file.preview ? (
-                    <Image
-                      src={file.preview}
-                      alt={`Preview ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <HiCamera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-xs text-muted-foreground truncate px-2">
-                          {file.name}
-                        </p>
-                      </div>
+        {showPreview &&
+          (visibleExistingPhotos.length > 0 || files.length > 0) && (
+            <div className={cn('grid gap-4 mt-6', gridColsClass)}>
+              {/* Mostrar imágenes existentes primero (filtrar las marcadas para eliminación) */}
+              {existingPhotos
+                .filter(photo => !markedForDeletion.includes(photo.url))
+                .map((photo, index) => (
+                  <div
+                    key={`existing-${photo.id}`}
+                    className="relative group"
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleExistingImageClick(photo.url);
+                    }}
+                  >
+                    <div className={existingImageClassName(photo.url)}>
+                      <Image
+                        src={photo.url}
+                        alt={photo.altText || `Imagen existente ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                      />
+
+                      {/* Overlay para imágenes marcadas para eliminación */}
+                      {markedForDeletion.includes(photo.url) && (
+                        <div className="absolute inset-0 bg-destructive/20 flex items-center justify-center">
+                          <div className="bg-destructive text-destructive-foreground rounded-full p-2">
+                            <HiTrash className="h-4 w-4" />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleFileRemoveWithEvent(index)}
-                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+                    {/* Botón de eliminar */}
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="destructive"
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleExistingImageClick(photo.url);
+                      }}
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+                    >
+                      <HiX className="h-3 w-3" />
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-1 truncate">
+                      {photo.altText || `Imagen ${index + 1}`}
+                    </p>
+                  </div>
+                ))}
+
+              {/* Mostrar archivos nuevos */}
+              {files.map((file, index) => (
+                <div
+                  key={`new-${index}`}
+                  className="relative group"
+                  onClick={e => e.stopPropagation()}
                 >
-                  <HiX className="h-3 w-3" />
-                </Button>
-                <p className="text-xs text-muted-foreground mt-1 truncate">
-                  {file.name}
-                </p>
-              </div>
-            ))}
+                  <div className={imageContainerClassName}>
+                    {isImageFile && file.preview ? (
+                      <Image
+                        src={file.preview}
+                        alt={`Preview ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <HiCamera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                          <p className="text-xs text-muted-foreground truncate px-2">
+                            {file.name}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-            {files.length < maxFiles && !disabled && (
-              <div
-                onClick={handleAddMoreWithEvent}
-                className={addMoreClassName}
-              >
-                <div className="flex flex-col items-center space-y-2">
-                  <HiPlus className="h-8 w-8 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">
-                    Agregar más
-                  </span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    onClick={handleFileRemoveWithEvent(index)}
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+                  >
+                    <HiX className="h-3 w-3" />
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                    {file.name}
+                  </p>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              ))}
+
+              {/* Botón para agregar más archivos */}
+              {totalItems < maxFiles && !disabled && (
+                <div
+                  onClick={handleAddMoreWithEvent}
+                  className={addMoreClassName}
+                >
+                  <div className="flex flex-col items-center space-y-2">
+                    <HiPlus className="h-8 w-8 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      Agregar más
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
       </div>
     </div>
   );

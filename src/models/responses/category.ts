@@ -1,9 +1,14 @@
-export interface CategoryResponse {
-  id: string;
+import { BaseEntity } from '../entities/base-entity';
+import { ServiceResponse } from './service';
+
+export interface CategoryResponse extends BaseEntity {
   name: string;
+  description?: string;
   level: number;
   fullPath: string;
   isFinal: boolean;
+  isActive: boolean;
   parentCategoryId?: string;
-  subCategories: CategoryResponse[];
+  subcategories: CategoryResponse[];
+  services: ServiceResponse[];
 }

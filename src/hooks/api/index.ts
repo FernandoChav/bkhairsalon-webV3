@@ -1,10 +1,12 @@
 export { useRegisterMutation } from './use-auth-client';
 export {
   useCreateCategoryMutation,
-  useCategoriesQuery,
+  useUpdateCategoryMutation,
+  useGetAllCategoryQuery,
 } from './use-category-client';
 export {
   useCreateServiceMutation,
-  useServicesQuery,
+  useUpdateServiceMutation,
+  useGetAllServiceQuery,
 } from './use-service-client';
 export { useEditUserMutation, useUserProfileQuery } from './use-user-client';
