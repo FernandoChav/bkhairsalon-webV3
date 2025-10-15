@@ -101,7 +101,9 @@ export const useUpdateService = ({
   const fileUpload = useFileUpload({ maxFiles: 10 });
 
   // Image management state
-  const [existingImagesToDelete, setExistingImagesToDelete] = useState<string[]>([]);
+  const [existingImagesToDelete, setExistingImagesToDelete] = useState<
+    string[]
+  >([]);
 
   // Image management handlers
   const handleMarkExistingForDeletion = useCallback((imageUrl: string) => {
@@ -191,7 +193,9 @@ export const useUpdateService = ({
     (data: UpdateServiceForm) => {
       // Calculate which photos to keep and which to delete using PhotoResponse
       const allExistingPhotos = service.photos || [];
-      const photosToKeep = allExistingPhotos.filter(photo => !existingImagesToDelete.includes(photo.url));
+      const photosToKeep = allExistingPhotos.filter(
+        photo => !existingImagesToDelete.includes(photo.url)
+      );
 
       // Extract photo IDs directly from PhotoResponse objects
       const keepPhotoIds = photosToKeep.map(photo => photo.id);
@@ -239,7 +243,15 @@ export const useUpdateService = ({
         }
       );
     },
-    [updateService, service.id, service.photos, existingImagesToDelete, fileUpload.files, queryClient, onSuccess]
+    [
+      updateService,
+      service.id,
+      service.photos,
+      existingImagesToDelete,
+      fileUpload.files,
+      queryClient,
+      onSuccess,
+    ]
   );
 
   return {
@@ -261,7 +273,11 @@ export const useUpdateService = ({
     },
     submission: {
       isLoading: isPending,
-      isValid: form.formState.isValid && (form.formState.isDirty || existingImagesToDelete.length > 0 || fileUpload.files.length > 0),
+      isValid:
+        form.formState.isValid &&
+        (form.formState.isDirty ||
+          existingImagesToDelete.length > 0 ||
+          fileUpload.files.length > 0),
       handleSubmit,
     },
   };

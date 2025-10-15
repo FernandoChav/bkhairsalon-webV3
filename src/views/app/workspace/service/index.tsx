@@ -224,7 +224,6 @@ export const ServiceView: FC = () => {
         isOpen={isCreateCategoryModalOpen}
         onClose={handleCloseCreateCategoryModal}
         parentCategory={selectedParentCategory}
-        categories={categories}
       />
 
       {/* Edit Category Modal */}

@@ -50,10 +50,11 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
   onClose,
   service,
 }) => {
-  const { form, fileUpload, imageManager, validation, submission } = useUpdateService({
-    onSuccess: onClose,
-    service,
-  });
+  const { form, fileUpload, imageManager, validation, submission } =
+    useUpdateService({
+      onSuccess: onClose,
+      service,
+    });
 
   // Duration Field Logic
   const formatDuration = useCallback((minutes: number): string => {
@@ -146,7 +147,6 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
     new: 0,
   });
 
-  const newFilesCount = fileUpload.files.length;
   const maxFiles = 10;
   const totalImages = imageCounts.total;
   const isAtMaxFiles = totalImages >= maxFiles;
@@ -531,7 +531,8 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
                       Gestión de Fotos del Servicio
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Gestiona las imágenes existentes y agrega nuevas fotos (opcional)
+                      Gestiona las imágenes existentes y agrega nuevas fotos
+                      (opcional)
                     </p>
                   </div>
 
@@ -550,8 +551,12 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
                       previewGridCols={previewGridCols}
                       handleAddFiles={fileUpload.handleAddFiles}
                       handleRemoveFile={fileUpload.handleRemoveFile}
-                      handleMarkExistingForDeletion={imageManager.handleMarkExistingForDeletion}
-                      handleUnmarkExistingForDeletion={imageManager.handleUnmarkExistingForDeletion}
+                      handleMarkExistingForDeletion={
+                        imageManager.handleMarkExistingForDeletion
+                      }
+                      handleUnmarkExistingForDeletion={
+                        imageManager.handleUnmarkExistingForDeletion
+                      }
                       onCountChange={setImageCounts}
                     />
                   </div>

@@ -31,19 +31,16 @@ interface CreateCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   parentCategory?: CategoryResponse | null;
-  categories?: CategoryResponse[];
 }
 
 export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
   isOpen,
   onClose,
   parentCategory,
-  categories = [],
 }) => {
   const { form, submission, handleResetForm } = useCreateCategory({
     parentCategory,
     onSuccess: onClose,
-    categories,
   });
 
   // Resetear el formulario cuando se cierre el modal

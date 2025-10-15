@@ -12,7 +12,6 @@ import { CreateCategoryForm, createCategorySchema } from '@/models/schemas';
 interface UseCreateCategoryParams {
   parentCategory?: CategoryResponse | null;
   onSuccess?: () => void;
-  categories?: CategoryResponse[];
 }
 
 interface UseCreateCategoryReturn {
@@ -30,7 +29,6 @@ interface UseCreateCategoryReturn {
 export const useCreateCategory = ({
   parentCategory,
   onSuccess,
-  categories = [],
 }: UseCreateCategoryParams = {}): UseCreateCategoryReturn => {
   const queryClient = useQueryClient();
 
