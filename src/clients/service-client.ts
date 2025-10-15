@@ -75,10 +75,14 @@ class ServiceClient {
       formData.append('discountId', data.discountId);
     }
     if (data.keepPhotoIds && data.keepPhotoIds.length > 0) {
-      formData.append('keepPhotoIds', JSON.stringify(data.keepPhotoIds));
+      data.keepPhotoIds.forEach(id => {
+        formData.append('keepPhotoIds', id);
+      });
     }
     if (data.deletePhotoIds && data.deletePhotoIds.length > 0) {
-      formData.append('deletePhotoIds', JSON.stringify(data.deletePhotoIds));
+      data.deletePhotoIds.forEach(id => {
+        formData.append('deletePhotoIds', id);
+      });
     }
     if (data.newPhotos) {
       data.newPhotos.forEach(photo => {

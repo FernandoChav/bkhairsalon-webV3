@@ -5,7 +5,7 @@ import {
   HiTag,
 } from 'react-icons/hi';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 
 import {
   Button,
@@ -50,7 +50,7 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
   onClose,
   service,
 }) => {
-  const { form, fileUpload, validation, submission } = useUpdateService({
+  const { form, fileUpload, imageManager, validation, submission } = useUpdateService({
     onSuccess: onClose,
     service,
   });
@@ -139,25 +139,31 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
     return value === '' ? '' : parseFloat(value);
   }, []);
 
-  // File Upload Field Logic
-  const hasFiles = fileUpload.files.length > 0;
-  const filesCount = fileUpload.files.length;
+  // Image Management Logic
+  const [imageCounts, setImageCounts] = useState({
+    total: 0,
+    existing: 0,
+    new: 0,
+  });
+
+  const newFilesCount = fileUpload.files.length;
   const maxFiles = 10;
-  const isAtMaxFiles = filesCount >= maxFiles;
+  const totalImages = imageCounts.total;
+  const isAtMaxFiles = totalImages >= maxFiles;
 
   const uploadTitle = useMemo(() => {
     return isAtMaxFiles
       ? `Límite máximo alcanzado (${maxFiles} fotos)`
-      : 'Sube fotos adicionales del servicio';
+      : 'Gestionar fotos del servicio';
   }, [isAtMaxFiles, maxFiles]);
 
   const uploadPlaceholder = useMemo(() => {
-    return `${filesCount}/${maxFiles} fotos nuevas`;
-  }, [filesCount, maxFiles]);
+    return `${totalImages}/${maxFiles} fotos (${imageCounts.existing} existentes, ${imageCounts.new} nuevas)`;
+  }, [totalImages, maxFiles, imageCounts.existing, imageCounts.new]);
 
   const previewGridCols = useMemo((): '2' | '3' | '4' | '5' => {
-    return filesCount === 1 ? '2' : '4';
-  }, [filesCount]);
+    return totalImages === 1 ? '2' : '4';
+  }, [totalImages]);
 
   // Computed values for form actions
   const isButtonDisabled = submission.isLoading || !submission.isValid;
@@ -522,33 +528,18 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
                 <div className="space-y-6">
                   <div className="border-t border-border pt-6">
                     <h3 className="text-lg font-semibold text-foreground">
-                      Fotos Adicionales del Servicio
+                      Gestión de Fotos del Servicio
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Agrega nuevas imágenes que muestren tu trabajo (opcional)
+                      Gestiona las imágenes existentes y agrega nuevas fotos (opcional)
                     </p>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <FormLabel className="text-sm font-medium text-muted-foreground">
-                        Nuevas Fotos del Servicio (Opcional)
-                      </FormLabel>
-                      {hasFiles && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={fileUpload.handleClearFiles}
-                          className="text-xs cursor-pointer"
-                        >
-                          Limpiar todas ({filesCount})
-                        </Button>
-                      )}
-                    </div>
-
                     <FileUpload
                       files={fileUpload.files}
+                      existingPhotos={service.photos || []}
+                      markedForDeletion={imageManager.existingImagesToDelete}
                       maxFiles={maxFiles}
                       accept="image/*"
                       multiple={true}
@@ -559,6 +550,9 @@ export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
                       previewGridCols={previewGridCols}
                       handleAddFiles={fileUpload.handleAddFiles}
                       handleRemoveFile={fileUpload.handleRemoveFile}
+                      handleMarkExistingForDeletion={imageManager.handleMarkExistingForDeletion}
+                      handleUnmarkExistingForDeletion={imageManager.handleUnmarkExistingForDeletion}
+                      onCountChange={setImageCounts}
                     />
                   </div>
                 </div>

@@ -1,5 +1,3 @@
-'use client';
-
 import { HiDocumentText, HiTag } from 'react-icons/hi';
 
 import { FC, useEffect } from 'react';

@@ -1,3 +1,18 @@
+export interface PhotoResponse {
+  id: string;
+  description?: string;
+  url: string;
+  publicId: string;
+  altText?: string;
+  width?: number;
+  height?: number;
+  format?: string;
+  bytes?: number;
+  entityType: string;
+  entityId: string;
+  isPrimary: boolean;
+}
+
 export interface ServiceResponse {
   id: string;
   name: string;
@@ -11,6 +26,7 @@ export interface ServiceResponse {
   categoryId: string;
   categoryName: string;
   images: string[];
+  photos: PhotoResponse[];
   createdAt: string;
   updatedAt: string;
   createdBy: string;

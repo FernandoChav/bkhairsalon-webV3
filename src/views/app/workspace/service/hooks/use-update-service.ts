@@ -4,7 +4,7 @@ import type { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useUpdateServiceMutation } from '@/hooks/api';
 import { useFileUpload } from '@/hooks/common';
@@ -26,6 +26,11 @@ interface UseUpdateServiceReturn {
     handleAddFiles: (files: FileList | File[]) => void;
     handleRemoveFile: (index: number) => void;
     handleClearFiles: () => void;
+  };
+  imageManager: {
+    existingImagesToDelete: string[];
+    handleMarkExistingForDeletion: (imageUrl: string) => void;
+    handleUnmarkExistingForDeletion: (imageUrl: string) => void;
   };
   validation: {
     durationOptions: number[];
@@ -94,6 +99,23 @@ export const useUpdateService = ({
 
   // File upload setup
   const fileUpload = useFileUpload({ maxFiles: 10 });
+
+  // Image management state
+  const [existingImagesToDelete, setExistingImagesToDelete] = useState<string[]>([]);
+
+  // Image management handlers
+  const handleMarkExistingForDeletion = useCallback((imageUrl: string) => {
+    setExistingImagesToDelete(prev => [...prev, imageUrl]);
+  }, []);
+
+  const handleUnmarkExistingForDeletion = useCallback((imageUrl: string) => {
+    setExistingImagesToDelete(prev => prev.filter(url => url !== imageUrl));
+  }, []);
+
+  // Reset image management when service changes
+  useEffect(() => {
+    setExistingImagesToDelete([]);
+  }, [service.id]);
 
   // Duration options
   const durationOptions = Array.from({ length: 61 }, (_, i) => i * 5);
@@ -167,12 +189,24 @@ export const useUpdateService = ({
   // Submit handler
   const handleSubmit = useCallback(
     (data: UpdateServiceForm) => {
+      // Calculate which photos to keep and which to delete using PhotoResponse
+      const allExistingPhotos = service.photos || [];
+      const photosToKeep = allExistingPhotos.filter(photo => !existingImagesToDelete.includes(photo.url));
+
+      // Extract photo IDs directly from PhotoResponse objects
+      const keepPhotoIds = photosToKeep.map(photo => photo.id);
+      const deletePhotoIds = allExistingPhotos
+        .filter(photo => existingImagesToDelete.includes(photo.url))
+        .map(photo => photo.id);
+
       const serviceRequest: UpdateServiceRequest = {
         ...data,
         commissionPercentage:
           typeof data.commissionPercentage === 'string'
             ? parseFloat(data.commissionPercentage) || 0
             : data.commissionPercentage,
+        keepPhotoIds,
+        deletePhotoIds,
         newPhotos: fileUpload.files,
       };
 
@@ -205,7 +239,7 @@ export const useUpdateService = ({
         }
       );
     },
-    [updateService, service.id, fileUpload.files, queryClient, onSuccess]
+    [updateService, service.id, service.photos, existingImagesToDelete, fileUpload.files, queryClient, onSuccess]
   );
 
   return {
@@ -216,13 +250,18 @@ export const useUpdateService = ({
       handleRemoveFile: fileUpload.handleRemoveFile,
       handleClearFiles: fileUpload.handleClearFiles,
     },
+    imageManager: {
+      existingImagesToDelete,
+      handleMarkExistingForDeletion,
+      handleUnmarkExistingForDeletion,
+    },
     validation: {
       durationOptions,
       errors: form.formState.errors,
     },
     submission: {
       isLoading: isPending,
-      isValid: form.formState.isValid && form.formState.isDirty,
+      isValid: form.formState.isValid && (form.formState.isDirty || existingImagesToDelete.length > 0 || fileUpload.files.length > 0),
       handleSubmit,
     },
   };

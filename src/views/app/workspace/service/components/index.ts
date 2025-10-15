@@ -6,3 +6,4 @@ export { CreateServiceModal } from './create-service-modal';
 export { CreateCategoryModal } from './create-category-modal';
 export { EditCategoryModal } from './edit-category-modal';
 export { UpdateServiceModal } from './update-service-modal';
+export { ServiceViewSkeleton } from './service-view-skeleton';
