@@ -8,6 +8,7 @@ export interface CategoryResponse extends BaseEntity {
   fullPath: string;
   isFinal: boolean;
   isActive: boolean;
+  sortOrder: number;
   parentCategoryId?: string;
   subcategories: CategoryResponse[];
   services: ServiceResponse[];
