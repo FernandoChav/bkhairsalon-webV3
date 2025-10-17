@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isValidChileanPhone } from '@/libs/phone-utils';
+import { isValidChileanPhone } from '@/libs';
 
 export const editUserFormSchema = z.object({
   firstName: z.string().min(1, 'El nombre es requerido'),

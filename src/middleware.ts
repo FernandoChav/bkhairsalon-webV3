@@ -2,7 +2,7 @@ import { getToken } from 'next-auth/jwt';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PUBLIC_ROUTES, getDefaultRoute, hasRouteAccess } from '@/libs/routes';
+import { PUBLIC_ROUTES, getDefaultRoute, hasRouteAccess } from '@/libs';
 import { UserRole } from '@/models/entities';
 
 export async function middleware(request: NextRequest) {

@@ -3,7 +3,7 @@ import {
   CreateCategoryRequest,
   ReorderElementsRequest,
   UpdateCategoryRequest,
-} from '@/models/requests/category';
+} from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';

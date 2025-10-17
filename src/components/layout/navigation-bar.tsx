@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn';
-import { getDefaultRoute } from '@/libs/routes';
+import { getDefaultRoute } from '@/libs';
 
 export const NavigationBar: FC = () => {
   const { data: session, status } = useSession();
