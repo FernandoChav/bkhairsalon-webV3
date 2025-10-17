@@ -1,15 +1,18 @@
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import {
   HiChevronDown,
   HiChevronRight,
   HiFolder,
   HiFolderOpen,
+  HiMenu,
   HiPencil,
   HiPlus,
   HiScissors,
   HiTrash,
 } from 'react-icons/hi';
 
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
   Badge,
@@ -37,9 +40,16 @@ interface CategoryCardProps {
   onCreateSubcategory?: (category: CategoryResponse) => void;
   onEditCategory?: (category: CategoryResponse) => void;
   onEditService?: (service: ServiceResponse) => void;
+  isEditMode?: boolean;
+  validDropTargets?: Set<string>;
+  expandedCategories?: Set<string>;
+  onToggleExpand?: (categoryId: string) => void;
+  isDragging?: boolean;
+  draggingLevel?: number | null;
 }
 
-export const CategoryCard: FC<CategoryCardProps> = ({
+// Componente Draggable para CategoryCard
+const DraggableCategoryCard: FC<CategoryCardProps> = ({
   category,
   level = 0,
   onCategoryClick,
@@ -48,8 +58,107 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   onCreateSubcategory,
   onEditCategory,
   onEditService,
+  isEditMode = false,
+  validDropTargets = new Set(),
+  expandedCategories = new Set(),
+  onToggleExpand,
+  isDragging = false,
+  draggingLevel = null,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDraggableRef,
+    transform,
+    isDragging: isThisElementDragging,
+  } = useDraggable({
+    id: `category-${category.id}`,
+    data: {
+      type: 'category',
+      category,
+      level,
+    },
+  });
+
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+    id: `category-drop-${category.id}`,
+    data: {
+      type: 'category',
+      category,
+      level,
+    },
+  });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    opacity: isThisElementDragging ? 0.3 : 1,
+    zIndex: isThisElementDragging ? 1000 : 'auto',
+  };
+
+  // Verificar si este elemento es un drop target válido
+  const isValidDropTarget = validDropTargets.has(
+    `category-drop-${category.id}`
+  );
+  const showDropIndicator = isOver && isValidDropTarget;
+
+  return (
+    <div
+      ref={node => {
+        setDraggableRef(node);
+        setDroppableRef(node);
+      }}
+      style={style}
+      className={`transition-all duration-200 ${isEditMode ? 'cursor-grab active:cursor-grabbing' : ''}`}
+      {...(isEditMode ? attributes : {})}
+      {...(isEditMode ? listeners : {})}
+    >
+      <div
+        className={`${showDropIndicator ? 'ring-2 ring-primary ring-offset-2 rounded-xl' : ''}`}
+      >
+        <CategoryCardContent
+          category={category}
+          level={level}
+          onCategoryClick={onCategoryClick}
+          onServiceClick={onServiceClick}
+          onCreateService={onCreateService}
+          onCreateSubcategory={onCreateSubcategory}
+          onEditCategory={onEditCategory}
+          onEditService={onEditService}
+          isEditMode={isEditMode}
+          validDropTargets={validDropTargets}
+          expandedCategories={expandedCategories}
+          onToggleExpand={onToggleExpand}
+          isDragging={isDragging}
+          draggingLevel={draggingLevel}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Componente de contenido de CategoryCard (sin drag)
+const CategoryCardContent: FC<CategoryCardProps> = ({
+  category,
+  level = 0,
+  onCategoryClick,
+  onServiceClick,
+  onCreateService,
+  onCreateSubcategory,
+  onEditCategory,
+  onEditService,
+  isEditMode = false,
+  validDropTargets = new Set(),
+  expandedCategories = new Set(),
+  onToggleExpand,
+  isDragging = false,
+  draggingLevel = null,
+}) => {
+  const [localIsExpanded, setLocalIsExpanded] = useState(false);
+
+  // Sincronizar con el estado global de expansión
+  useEffect(() => {
+    setLocalIsExpanded(expandedCategories.has(category.id));
+  }, [expandedCategories, category.id]);
 
   const hasSubcategories = (category.subcategories?.length ?? 0) > 0;
   const hasServices = (category.services?.length ?? 0) > 0;
@@ -73,6 +182,15 @@ export const CategoryCard: FC<CategoryCardProps> = ({
   // Calcular indentación
   const indentLevel = level * 24;
 
+  const handleExpandClick = () => {
+    if (onToggleExpand) {
+      onToggleExpand(category.id);
+    }
+  };
+
+  // Determinar si el botón de expansión debe estar deshabilitado durante el drag
+  const isExpandDisabled = isDragging && draggingLevel === level;
+
   return (
     <div className="space-y-2" style={{ marginLeft: `${indentLevel}px` }}>
       {/* Category Card */}
@@ -81,15 +199,23 @@ export const CategoryCard: FC<CategoryCardProps> = ({
           <div className="flex items-center justify-between">
             {/* Left Section */}
             <div className="flex items-center gap-3 flex-1">
-              {/* Expand Button */}
+              {/* Drag Handle */}
+              {isEditMode && (
+                <div className="cursor-grab active:cursor-grabbing">
+                  <HiMenu className="h-4 w-4 text-muted-foreground" />
+                </div>
+              )}
+
+              {/* Expand Button - Siempre visible cuando hay contenido */}
               {canExpand && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="h-8 w-8 p-0 cursor-pointer"
+                  onClick={handleExpandClick}
+                  className={`h-8 w-8 p-0 ${isExpandDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                  disabled={isExpandDisabled}
                 >
-                  {isExpanded ? (
+                  {localIsExpanded ? (
                     <HiChevronDown className="h-4 w-4" />
                   ) : (
                     <HiChevronRight className="h-4 w-4" />
@@ -100,7 +226,7 @@ export const CategoryCard: FC<CategoryCardProps> = ({
 
               {/* Icon */}
               <div className="text-2xl">
-                {isExpanded ? (
+                {localIsExpanded ? (
                   <HiFolderOpen className="h-6 w-6 text-orange-500" />
                 ) : (
                   <HiFolder className="h-6 w-6 text-orange-500" />
@@ -111,8 +237,9 @@ export const CategoryCard: FC<CategoryCardProps> = ({
               <div className="flex flex-col gap-1 flex-1">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => onCategoryClick(category)}
-                    className="font-semibold text-lg hover:text-primary hover:underline transition-colors text-left cursor-pointer"
+                    onClick={() => !isEditMode && onCategoryClick(category)}
+                    className={`font-semibold text-lg ${isEditMode ? 'cursor-default' : 'hover:text-primary hover:underline cursor-pointer'} transition-colors text-left`}
+                    disabled={isEditMode}
                   >
                     {category.name}
                   </button>
@@ -143,83 +270,85 @@ export const CategoryCard: FC<CategoryCardProps> = ({
             </div>
 
             {/* Right Section - Actions */}
-            <div className="flex items-center gap-1">
-              <DropdownMenu modal={false}>
+            {!isEditMode && (
+              <div className="flex items-center gap-1">
+                <DropdownMenu modal={false}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 px-3 cursor-pointer"
+                        >
+                          <HiPlus className="h-4 w-4 mr-1" />
+                          <span className="text-xs">Crear</span>
+                          <HiChevronDown className="h-3 w-3 ml-1" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Crear nuevo elemento</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <DropdownMenuContent
+                    align="end"
+                    className="rounded-lg border border-border shadow-md"
+                  >
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => onCreateSubcategory?.(category)}
+                    >
+                      <HiFolder className="h-4 w-4 mr-2" />
+                      Nueva Subcategoría
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => onCreateService?.(category)}
+                    >
+                      <HiScissors className="h-4 w-4 mr-2" />
+                      Nuevo Servicio
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-9 px-3 cursor-pointer"
-                      >
-                        <HiPlus className="h-4 w-4 mr-1" />
-                        <span className="text-xs">Crear</span>
-                        <HiChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 cursor-pointer"
+                      onClick={() => onEditCategory?.(category)}
+                    >
+                      <HiPencil className="h-4 w-4" />
+                    </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Crear nuevo elemento</p>
+                    <p>Editar categoría</p>
                   </TooltipContent>
                 </Tooltip>
-                <DropdownMenuContent
-                  align="end"
-                  className="rounded-lg border border-border shadow-md"
-                >
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => onCreateSubcategory?.(category)}
-                  >
-                    <HiFolder className="h-4 w-4 mr-2" />
-                    Nueva Subcategoría
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => onCreateService?.(category)}
-                  >
-                    <HiScissors className="h-4 w-4 mr-2" />
-                    Nuevo Servicio
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 cursor-pointer"
-                    onClick={() => onEditCategory?.(category)}
-                  >
-                    <HiPencil className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Editar categoría</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-destructive cursor-pointer"
-                  >
-                    <HiTrash className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Eliminar categoría</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-destructive cursor-pointer"
+                    >
+                      <HiTrash className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Eliminar categoría</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            )}
           </div>
         </CardContent>
 
-        {/* Expanded Content */}
-        {isExpanded && canExpand && (
+        {/* Expanded Content - Ahora puede mostrarse en modo edición */}
+        {localIsExpanded && canExpand && (
           <div className="border-t border-border px-4 pb-3 pt-3 bg-muted/20">
             {/* Services */}
             {hasServices && (
@@ -233,6 +362,8 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     service={service}
                     onServiceClick={onServiceClick}
                     onEditService={onEditService}
+                    isEditMode={isEditMode}
+                    validDropTargets={validDropTargets}
                   />
                 ))}
               </div>
@@ -262,6 +393,12 @@ export const CategoryCard: FC<CategoryCardProps> = ({
                     onCreateSubcategory={onCreateSubcategory}
                     onEditCategory={onEditCategory}
                     onEditService={onEditService}
+                    isEditMode={isEditMode}
+                    validDropTargets={validDropTargets}
+                    expandedCategories={expandedCategories}
+                    onToggleExpand={onToggleExpand}
+                    isDragging={isDragging}
+                    draggingLevel={draggingLevel}
                   />
                 ))}
               </div>
@@ -271,4 +408,12 @@ export const CategoryCard: FC<CategoryCardProps> = ({
       </Card>
     </div>
   );
+};
+
+// Exportar el componente principal que decide si usar drag o no
+export const CategoryCard: FC<CategoryCardProps> = props => {
+  if (props.isEditMode) {
+    return <DraggableCategoryCard {...props} />;
+  }
+  return <CategoryCardContent {...props} />;
 };

@@ -3,6 +3,7 @@ export {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useGetAllCategoryQuery,
+  useReorderElementsMutation,
 } from './use-category-client';
 export {
   useCreateServiceMutation,

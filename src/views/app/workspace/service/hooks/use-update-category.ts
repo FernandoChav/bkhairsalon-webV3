@@ -99,7 +99,7 @@ export const useUpdateCategory = ({
             // Llamar al callback de éxito (para cerrar el modal)
             onSuccess?.();
           },
-          onError: error => {
+          onError: (error: { response?: { data?: { message?: string } } }) => {
             toast.error(
               error.response?.data?.message ||
                 'Error al actualizar la categoría'

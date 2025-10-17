@@ -1,8 +1,9 @@
 import { ApiResponse } from '@/models/generics';
 import {
   CreateCategoryRequest,
+  ReorderElementsRequest,
   UpdateCategoryRequest,
-} from '@/models/requests';
+} from '@/models/requests/category';
 import { CategoryResponse } from '@/models/responses';
 
 import { baseClient } from './base-client';
@@ -61,6 +62,19 @@ class CategoryClient {
   ): Promise<ApiResponse<CategoryResponse>> {
     const response = await baseClient.put<ApiResponse<CategoryResponse>>(
       `/category/${id}`,
+      data
+    );
+    return response.data;
+  }
+
+  /**
+   * Reordena elementos (categorías y servicios)
+   * @param data - Estructura completa con nuevos ordenes
+   * @returns Respuesta de la API
+   */
+  async reorderElements(data: ReorderElementsRequest): Promise<ApiResponse> {
+    const response = await baseClient.post<ApiResponse>(
+      '/category/reorder',
       data
     );
     return response.data;
