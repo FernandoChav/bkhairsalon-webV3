@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/models/generics';
-import { EditUserRequest } from '@/models/requests';
-import { ProfileDto } from '@/models/responses';
+import { DeleteUserRequest, EditUserRequest } from '@/models/requests';
+import { DeletionInfoDto, ProfileDto } from '@/models/responses';
 
 import { baseClient } from './base-client';
 
@@ -26,6 +26,29 @@ class UserClient {
   async getProfile(): Promise<ApiResponse<ProfileDto>> {
     const response =
       await baseClient.get<ApiResponse<ProfileDto>>('/user/profile');
+    return response.data;
+  }
+
+  /**
+   * Elimina la cuenta del usuario
+   * @param data - Datos necesarios para la eliminación
+   * @returns Respuesta de la API con resultado de la eliminación
+   */
+  async deleteUser(data: DeleteUserRequest): Promise<ApiResponse> {
+    const response = await baseClient.delete<ApiResponse>('/user/delete', {
+      data: data,
+    });
+    return response.data;
+  }
+
+  /**
+   * Obtiene información relevante antes de eliminar la cuenta
+   * @returns Respuesta de la API con información de eliminación
+   */
+  async getDeletionInfo(): Promise<ApiResponse<DeletionInfoDto>> {
+    const response = await baseClient.get<ApiResponse<DeletionInfoDto>>(
+      '/user/deletion-info'
+    );
     return response.data;
   }
 }

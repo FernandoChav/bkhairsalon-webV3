@@ -5,3 +5,7 @@ export interface EditUserRequest {
   dateOfBirth: string; // ISO date string
   currentPassword: string;
 }
+
+export interface DeleteUserRequest {
+  password: string;
+}
