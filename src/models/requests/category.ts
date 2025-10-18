@@ -1,4 +1,4 @@
-import { CategoryResponse, ServiceResponse } from '../responses';
+import { CategoryResponse } from '../responses';
 
 export interface CreateCategoryRequest {
   name: string;
@@ -12,12 +12,6 @@ export interface UpdateCategoryRequest {
 }
 
 // Drag and Drop Types
-export interface DragItem {
-  id: string;
-  type: 'category' | 'service';
-  data: CategoryResponse | ServiceResponse;
-}
-
 export interface DragContext {
   categoryId?: string; // Para servicios, indica en qué categoría están
   parentCategoryId?: string; // Para subcategorías, indica el padre
@@ -37,22 +31,6 @@ export interface PendingChange {
   categoryId?: string; // Para servicios
   context: DragContext;
 }
-
-export interface DragConstraints {
-  allowCategoryToCategory: boolean;
-  allowServiceToService: boolean;
-  allowServiceToCategory: boolean;
-  allowCategoryToService: boolean;
-  maxLevels: number;
-}
-
-export const DEFAULT_DRAG_CONSTRAINTS: DragConstraints = {
-  allowCategoryToCategory: true,
-  allowServiceToService: true,
-  allowServiceToCategory: false,
-  allowCategoryToService: false,
-  maxLevels: 5,
-};
 
 // Reorder Request Types
 export interface ReorderElementRequest {
