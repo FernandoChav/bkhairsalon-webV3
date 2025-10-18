@@ -1,7 +1,12 @@
+import { useAtomValue } from 'jotai';
 import { HiDocumentText, HiTag } from 'react-icons/hi';
 
 import { FC, useEffect } from 'react';
 
+import {
+  isCreateCategoryModalOpenAtom,
+  selectedParentCategoryAtom,
+} from '@/atoms';
 import {
   Button,
   Card,
@@ -23,21 +28,19 @@ import {
   Textarea,
 } from '@/components/shadcn';
 import { cn } from '@/libs';
-import { CategoryResponse } from '@/models/responses';
 
 import { useCreateCategory } from '../hooks';
 
 interface CreateCategoryModalProps {
-  isOpen: boolean;
   onClose: () => void;
-  parentCategory?: CategoryResponse | null;
 }
 
 export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({
-  isOpen,
   onClose,
-  parentCategory,
 }) => {
+  const isOpen = useAtomValue(isCreateCategoryModalOpenAtom);
+  const parentCategory = useAtomValue(selectedParentCategoryAtom);
+
   const { form, submission, handleResetForm } = useCreateCategory({
     parentCategory,
     onSuccess: onClose,

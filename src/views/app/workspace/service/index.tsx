@@ -1,90 +1,71 @@
 'use client';
 
-import { DndContext, DragOverlay } from '@dnd-kit/core';
-import { HiCheck, HiPencil, HiPlus, HiSearch, HiX } from 'react-icons/hi';
+import { useAtomValue } from 'jotai';
 
 import { FC } from 'react';
 
 import {
-  Button,
-  Input,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/shadcn';
+  isEditModeAtom,
+  selectedServiceCategoryAtom,
+  selectedUpdateServiceAtom,
+} from '@/atoms';
 
 import {
   CategoryCard,
   CategoryDetailsSheet,
+  CategoryList,
   CreateCategoryModal,
   CreateServiceModal,
   EditCategoryModal,
   ServiceCard,
   ServiceDetailsSheet,
+  ServiceHeader,
   ServiceViewSkeleton,
   UpdateServiceModal,
 } from './components';
-import { useServiceView } from './hooks';
+import { useCategoryActions, useServiceActions, useServiceView } from './hooks';
 
 export const ServiceView: FC = () => {
+  // Atoms for shared state
+  const selectedServiceCategory = useAtomValue(selectedServiceCategoryAtom);
+  const selectedUpdateService = useAtomValue(selectedUpdateServiceAtom);
+  const isEditMode = useAtomValue(isEditModeAtom);
+
+  // Main view logic
   const {
-    // Values - Data
     categories,
     isLoading,
     isSaving,
-    searchQuery,
-    selectedCategory,
-    isCategorySheetOpen,
-    selectedService,
-    isServiceSheetOpen,
-    isCreateServiceModalOpen,
-    isCreateCategoryModalOpen,
-    selectedParentCategory,
-    selectedServiceCategory,
-    isEditCategoryModalOpen,
-    selectedEditCategory,
-    isUpdateServiceModalOpen,
-    selectedUpdateService,
-    // Values - Drag and Drop
-    isEditMode,
     reorderState,
     activeId,
     validDropTargets,
-    expandedCategories,
     draggingLevel,
     sensors,
-    // Values - Computed
     hasCategories,
     hasPendingChanges,
     categoryMap,
-    // Handlers - Search
-    handleSearchChange,
-    // Handlers - Category
-    handleCategoryClick,
     handleCreateCategory,
-    handleCreateSubcategory,
-    handleEditCategory,
-    handleCloseCreateCategoryModal,
-    handleCloseEditCategoryModal,
-    handleCloseCategorySheet,
-    // Handlers - Service
-    handleServiceClick,
-    handleCreateService,
-    handleEditService,
-    handleCloseCreateServiceModal,
-    handleCloseUpdateServiceModal,
-    handleCloseServiceSheet,
-    // Handlers - Edit Mode
     handleStartEditMode,
     handleCancelEditMode,
     handleSaveChanges,
-    // Handlers - Expand/Collapse
-    handleToggleExpand,
-    // Handlers - Drag and Drop
     handleDragStart,
     handleDragEnd,
     handleDragOver,
   } = useServiceView();
+
+  // Category actions
+  const {
+    handleCloseCategorySheet,
+    handleCloseCreateCategoryModal,
+    handleCloseEditCategoryModal,
+  } = useCategoryActions();
+
+  // Service actions
+  const {
+    handleCloseServiceSheet,
+    handleCloseCreateServiceModal,
+    handleCloseUpdateServiceModal,
+  } = useServiceActions();
 
   // Computed values for rendering
   const categoriesToRender = isEditMode ? reorderState.categories : categories;
@@ -100,17 +81,11 @@ export const ServiceView: FC = () => {
 
     if (isDraggingCategory) {
       const info = categoryMap.get(elementId);
-      return info ? (
-        <CategoryCard
-          category={info.category}
-          onCategoryClick={() => {}}
-          isEditMode={false}
-          expandedCategories={new Set()}
-          onToggleExpand={() => {}}
-          isDragging={false}
-          draggingLevel={null}
-        />
-      ) : null;
+      return (
+        info && (
+          <CategoryCard category={info.category} onCategoryClick={() => {}} />
+        )
+      );
     }
 
     // Service
@@ -120,13 +95,9 @@ export const ServiceView: FC = () => {
       if (found) service = found;
     });
 
-    return service ? (
-      <ServiceCard
-        service={service}
-        onServiceClick={() => {}}
-        isEditMode={false}
-      />
-    ) : null;
+    return (
+      service && <ServiceCard service={service} onServiceClick={() => {}} />
+    );
   })();
 
   // Show loading state
@@ -137,107 +108,15 @@ export const ServiceView: FC = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2">
-              Gestionar Servicios
-            </h1>
-            <p className="text-muted-foreground">
-              Organiza tus servicios por categorías para una mejor gestión
-            </p>
-          </div>
-
-          {!isEditMode ? (
-            <div className="flex gap-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={handleStartEditMode}
-                  >
-                    <HiPencil className="h-4 w-4" />
-                    Reordenar
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Reordenar categorías y servicios</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={handleCreateCategory}
-                  >
-                    <HiPlus className="h-4 w-4" />
-                    Nueva Categoría
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nueva categoría para organizar servicios</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          ) : (
-            <div className="flex gap-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={handleSaveChanges}
-                    disabled={isEditButtonDisabled}
-                  >
-                    <HiCheck className="h-4 w-4" />
-                    {saveButtonText}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {hasPendingChanges
-                      ? 'Guardar el nuevo orden'
-                      : 'No hay cambios para guardar'}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={handleCancelEditMode}
-                  >
-                    <HiX className="h-4 w-4" />
-                    Cancelar
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Cancelar cambios y volver al modo normal</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    disabled
-                    variant="outline"
-                    className="flex items-center gap-2"
-                  >
-                    <HiPlus className="h-4 w-4" />
-                    Nueva Categoría
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>No disponible en modo edición</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          )}
-        </div>
-      </div>
+      <ServiceHeader
+        isEditButtonDisabled={isEditButtonDisabled}
+        saveButtonText={saveButtonText}
+        hasPendingChanges={hasPendingChanges}
+        handleStartEditMode={handleStartEditMode}
+        handleCreateCategory={handleCreateCategory}
+        handleSaveChanges={handleSaveChanges}
+        handleCancelEditMode={handleCancelEditMode}
+      />
 
       {/* Indicador de cambios pendientes */}
       {isEditMode && hasPendingChanges && (
@@ -251,121 +130,43 @@ export const ServiceView: FC = () => {
         </div>
       )}
 
-      {/* Search Bar */}
-      {hasCategories && !isEditMode && (
-        <div className="relative mb-4">
-          <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar categorías o servicios..."
-            value={searchQuery}
-            onChange={e => handleSearchChange(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-      )}
-
       {/* Categories List */}
-      {hasCategories ? (
-        <DndContext
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragOver={handleDragOver}
-        >
-          <div className="space-y-3">
-            {categoriesToRender.map(category => (
-              <CategoryCard
-                key={category.id}
-                category={category}
-                onCategoryClick={handleCategoryClick}
-                onServiceClick={handleServiceClick}
-                onCreateService={handleCreateService}
-                onCreateSubcategory={handleCreateSubcategory}
-                onEditCategory={handleEditCategory}
-                onEditService={handleEditService}
-                isEditMode={isEditMode}
-                validDropTargets={validDropTargets}
-                expandedCategories={expandedCategories}
-                onToggleExpand={handleToggleExpand}
-                isDragging={!!activeId}
-                draggingLevel={draggingLevel}
-              />
-            ))}
-          </div>
-
-          <DragOverlay>
-            {activeId ? (
-              <div
-                className={`opacity-90 scale-105 ${activeId.startsWith('category-') ? 'rotate-1' : 'rotate-3'}`}
-              >
-                {dragOverlayContent}
-              </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <h3 className="text-lg font-semibold mb-2">No hay categorías</h3>
-          <p className="text-muted-foreground mb-4">
-            Crea tu primera categoría para comenzar a organizar tus servicios
-          </p>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={handleCreateCategory}
-              >
-                <HiPlus className="h-4 w-4" />
-                Crear Primera Categoría
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Crear tu primera categoría para organizar servicios</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      )}
+      <CategoryList
+        hasCategories={hasCategories}
+        categoriesToRender={categoriesToRender}
+        sensors={sensors}
+        validDropTargets={validDropTargets}
+        activeId={activeId}
+        draggingLevel={draggingLevel}
+        dragOverlayContent={dragOverlayContent}
+        handleDragStart={handleDragStart}
+        handleDragEnd={handleDragEnd}
+        handleDragOver={handleDragOver}
+        handleCreateCategory={handleCreateCategory}
+      />
 
       {/* Details Sheets */}
-      <CategoryDetailsSheet
-        category={selectedCategory}
-        isOpen={isCategorySheetOpen}
-        onClose={handleCloseCategorySheet}
-      />
+      <CategoryDetailsSheet onClose={handleCloseCategorySheet} />
 
-      <ServiceDetailsSheet
-        service={selectedService}
-        isOpen={isServiceSheetOpen}
-        onClose={handleCloseServiceSheet}
-      />
+      <ServiceDetailsSheet onClose={handleCloseServiceSheet} />
 
       {/* Create Service Modal */}
       {selectedServiceCategory && (
         <CreateServiceModal
-          isOpen={isCreateServiceModalOpen}
-          onClose={handleCloseCreateServiceModal}
           selectedCategory={selectedServiceCategory}
+          onClose={handleCloseCreateServiceModal}
         />
       )}
 
       {/* Create Category Modal */}
-      <CreateCategoryModal
-        isOpen={isCreateCategoryModalOpen}
-        onClose={handleCloseCreateCategoryModal}
-        parentCategory={selectedParentCategory}
-      />
+      <CreateCategoryModal onClose={handleCloseCreateCategoryModal} />
 
       {/* Edit Category Modal */}
-      <EditCategoryModal
-        isOpen={isEditCategoryModalOpen}
-        onClose={handleCloseEditCategoryModal}
-        category={selectedEditCategory}
-      />
+      <EditCategoryModal onClose={handleCloseEditCategoryModal} />
 
       {/* Update Service Modal */}
       {selectedUpdateService && (
         <UpdateServiceModal
-          isOpen={isUpdateServiceModalOpen}
           onClose={handleCloseUpdateServiceModal}
           service={selectedUpdateService}
         />

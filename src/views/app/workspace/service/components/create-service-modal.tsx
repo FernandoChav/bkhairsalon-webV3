@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai';
 import {
   HiClock,
   HiCurrencyDollar,
@@ -7,6 +8,7 @@ import {
 
 import { FC, useCallback, useMemo } from 'react';
 
+import { isCreateServiceModalOpenAtom } from '@/atoms';
 import {
   Button,
   Card,
@@ -40,16 +42,16 @@ import { CategoryResponse } from '@/models/responses';
 import { useCreateService } from '../hooks';
 
 interface CreateServiceModalProps {
-  isOpen: boolean;
   onClose: () => void;
   selectedCategory: CategoryResponse;
 }
 
 export const CreateServiceModal: FC<CreateServiceModalProps> = ({
-  isOpen,
   onClose,
   selectedCategory,
 }) => {
+  const isOpen = useAtomValue(isCreateServiceModalOpenAtom);
+
   const { form, fileUpload, validation, submission } = useCreateService({
     onSuccess: onClose,
     selectedCategory,

@@ -1,9 +1,11 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAtomValue } from 'jotai';
 import { HiFolder } from 'react-icons/hi';
 
 import { FC } from 'react';
 
+import { isCategorySheetOpenAtom, selectedCategoryAtom } from '@/atoms';
 import {
   Separator,
   Sheet,
@@ -12,19 +14,17 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/shadcn';
-import { CategoryResponse } from '@/models/responses';
 
 interface CategoryDetailsSheetProps {
-  category: CategoryResponse | null;
-  isOpen: boolean;
   onClose: () => void;
 }
 
 export const CategoryDetailsSheet: FC<CategoryDetailsSheetProps> = ({
-  category,
-  isOpen,
   onClose,
 }) => {
+  const category = useAtomValue(selectedCategoryAtom);
+  const isOpen = useAtomValue(isCategorySheetOpenAtom);
+
   if (!category) return null;
 
   const formatDate = (dateString: string) => {

@@ -1,5 +1,6 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
+import { useAtom } from 'jotai';
 import {
   HiChevronDown,
   HiChevronRight,
@@ -14,6 +15,7 @@ import {
 
 import { FC, useEffect, useState } from 'react';
 
+import { expandedCategoriesAtom, isEditModeAtom } from '@/atoms';
 import {
   Badge,
   Button,
@@ -29,12 +31,17 @@ import {
 } from '@/components/shadcn';
 import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
+import {
+  useCategoryActions,
+  useSearchExpand,
+  useServiceActions,
+} from '../hooks';
 import { ServiceCard } from './service-card';
 
 interface CategoryCardProps {
   category: CategoryResponse;
   level?: number;
-  onCategoryClick: (category: CategoryResponse) => void;
+  onCategoryClick?: (category: CategoryResponse) => void;
   onServiceClick?: (service: ServiceResponse) => void;
   onCreateService?: (category: CategoryResponse) => void;
   onCreateSubcategory?: (category: CategoryResponse) => void;
@@ -52,16 +59,7 @@ interface CategoryCardProps {
 const DraggableCategoryCard: FC<CategoryCardProps> = ({
   category,
   level = 0,
-  onCategoryClick,
-  onServiceClick,
-  onCreateService,
-  onCreateSubcategory,
-  onEditCategory,
-  onEditService,
-  isEditMode = false,
   validDropTargets = new Set(),
-  expandedCategories = new Set(),
-  onToggleExpand,
   isDragging = false,
   draggingLevel = null,
 }) => {
@@ -95,6 +93,8 @@ const DraggableCategoryCard: FC<CategoryCardProps> = ({
     zIndex: isThisElementDragging ? 1000 : 'auto',
   };
 
+  const [isEditMode] = useAtom(isEditModeAtom);
+
   // Verificar si este elemento es un drop target válido
   const isValidDropTarget = validDropTargets.has(
     `category-drop-${category.id}`
@@ -118,18 +118,9 @@ const DraggableCategoryCard: FC<CategoryCardProps> = ({
         <CategoryCardContent
           category={category}
           level={level}
-          onCategoryClick={onCategoryClick}
-          onServiceClick={onServiceClick}
-          onCreateService={onCreateService}
-          onCreateSubcategory={onCreateSubcategory}
-          onEditCategory={onEditCategory}
-          onEditService={onEditService}
-          isEditMode={isEditMode}
-          validDropTargets={validDropTargets}
-          expandedCategories={expandedCategories}
-          onToggleExpand={onToggleExpand}
           isDragging={isDragging}
           draggingLevel={draggingLevel}
+          validDropTargets={validDropTargets}
         />
       </div>
     </div>
@@ -137,23 +128,29 @@ const DraggableCategoryCard: FC<CategoryCardProps> = ({
 };
 
 // Componente de contenido de CategoryCard (sin drag)
-const CategoryCardContent: FC<CategoryCardProps> = ({
+const CategoryCardContent: FC<{
+  category: CategoryResponse;
+  level?: number;
+  isDragging?: boolean;
+  draggingLevel?: number | null;
+  validDropTargets?: Set<string>;
+}> = ({
   category,
   level = 0,
-  onCategoryClick,
-  onServiceClick,
-  onCreateService,
-  onCreateSubcategory,
-  onEditCategory,
-  onEditService,
-  isEditMode = false,
-  validDropTargets = new Set(),
-  expandedCategories = new Set(),
-  onToggleExpand,
   isDragging = false,
   draggingLevel = null,
+  validDropTargets = new Set(),
 }) => {
   const [localIsExpanded, setLocalIsExpanded] = useState(false);
+  const [isEditMode] = useAtom(isEditModeAtom);
+  const [expandedCategories] = useAtom(expandedCategoriesAtom);
+
+  // Get actions from hooks
+  const { handleCategoryClick, handleCreateSubcategory, handleEditCategory } =
+    useCategoryActions();
+  const { handleServiceClick, handleCreateService, handleEditService } =
+    useServiceActions();
+  const { handleToggleExpand } = useSearchExpand();
 
   // Sincronizar con el estado global de expansión
   useEffect(() => {
@@ -183,8 +180,8 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
   const indentLevel = level * 24;
 
   const handleExpandClick = () => {
-    if (onToggleExpand) {
-      onToggleExpand(category.id);
+    if (handleToggleExpand) {
+      handleToggleExpand(category.id);
     }
   };
 
@@ -237,7 +234,7 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
               <div className="flex flex-col gap-1 flex-1">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => !isEditMode && onCategoryClick(category)}
+                    onClick={() => !isEditMode && handleCategoryClick(category)}
                     className={`font-semibold text-lg ${isEditMode ? 'cursor-default' : 'hover:text-primary hover:underline cursor-pointer'} transition-colors text-left`}
                     disabled={isEditMode}
                   >
@@ -297,14 +294,14 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
                   >
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={() => onCreateSubcategory?.(category)}
+                      onClick={() => handleCreateSubcategory(category)}
                     >
                       <HiFolder className="h-4 w-4 mr-2" />
                       Nueva Subcategoría
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={() => onCreateService?.(category)}
+                      onClick={() => handleCreateService(category)}
                     >
                       <HiScissors className="h-4 w-4 mr-2" />
                       Nuevo Servicio
@@ -318,7 +315,7 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 cursor-pointer"
-                      onClick={() => onEditCategory?.(category)}
+                      onClick={() => handleEditCategory(category)}
                     >
                       <HiPencil className="h-4 w-4" />
                     </Button>
@@ -360,8 +357,8 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
                   <ServiceCard
                     key={service.id}
                     service={service}
-                    onServiceClick={onServiceClick}
-                    onEditService={onEditService}
+                    onServiceClick={handleServiceClick}
+                    onEditService={handleEditService}
                     isEditMode={isEditMode}
                     validDropTargets={validDropTargets}
                   />
@@ -387,16 +384,8 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
                     key={subcategory.id}
                     category={subcategory}
                     level={level + 1}
-                    onCategoryClick={onCategoryClick}
-                    onServiceClick={onServiceClick}
-                    onCreateService={onCreateService}
-                    onCreateSubcategory={onCreateSubcategory}
-                    onEditCategory={onEditCategory}
-                    onEditService={onEditService}
                     isEditMode={isEditMode}
                     validDropTargets={validDropTargets}
-                    expandedCategories={expandedCategories}
-                    onToggleExpand={onToggleExpand}
                     isDragging={isDragging}
                     draggingLevel={draggingLevel}
                   />
@@ -412,8 +401,10 @@ const CategoryCardContent: FC<CategoryCardProps> = ({
 
 // Exportar el componente principal que decide si usar drag o no
 export const CategoryCard: FC<CategoryCardProps> = props => {
-  if (props.isEditMode) {
+  const [isEditMode] = useAtom(isEditModeAtom);
+
+  if (isEditMode || props.isEditMode) {
     return <DraggableCategoryCard {...props} />;
   }
-  return <CategoryCardContent {...props} />;
+  return <CategoryCardContent category={props.category} level={props.level} />;
 };

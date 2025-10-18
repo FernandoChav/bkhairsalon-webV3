@@ -7,41 +7,33 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
+import { useAtom, useSetAtom } from 'jotai';
 import { toast } from 'sonner';
 
 import { useCallback, useMemo, useState } from 'react';
 
 import {
+  expandedCategoriesAtom,
+  isCreateCategoryModalOpenAtom,
+  isEditModeAtom,
+  selectedParentCategoryAtom,
+} from '@/atoms';
+import {
   useGetAllCategoryQuery,
   useReorderElementsMutation,
 } from '@/hooks/api';
 import { ReorderElementRequest, ReorderState } from '@/models/requests';
-import { CategoryResponse, ServiceResponse } from '@/models/responses';
+import { CategoryResponse } from '@/models/responses';
 
 interface UseServiceViewReturn {
   // Values - Data
   categories: CategoryResponse[];
   isLoading: boolean;
   isSaving: boolean;
-  searchQuery: string;
-  selectedCategory: CategoryResponse | null;
-  isCategorySheetOpen: boolean;
-  selectedService: ServiceResponse | null;
-  isServiceSheetOpen: boolean;
-  isCreateServiceModalOpen: boolean;
-  isCreateCategoryModalOpen: boolean;
-  selectedParentCategory: CategoryResponse | null;
-  selectedServiceCategory: CategoryResponse | null;
-  isEditCategoryModalOpen: boolean;
-  selectedEditCategory: CategoryResponse | null;
-  isUpdateServiceModalOpen: boolean;
-  selectedUpdateService: ServiceResponse | null;
   // Values - Drag and Drop
-  isEditMode: boolean;
   reorderState: ReorderState;
   activeId: string | null;
   validDropTargets: Set<string>;
-  expandedCategories: Set<string>;
   draggingLevel: number | null;
   sensors: ReturnType<typeof useSensors>;
   // Values - Computed
@@ -55,29 +47,12 @@ interface UseServiceViewReturn {
       level: number;
     }
   >;
-  // Handlers - Search
-  handleSearchChange: (value: string) => void;
   // Handlers - Category
-  handleCategoryClick: (category: CategoryResponse) => void;
   handleCreateCategory: () => void;
-  handleCreateSubcategory: (parentCategory: CategoryResponse) => void;
-  handleEditCategory: (category: CategoryResponse) => void;
-  handleCloseCreateCategoryModal: () => void;
-  handleCloseEditCategoryModal: () => void;
-  handleCloseCategorySheet: () => void;
-  // Handlers - Service
-  handleServiceClick: (service: ServiceResponse) => void;
-  handleCreateService: (category: CategoryResponse) => void;
-  handleEditService: (service: ServiceResponse) => void;
-  handleCloseCreateServiceModal: () => void;
-  handleCloseUpdateServiceModal: () => void;
-  handleCloseServiceSheet: () => void;
   // Handlers - Edit Mode
   handleStartEditMode: () => void;
   handleCancelEditMode: () => void;
   handleSaveChanges: () => Promise<void>;
-  // Handlers - Expand/Collapse
-  handleToggleExpand: (categoryId: string) => void;
   // Handlers - Drag and Drop
   handleDragStart: (event: DragStartEvent) => void;
   handleDragEnd: (event: DragEndEvent) => void;
@@ -93,36 +68,15 @@ export const useServiceView = (): UseServiceViewReturn => {
 
   const reorderMutation = useReorderElementsMutation();
 
-  // Search state
-  const [searchQuery, setSearchQuery] = useState('');
+  // Atoms for shared state
+  const setIsCreateCategoryModalOpen = useSetAtom(
+    isCreateCategoryModalOpenAtom
+  );
+  const setSelectedParentCategory = useSetAtom(selectedParentCategoryAtom);
+  const [isEditMode, setIsEditMode] = useAtom(isEditModeAtom);
+  const setExpandedCategories = useSetAtom(expandedCategoriesAtom);
 
-  // Category states
-  const [selectedCategory, setSelectedCategory] =
-    useState<CategoryResponse | null>(null);
-  const [isCategorySheetOpen, setIsCategorySheetOpen] = useState(false);
-  const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] =
-    useState(false);
-  const [selectedParentCategory, setSelectedParentCategory] =
-    useState<CategoryResponse | null>(null);
-  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
-  const [selectedEditCategory, setSelectedEditCategory] =
-    useState<CategoryResponse | null>(null);
-
-  // Service states
-  const [selectedService, setSelectedService] =
-    useState<ServiceResponse | null>(null);
-  const [isServiceSheetOpen, setIsServiceSheetOpen] = useState(false);
-  const [isCreateServiceModalOpen, setIsCreateServiceModalOpen] =
-    useState(false);
-  const [selectedServiceCategory, setSelectedServiceCategory] =
-    useState<CategoryResponse | null>(null);
-  const [isUpdateServiceModalOpen, setIsUpdateServiceModalOpen] =
-    useState(false);
-  const [selectedUpdateService, setSelectedUpdateService] =
-    useState<ServiceResponse | null>(null);
-
-  // Drag and drop states
-  const [isEditMode, setIsEditMode] = useState(false);
+  // Local state for drag and drop (specific to this hook)
   const [isSaving, setIsSaving] = useState(false);
   const [reorderState, setReorderState] = useState<ReorderState>({
     categories: [],
@@ -132,11 +86,7 @@ export const useServiceView = (): UseServiceViewReturn => {
   const [validDropTargets, setValidDropTargets] = useState<Set<string>>(
     new Set()
   );
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set()
-  );
   const [draggingLevel, setDraggingLevel] = useState<number | null>(null);
-  const [draggingParentId, setDraggingParentId] = useState<string | null>(null);
 
   // Sensors configuration
   const sensors = useSensors(
@@ -199,29 +149,6 @@ export const useServiceView = (): UseServiceViewReturn => {
     };
   }, []);
 
-  const shouldCollapseCategory = useCallback(
-    (categoryId: string): boolean => {
-      if (draggingLevel === null) return false;
-
-      const categoryInfo = categoryMap.get(categoryId);
-      if (!categoryInfo) return false;
-
-      if (draggingLevel === 0 && categoryInfo.level === 0) {
-        return true;
-      }
-
-      if (draggingLevel > 0 && draggingParentId) {
-        return (
-          categoryInfo.parent?.id === draggingParentId &&
-          categoryInfo.level === draggingLevel
-        );
-      }
-
-      return false;
-    },
-    [draggingLevel, draggingParentId, categoryMap]
-  );
-
   const collapseAppropriateLevel = useCallback(
     (elementId: string, elementType: 'category' | 'service') => {
       if (elementType === 'service') {
@@ -231,7 +158,6 @@ export const useServiceView = (): UseServiceViewReturn => {
 
         if (parentCategory) {
           setDraggingLevel(-1);
-          setDraggingParentId(parentCategory.category.id);
         }
         return;
       }
@@ -243,7 +169,6 @@ export const useServiceView = (): UseServiceViewReturn => {
       const parentId = draggedCategoryInfo.parent?.id || null;
 
       setDraggingLevel(level);
-      setDraggingParentId(parentId);
 
       const categoriesToCollapse = new Set<string>();
 
@@ -263,7 +188,7 @@ export const useServiceView = (): UseServiceViewReturn => {
         return newSet;
       });
     },
-    [categoryMap]
+    [categoryMap, setExpandedCategories]
   );
 
   const findAndReorderCategories = useCallback(
@@ -484,79 +409,11 @@ export const useServiceView = (): UseServiceViewReturn => {
     [findAndReorderServices]
   );
 
-  // Handlers - Search
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchQuery(value);
-  }, []);
-
   // Handlers - Category
-  const handleCategoryClick = useCallback((category: CategoryResponse) => {
-    setSelectedCategory(category);
-    setIsCategorySheetOpen(true);
-  }, []);
-
   const handleCreateCategory = useCallback(() => {
     setSelectedParentCategory(null);
     setIsCreateCategoryModalOpen(true);
-  }, []);
-
-  const handleCreateSubcategory = useCallback(
-    (parentCategory: CategoryResponse) => {
-      setSelectedParentCategory(parentCategory);
-      setIsCreateCategoryModalOpen(true);
-    },
-    []
-  );
-
-  const handleEditCategory = useCallback((category: CategoryResponse) => {
-    setSelectedEditCategory(category);
-    setIsEditCategoryModalOpen(true);
-  }, []);
-
-  const handleCloseCreateCategoryModal = useCallback(() => {
-    setIsCreateCategoryModalOpen(false);
-    setSelectedParentCategory(null);
-  }, []);
-
-  const handleCloseEditCategoryModal = useCallback(() => {
-    setIsEditCategoryModalOpen(false);
-    setSelectedEditCategory(null);
-  }, []);
-
-  const handleCloseCategorySheet = useCallback(() => {
-    setIsCategorySheetOpen(false);
-  }, []);
-
-  // Handlers - Service
-  const handleServiceClick = useCallback((service: ServiceResponse) => {
-    setSelectedService(service);
-    setIsServiceSheetOpen(true);
-  }, []);
-
-  const handleCreateService = useCallback((category: CategoryResponse) => {
-    setSelectedServiceCategory(category);
-    setIsCreateServiceModalOpen(true);
-  }, []);
-
-  const handleEditService = useCallback((service: ServiceResponse) => {
-    setSelectedUpdateService(service);
-    setIsUpdateServiceModalOpen(true);
-    setIsServiceSheetOpen(false);
-  }, []);
-
-  const handleCloseCreateServiceModal = useCallback(() => {
-    setIsCreateServiceModalOpen(false);
-    setSelectedServiceCategory(null);
-  }, []);
-
-  const handleCloseUpdateServiceModal = useCallback(() => {
-    setIsUpdateServiceModalOpen(false);
-    setSelectedUpdateService(null);
-  }, []);
-
-  const handleCloseServiceSheet = useCallback(() => {
-    setIsServiceSheetOpen(false);
-  }, []);
+  }, [setSelectedParentCategory, setIsCreateCategoryModalOpen]);
 
   // Handlers - Edit Mode
   const handleStartEditMode = useCallback(() => {
@@ -565,7 +422,7 @@ export const useServiceView = (): UseServiceViewReturn => {
       categories: [...categories],
       pendingChanges: [],
     });
-  }, [categories]);
+  }, [categories, setIsEditMode]);
 
   const handleCancelEditMode = useCallback(() => {
     setIsEditMode(false);
@@ -574,8 +431,7 @@ export const useServiceView = (): UseServiceViewReturn => {
       pendingChanges: [],
     });
     setDraggingLevel(null);
-    setDraggingParentId(null);
-  }, []);
+  }, [setIsEditMode]);
 
   const handleSaveChanges = useCallback(async () => {
     try {
@@ -604,27 +460,13 @@ export const useServiceView = (): UseServiceViewReturn => {
     } finally {
       setIsSaving(false);
     }
-  }, [reorderState.categories, buildReorderRequest, reorderMutation, refetch]);
-
-  // Handlers - Expand/Collapse
-  const handleToggleExpand = useCallback(
-    (categoryId: string) => {
-      const canExpand = !draggingLevel || !shouldCollapseCategory(categoryId);
-
-      if (canExpand) {
-        setExpandedCategories(prev => {
-          const newSet = new Set(prev);
-          if (newSet.has(categoryId)) {
-            newSet.delete(categoryId);
-          } else {
-            newSet.add(categoryId);
-          }
-          return newSet;
-        });
-      }
-    },
-    [draggingLevel, shouldCollapseCategory]
-  );
+  }, [
+    reorderState.categories,
+    buildReorderRequest,
+    reorderMutation,
+    refetch,
+    setIsEditMode,
+  ]);
 
   // Handlers - Drag and Drop
   const handleDragStart = useCallback(
@@ -651,7 +493,6 @@ export const useServiceView = (): UseServiceViewReturn => {
         setActiveId(null);
         setValidDropTargets(new Set());
         setDraggingLevel(null);
-        setDraggingParentId(null);
         return;
       }
 
@@ -662,7 +503,6 @@ export const useServiceView = (): UseServiceViewReturn => {
         setActiveId(null);
         setValidDropTargets(new Set());
         setDraggingLevel(null);
-        setDraggingParentId(null);
         return;
       }
 
@@ -688,7 +528,6 @@ export const useServiceView = (): UseServiceViewReturn => {
         setActiveId(null);
         setValidDropTargets(new Set());
         setDraggingLevel(null);
-        setDraggingParentId(null);
         return;
       }
 
@@ -701,7 +540,6 @@ export const useServiceView = (): UseServiceViewReturn => {
           setActiveId(null);
           setValidDropTargets(new Set());
           setDraggingLevel(null);
-          setDraggingParentId(null);
           return;
         }
       } else {
@@ -710,7 +548,6 @@ export const useServiceView = (): UseServiceViewReturn => {
           setActiveId(null);
           setValidDropTargets(new Set());
           setDraggingLevel(null);
-          setDraggingParentId(null);
           return;
         }
       }
@@ -718,7 +555,6 @@ export const useServiceView = (): UseServiceViewReturn => {
       setActiveId(null);
       setValidDropTargets(new Set());
       setDraggingLevel(null);
-      setDraggingParentId(null);
     },
     [handleCategoryReorder, handleServiceReorder]
   );
@@ -814,54 +650,22 @@ export const useServiceView = (): UseServiceViewReturn => {
     categories,
     isLoading: categoriesLoading,
     isSaving,
-    searchQuery,
-    selectedCategory,
-    isCategorySheetOpen,
-    selectedService,
-    isServiceSheetOpen,
-    isCreateServiceModalOpen,
-    isCreateCategoryModalOpen,
-    selectedParentCategory,
-    selectedServiceCategory,
-    isEditCategoryModalOpen,
-    selectedEditCategory,
-    isUpdateServiceModalOpen,
-    selectedUpdateService,
     // Values - Drag and Drop
-    isEditMode,
     reorderState,
     activeId,
     validDropTargets,
-    expandedCategories,
     draggingLevel,
     sensors,
     // Values - Computed
     hasCategories,
     hasPendingChanges,
     categoryMap,
-    // Handlers - Search
-    handleSearchChange,
     // Handlers - Category
-    handleCategoryClick,
     handleCreateCategory,
-    handleCreateSubcategory,
-    handleEditCategory,
-    handleCloseCreateCategoryModal,
-    handleCloseEditCategoryModal,
-    handleCloseCategorySheet,
-    // Handlers - Service
-    handleServiceClick,
-    handleCreateService,
-    handleEditService,
-    handleCloseCreateServiceModal,
-    handleCloseUpdateServiceModal,
-    handleCloseServiceSheet,
     // Handlers - Edit Mode
     handleStartEditMode,
     handleCancelEditMode,
     handleSaveChanges,
-    // Handlers - Expand/Collapse
-    handleToggleExpand,
     // Handlers - Drag and Drop
     handleDragStart,
     handleDragEnd,

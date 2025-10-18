@@ -1,5 +1,6 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
+import { useAtom } from 'jotai';
 import {
   HiClock,
   HiCurrencyDollar,
@@ -11,6 +12,7 @@ import {
 
 import { FC } from 'react';
 
+import { isEditModeAtom } from '@/atoms';
 import {
   Badge,
   Button,
@@ -21,6 +23,8 @@ import {
   TooltipTrigger,
 } from '@/components/shadcn';
 import { ServiceResponse } from '@/models/responses';
+
+import { useServiceActions } from '../hooks';
 
 interface ServiceCardProps {
   service: ServiceResponse;
@@ -33,11 +37,10 @@ interface ServiceCardProps {
 // Componente Draggable para ServiceCard
 const DraggableServiceCard: FC<ServiceCardProps> = ({
   service,
-  onServiceClick,
-  onEditService,
-  isEditMode = false,
   validDropTargets = new Set(),
 }) => {
+  const [isEditMode] = useAtom(isEditModeAtom);
+
   const {
     attributes,
     listeners,
@@ -84,24 +87,17 @@ const DraggableServiceCard: FC<ServiceCardProps> = ({
       <div
         className={`${showDropIndicator ? 'ring-2 ring-primary ring-offset-2 rounded-xl' : ''}`}
       >
-        <ServiceCardContent
-          service={service}
-          onServiceClick={onServiceClick}
-          onEditService={onEditService}
-          isEditMode={isEditMode}
-        />
+        <ServiceCardContent service={service} />
       </div>
     </div>
   );
 };
 
 // Componente de contenido de ServiceCard (sin drag)
-const ServiceCardContent: FC<ServiceCardProps> = ({
-  service,
-  onServiceClick,
-  onEditService,
-  isEditMode = false,
-}) => {
+const ServiceCardContent: FC<{ service: ServiceResponse }> = ({ service }) => {
+  const [isEditMode] = useAtom(isEditModeAtom);
+  const { handleServiceClick, handleEditService } = useServiceActions();
+
   return (
     <Card className="group shadow-none hover:shadow-lg hover:border-border/80 transition-all">
       <CardContent className="p-3">
@@ -120,7 +116,7 @@ const ServiceCardContent: FC<ServiceCardProps> = ({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => !isEditMode && onServiceClick?.(service)}
+                  onClick={() => !isEditMode && handleServiceClick(service)}
                   className={`font-medium ${isEditMode ? 'cursor-default' : 'hover:text-primary hover:underline cursor-pointer'} transition-colors text-left`}
                   disabled={isEditMode}
                 >
@@ -162,7 +158,7 @@ const ServiceCardContent: FC<ServiceCardProps> = ({
                     variant="ghost"
                     size="sm"
                     className="h-7 w-7 p-0 cursor-pointer"
-                    onClick={() => onEditService?.(service)}
+                    onClick={() => handleEditService(service)}
                   >
                     <HiPencil className="h-3 w-3" />
                   </Button>
@@ -196,8 +192,10 @@ const ServiceCardContent: FC<ServiceCardProps> = ({
 
 // Exportar el componente principal que decide si usar drag o no
 export const ServiceCard: FC<ServiceCardProps> = props => {
-  if (props.isEditMode) {
+  const [isEditMode] = useAtom(isEditModeAtom);
+
+  if (isEditMode || props.isEditMode) {
     return <DraggableServiceCard {...props} />;
   }
-  return <ServiceCardContent {...props} />;
+  return <ServiceCardContent service={props.service} />;
 };

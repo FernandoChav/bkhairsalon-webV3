@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai';
 import {
   HiClock,
   HiCurrencyDollar,
@@ -7,6 +8,7 @@ import {
 
 import { FC, useCallback, useMemo, useState } from 'react';
 
+import { isUpdateServiceModalOpenAtom } from '@/atoms';
 import {
   Button,
   Card,
@@ -40,16 +42,15 @@ import { ServiceResponse } from '@/models/responses';
 import { useUpdateService } from '../hooks';
 
 interface UpdateServiceModalProps {
-  isOpen: boolean;
   onClose: () => void;
   service: ServiceResponse;
 }
 
 export const UpdateServiceModal: FC<UpdateServiceModalProps> = ({
-  isOpen,
   onClose,
   service,
 }) => {
+  const isOpen = useAtomValue(isUpdateServiceModalOpenAtom);
   const { form, fileUpload, imageManager, validation, submission } =
     useUpdateService({
       onSuccess: onClose,

@@ -1,9 +1,11 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAtomValue } from 'jotai';
 import { HiScissors } from 'react-icons/hi';
 
 import { FC } from 'react';
 
+import { isServiceSheetOpenAtom, selectedServiceAtom } from '@/atoms';
 import {
   Separator,
   Sheet,
@@ -12,19 +14,17 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/shadcn';
-import { ServiceResponse } from '@/models/responses';
 
 interface ServiceDetailsSheetProps {
-  service: ServiceResponse | null;
-  isOpen: boolean;
   onClose: () => void;
 }
 
 export const ServiceDetailsSheet: FC<ServiceDetailsSheetProps> = ({
-  service,
-  isOpen,
   onClose,
 }) => {
+  const service = useAtomValue(selectedServiceAtom);
+  const isOpen = useAtomValue(isServiceSheetOpenAtom);
+
   if (!service) return null;
 
   const formatDate = (dateString: string) => {

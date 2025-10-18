@@ -1,7 +1,9 @@
+import { useAtomValue } from 'jotai';
 import { HiDocumentText, HiTag } from 'react-icons/hi';
 
 import { FC, useEffect } from 'react';
 
+import { isEditCategoryModalOpenAtom, selectedEditCategoryAtom } from '@/atoms';
 import {
   Button,
   Card,
@@ -23,21 +25,17 @@ import {
   Textarea,
 } from '@/components/shadcn';
 import { cn } from '@/libs';
-import { CategoryResponse } from '@/models/responses';
 
 import { useUpdateCategory } from '../hooks/use-update-category';
 
 interface EditCategoryModalProps {
-  isOpen: boolean;
   onClose: () => void;
-  category?: CategoryResponse | null;
 }
 
-export const EditCategoryModal: FC<EditCategoryModalProps> = ({
-  isOpen,
-  onClose,
-  category,
-}) => {
+export const EditCategoryModal: FC<EditCategoryModalProps> = ({ onClose }) => {
+  const isOpen = useAtomValue(isEditCategoryModalOpenAtom);
+  const category = useAtomValue(selectedEditCategoryAtom);
+
   const { form, submission, handleSubmit, handleResetForm } = useUpdateCategory(
     {
       category,
