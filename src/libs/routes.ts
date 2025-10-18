@@ -25,14 +25,22 @@ export const ROUTE_ACCESS_CONFIG = {
     UserRole.CLIENT,
   ],
 
-  // Área de workspace (trabajadores)
-  '/workspace': [UserRole.ADMIN, UserRole.STYLIST, UserRole.RECEPTIONIST],
-  '/workspace/profile/edit': [
+  // Área de cuenta (usuarios autenticados)
+  '/account': [
     UserRole.ADMIN,
     UserRole.STYLIST,
     UserRole.RECEPTIONIST,
     UserRole.CLIENT,
   ],
+  '/account/edit': [
+    UserRole.ADMIN,
+    UserRole.STYLIST,
+    UserRole.RECEPTIONIST,
+    UserRole.CLIENT,
+  ],
+
+  // Área de workspace (trabajadores)
+  '/workspace': [UserRole.ADMIN, UserRole.STYLIST, UserRole.RECEPTIONIST],
   '/workspace/service': [
     UserRole.ADMIN,
     UserRole.STYLIST,

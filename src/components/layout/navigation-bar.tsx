@@ -75,11 +75,11 @@ export const NavigationBar: FC = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href="/workspace/profile/edit"
+                  href="/account"
                   className="cursor-pointer flex items-center space-x-2 focus:bg-accent focus:text-accent-foreground"
                 >
                   <HiCog className="h-4 w-4" />
-                  <span>Editar Perfil</span>
+                  <span>Configuración</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
