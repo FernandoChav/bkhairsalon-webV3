@@ -70,6 +70,11 @@ export const useRegisterView = (): UseRegisterViewReturn => {
             validationMessages.forEach(message => {
               toast.error(message);
             });
+          } else {
+            // Manejo de errores generales, como correo duplicado
+            toast.error(
+              error.response?.data?.message || 'Ocurrió un error al registrarse'
+            );
           }
         },
       });
