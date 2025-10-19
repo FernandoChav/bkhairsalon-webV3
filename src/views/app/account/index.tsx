@@ -6,6 +6,8 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
+import { LoadingPage } from '@/components/ui/loading-page';
+
 import { ConfirmPasswordModal } from './components/confirm-password-modal';
 import { DeletionInfoModal } from './components/deletion-info-modal';
 import { useAccountView } from './hooks/use-account-view';
@@ -19,11 +21,16 @@ export const AccountView: FC = () => {
     deletionInfo,
     isDeletionModalOpen,
     confirmPasswordModal,
+    isLoading,
     handleOpenDeletionModal,
     handleCloseDeletionModal,
     handleContinueDeletion,
     handleConfirmPassword,
   } = useAccountView();
+
+  if (isLoading) {
+    return <LoadingPage message="Eliminando cuenta..." />;
+  }
 
   return (
     <>
