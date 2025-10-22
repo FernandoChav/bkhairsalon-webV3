@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
 
 import { userClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
-import { EditUserRequest } from '@/models/requests';
+import { DeleteUserRequest, EditUserRequest } from '@/models/requests';
+import { DeletionInfoDto } from '@/models/responses';
 
 export const useUserProfileQuery = () => {
   return useQuery({
@@ -41,15 +42,43 @@ export const useEditUserMutation = () => {
             },
           });
 
-          router.push('/workspace');
+          router.push('/account');
         }
       } catch {
         queryClient.invalidateQueries({
           queryKey: ['user', 'profile'],
         });
 
-        router.push('/workspace');
+        router.push('/account');
       }
     },
+  });
+};
+
+export const useDeleteAccountMutation = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  return useMutation<ApiResponse, AxiosError<ApiResponse>, DeleteUserRequest>({
+    mutationFn: userClient.deleteUser,
+    onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: ['user', 'profile'] });
+      queryClient.removeQueries({ queryKey: ['user', 'deletion-info'] });
+
+      await signOut({ redirect: false });
+
+      router.push('/');
+    },
+  });
+};
+
+export const useDeletionInfoQuery = () => {
+  return useQuery<DeletionInfoDto | null, Error>({
+    queryKey: ['user', 'deletion-info'], // clave única para cache
+    queryFn: async () => {
+      const response = await userClient.getDeletionInfo();
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 };

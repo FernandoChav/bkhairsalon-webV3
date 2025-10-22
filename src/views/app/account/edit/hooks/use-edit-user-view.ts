@@ -60,16 +60,25 @@ export const useEditUserView = (): UseEditUserViewReturn => {
 
     editUser(transformedData, {
       onSuccess: (data: ApiResponse) => {
-        toast.success(data.message);
+        toast.success(data.message || 'Perfil actualizado correctamente');
         handleCloseModal();
       },
       onError: (error: AxiosError<ApiResponse>) => {
         if (isValidationError(error)) {
           const validationMessages = extractValidationMessages(error);
-          validationMessages.forEach(message => {
-            toast.error(message);
-          });
+          validationMessages.forEach(message => toast.error(message));
+          return;
         }
+
+        const backendMessage = error.response?.data?.message;
+        if (backendMessage) {
+          toast.error(backendMessage);
+          return;
+        }
+
+        toast.error(
+          'No se pudo actualizar el perfil. Inténtalo nuevamente más tarde.'
+        );
       },
     });
   };

@@ -4,7 +4,7 @@ import { cn } from '@/libs';
 
 export const Input = ({
   className,
-  type,
+  type = 'text',
   size = 'default',
   ...props
 }: Omit<ComponentProps<'input'>, 'size'> & {

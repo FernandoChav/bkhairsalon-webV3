@@ -10,4 +10,9 @@ export {
   useUpdateServiceMutation,
   useGetAllServiceQuery,
 } from './use-service-client';
-export { useEditUserMutation, useUserProfileQuery } from './use-user-client';
+export {
+  useEditUserMutation,
+  useUserProfileQuery,
+  useDeleteAccountMutation,
+  useDeletionInfoQuery,
+} from './use-user-client';

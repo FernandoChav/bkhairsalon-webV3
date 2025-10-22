@@ -7,4 +7,4 @@ export type {
   ReorderState,
 } from './category';
 export type { CreateServiceRequest, UpdateServiceRequest } from './service';
-export type { EditUserRequest } from './user';
+export type { EditUserRequest, DeleteUserRequest } from './user';
