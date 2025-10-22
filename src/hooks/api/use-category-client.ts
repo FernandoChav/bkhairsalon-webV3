@@ -1,16 +1,27 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
 import { categoryClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
-import { CreateCategoryRequest } from '@/models/requests';
+import {
+  CreateCategoryRequest,
+  ReorderElementsRequest,
+  UpdateCategoryRequest,
+} from '@/models/requests';
 import { CategoryResponse } from '@/models/responses';
 
-export const useCategoriesQuery = () =>
+export const useGetAllCategoryQuery = (
+  includeSubcategories: boolean = true,
+  includeServices: boolean = true
+) =>
   useQuery<CategoryResponse[], AxiosError<ApiResponse>>({
-    queryKey: ['categories'],
+    queryKey: ['categories', includeSubcategories, includeServices],
     queryFn: async () => {
-      const response = await categoryClient.getAll();
+      const response = await categoryClient.getAll(
+        includeSubcategories,
+        includeServices
+      );
+
       return response.data || [];
     },
   });
@@ -19,3 +30,30 @@ export const useCreateCategoryMutation = () =>
   useMutation<ApiResponse, AxiosError<ApiResponse>, CreateCategoryRequest>({
     mutationFn: categoryClient.create,
   });
+
+export const useUpdateCategoryMutation = () =>
+  useMutation<
+    ApiResponse<CategoryResponse>,
+    AxiosError<ApiResponse>,
+    { id: string; data: UpdateCategoryRequest }
+  >({
+    mutationFn: ({ id, data }) => categoryClient.update(id, data),
+  });
+
+export const useReorderElementsMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ApiResponse,
+    AxiosError<ApiResponse>,
+    ReorderElementsRequest
+  >({
+    mutationFn: data => categoryClient.reorderElements(data),
+    onSuccess: () => {
+      // Invalidar y refetch las categorías después del reordenamiento
+      queryClient.invalidateQueries({
+        queryKey: ['categories', true, true], // includeSubcategories=true, includeServices=true
+      });
+    },
+  });
+};

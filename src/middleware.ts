@@ -2,7 +2,7 @@ import { getToken } from 'next-auth/jwt';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PUBLIC_ROUTES, getDefaultRoute, hasRouteAccess } from '@/libs/routes';
+import { PUBLIC_ROUTES, getDefaultRoute, hasRouteAccess } from '@/libs';
 import { UserRole } from '@/models/entities';
 
 export async function middleware(request: NextRequest) {
@@ -27,8 +27,7 @@ export async function middleware(request: NextRequest) {
       userRoles.push(
         ...rolesData.map((role: { Name: string }) => role.Name as UserRole)
       );
-    } catch (error) {
-      console.error('Error parsing roles from token:', error);
+    } catch {
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }

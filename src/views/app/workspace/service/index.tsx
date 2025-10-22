@@ -1,140 +1,176 @@
 'use client';
 
-import type { FC } from 'react';
+import { useAtomValue } from 'jotai';
 
-import Image from 'next/image';
+import { FC } from 'react';
 
-import { useServicesView } from './hooks';
+import {
+  isEditModeAtom,
+  selectedServiceCategoryAtom,
+  selectedUpdateServiceAtom,
+} from '@/atoms';
 
-export const ServicesView: FC = () => {
-  const { data, isLoading, error } = useServicesView();
+import {
+  CategoryCard,
+  CategoryDetailsSheet,
+  CategoryList,
+  CreateCategoryModal,
+  CreateServiceModal,
+  EditCategoryModal,
+  ServiceCard,
+  ServiceDetailsSheet,
+  ServiceHeader,
+  ServiceViewSkeleton,
+  UpdateServiceModal,
+} from './components';
+import { useCategoryActions, useServiceActions, useServiceView } from './hooks';
 
-  // Computed values
-  const services = data?.data || [];
-  const hasServices = services.length > 0;
-  const servicesCount = services.length;
-  const hasError = !!error;
-  const errorMessage = error ? 'Error al cargar los servicios' : null;
+export const ServiceView: FC = () => {
+  // Atoms for shared state
+  const selectedServiceCategory = useAtomValue(selectedServiceCategoryAtom);
+  const selectedUpdateService = useAtomValue(selectedUpdateServiceAtom);
+  const isEditMode = useAtomValue(isEditModeAtom);
 
-  // Loading state
-  if (isLoading) {
+  // Main view logic
+  const {
+    categories,
+    isLoading,
+    isSaving,
+    reorderState,
+    activeId,
+    validDropTargets,
+    draggingLevel,
+    sensors,
+    hasCategories,
+    hasPendingChanges,
+    categoryMap,
+    handleCreateCategory,
+    handleStartEditMode,
+    handleCancelEditMode,
+    handleSaveChanges,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+  } = useServiceView();
+
+  // Category actions
+  const {
+    handleCloseCategorySheet,
+    handleCloseCreateCategoryModal,
+    handleCloseEditCategoryModal,
+  } = useCategoryActions();
+
+  // Service actions
+  const {
+    handleCloseServiceSheet,
+    handleCloseCreateServiceModal,
+    handleCloseUpdateServiceModal,
+  } = useServiceActions();
+
+  // Computed values for rendering
+  const categoriesToRender = isEditMode ? reorderState.categories : categories;
+  const isEditButtonDisabled = isSaving || !hasPendingChanges;
+  const saveButtonText = isSaving ? 'Guardando...' : 'Guardar Cambios';
+
+  // Computed values for drag overlay
+  const dragOverlayContent = (() => {
+    if (!activeId) return null;
+
+    const isDraggingCategory = activeId.startsWith('category-');
+    const elementId = activeId.replace(/^(category-|service-)/, '');
+
+    if (isDraggingCategory) {
+      const info = categoryMap.get(elementId);
+      return (
+        info && (
+          <CategoryCard category={info.category} onCategoryClick={() => {}} />
+        )
+      );
+    }
+
+    // Service
+    let service = null;
+    categoryMap.forEach(info => {
+      const found = info.category.services?.find(s => s.id === elementId);
+      if (found) service = found;
+    });
+
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Cargando servicios...</p>
-          </div>
-        </div>
-      </div>
+      service && <ServiceCard service={service} onServiceClick={() => {}} />
     );
+  })();
+
+  // Show loading state
+  if (isLoading || isSaving) {
+    return <ServiceViewSkeleton />;
   }
 
-  // Error state
-  if (hasError) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-destructive text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-semibold mb-2">Error</h2>
-            <p className="text-muted-foreground">{errorMessage}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Empty state
-  if (!hasServices) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-muted-foreground text-6xl mb-4">📋</div>
-            <h2 className="text-2xl font-semibold mb-2">No hay servicios</h2>
-            <p className="text-muted-foreground">
-              Aún no se han creado servicios. ¡Crea el primero!
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Main content
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Servicios</h1>
-        <p className="text-muted-foreground">
-          Lista de todos los servicios disponibles ({servicesCount} servicios)
-        </p>
-      </div>
+    <div className="container mx-auto px-4 py-6">
+      {/* Header */}
+      <ServiceHeader
+        isEditButtonDisabled={isEditButtonDisabled}
+        saveButtonText={saveButtonText}
+        hasPendingChanges={hasPendingChanges}
+        handleStartEditMode={handleStartEditMode}
+        handleCreateCategory={handleCreateCategory}
+        handleSaveChanges={handleSaveChanges}
+        handleCancelEditMode={handleCancelEditMode}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map(service => (
-          <div
-            key={service.id}
-            className="bg-card border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-          >
-            {/* Imagen del servicio */}
-            {service.images.length > 0 && (
-              <div className="relative h-48 w-full">
-                <Image
-                  src={service.images[0]}
-                  alt={service.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-            )}
-
-            <div className="p-6">
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                {service.description && (
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {service.description}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Precio:</span>
-                  <span className="font-semibold text-primary">
-                    ${service.price.toLocaleString()}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Duración:
-                  </span>
-                  <span className="font-medium">
-                    {service.durationInMinutes < 60
-                      ? `${service.durationInMinutes} min`
-                      : `${Math.floor(service.durationInMinutes / 60)}h ${service.durationInMinutes % 60}m`}
-                  </span>
-                </div>
-
-                {service.images.length > 1 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Fotos:
-                    </span>
-                    <span className="font-medium text-primary">
-                      +{service.images.length - 1} más
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
+      {/* Indicador de cambios pendientes */}
+      {isEditMode && hasPendingChanges && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 bg-blue-600 rounded-full"></div>
+            <span className="text-sm text-blue-800">
+              Tienes cambios pendientes
+            </span>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Categories List */}
+      <CategoryList
+        hasCategories={hasCategories}
+        categoriesToRender={categoriesToRender}
+        sensors={sensors}
+        validDropTargets={validDropTargets}
+        activeId={activeId}
+        draggingLevel={draggingLevel}
+        dragOverlayContent={dragOverlayContent}
+        handleDragStart={handleDragStart}
+        handleDragEnd={handleDragEnd}
+        handleDragOver={handleDragOver}
+        handleCreateCategory={handleCreateCategory}
+      />
+
+      {/* Details Sheets */}
+      <CategoryDetailsSheet onClose={handleCloseCategorySheet} />
+
+      <ServiceDetailsSheet onClose={handleCloseServiceSheet} />
+
+      {/* Create Service Modal */}
+      {selectedServiceCategory && (
+        <CreateServiceModal
+          selectedCategory={selectedServiceCategory}
+          onClose={handleCloseCreateServiceModal}
+        />
+      )}
+
+      {/* Create Category Modal */}
+      <CreateCategoryModal onClose={handleCloseCreateCategoryModal} />
+
+      {/* Edit Category Modal */}
+      <EditCategoryModal onClose={handleCloseEditCategoryModal} />
+
+      {/* Update Service Modal */}
+      {selectedUpdateService && (
+        <UpdateServiceModal
+          onClose={handleCloseUpdateServiceModal}
+          service={selectedUpdateService}
+        />
+      )}
     </div>
   );
 };

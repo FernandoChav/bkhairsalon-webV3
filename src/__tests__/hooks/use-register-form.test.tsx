@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ReactNode } from 'react';
 
-import { useRegisterMutation } from '@/hooks/api/use-auth-client';
-import { useRegisterView } from '@/views/app/register/hooks/use-register-view';
+import { useRegisterMutation } from '@/hooks/api';
+import { useRegisterView } from '@/views/app/register/hooks';
 
 // Mock de las dependencias
-vi.mock('@/hooks/api/use-auth-client');
+vi.mock('@/hooks/api');
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({
     push: vi.fn(),

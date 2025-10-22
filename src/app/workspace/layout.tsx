@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import { ProtectedRouteWrapper } from '@/components/layout';
+import { ProtectedRouteWrapper, WorkspaceSidebar } from '@/components/layout';
+import { SidebarInset, SidebarProvider } from '@/components/shadcn';
 
 export default function WorkspaceLayout({
   children,
@@ -9,7 +10,10 @@ export default function WorkspaceLayout({
 }>) {
   return (
     <ProtectedRouteWrapper loadingMessage="Cargando la aplicación...">
-      {children}
+      <SidebarProvider>
+        <WorkspaceSidebar />
+        <SidebarInset>{children}</SidebarInset>
+      </SidebarProvider>
     </ProtectedRouteWrapper>
   );
 }
