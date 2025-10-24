@@ -5,6 +5,7 @@ import { atom, useAtom } from 'jotai';
 import { useMemo } from 'react';
 
 import { useGetAllCategoryQuery, useGetAllServiceQuery } from '@/hooks/api';
+import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
 export const selectedCategoryAtom = atom<string>('all');
 
@@ -17,29 +18,6 @@ export const useCustomerServiceView = () => {
     useGetAllServiceQuery();
 
   const categories = useMemo(() => categoriesData || [], [categoriesData]);
-  const services = useMemo(() => {
-    if (servicesData?.data) {
-      return servicesData.data.map(service => ({
-        id: service.id,
-        name: service.name,
-        description: service.description || '',
-        duration: service.durationInMinutes,
-        price: service.price,
-        startTime: '',
-        endTime: '',
-        sortOrder: 0,
-        commissionPercentage: 0,
-        categoryId: '', //service.categoryId, TODO: add categoryId to service response for improved filtering
-        categoryName: '', // service.categoryName,
-        images: service.images || [],
-        photos: [],
-        createdAt: '',
-        updatedAt: '',
-        createdBy: '',
-      }));
-    }
-    return [];
-  }, [servicesData]);
 
   const topLevelCategories = useMemo(
     () => categories.filter(cat => cat.level === 1 && cat.isActive),
@@ -47,12 +25,35 @@ export const useCustomerServiceView = () => {
   );
 
   const filteredServices = useMemo(() => {
-    if (selectedCategory === 'all') return services;
-    const selected = categories.find(cat => cat.slug === selectedCategory);
-    if (!selected) return services;
+    if (!categories || !servicesData?.data) return [];
 
-    return services.filter(s => s.categoryId === selected.id);
-  }, [selectedCategory, services, categories]);
+    const allServices: (ServiceResponse & {
+      categoryId: string;
+      categoryName: string;
+    })[] = [];
+    const traverseCategories = (cats: CategoryResponse[]) => {
+      cats.forEach(cat => {
+        if (cat.services) {
+          cat.services.forEach(s => {
+            allServices.push({
+              ...s,
+              categoryId: cat.id,
+              categoryName: cat.name,
+            });
+          });
+        }
+        if (cat.subcategories) traverseCategories(cat.subcategories);
+      });
+    };
+    traverseCategories(categories);
+
+    if (selectedCategory === 'all') return allServices;
+
+    const selectedCat = categories.find(cat => cat.slug === selectedCategory);
+    if (!selectedCat) return allServices;
+
+    return allServices.filter(s => s.categoryId === selectedCat.id);
+  }, [selectedCategory, categories, servicesData]);
 
   const getCategoryName = (categoryId: string): string => {
     const category = categories.find(cat => cat.id === categoryId);
