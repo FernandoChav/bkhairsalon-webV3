@@ -4,7 +4,10 @@ import { atom, useAtom } from 'jotai';
 
 import { useMemo } from 'react';
 
-import { useGetAllCategoryQuery, useGetAllServiceQuery } from '@/hooks/api';
+import {
+  useGetAllCategoryQuery,
+  useGetAllServicePublicQuery,
+} from '@/hooks/api';
 import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
 export const selectedCategoryAtom = atom<string>('all');
@@ -15,7 +18,7 @@ export const useCustomerServiceView = () => {
   const { data: categoriesData, isLoading: categoriesLoading } =
     useGetAllCategoryQuery(true, true);
   const { data: servicesData, isLoading: servicesLoading } =
-    useGetAllServiceQuery();
+    useGetAllServicePublicQuery();
 
   const categories = useMemo(() => categoriesData || [], [categoriesData]);
 

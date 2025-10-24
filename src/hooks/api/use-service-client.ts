@@ -25,3 +25,9 @@ export const useUpdateServiceMutation = () =>
   >({
     mutationFn: ({ id, data }) => serviceClient.updateService(id, data),
   });
+
+export const useGetAllServicePublicQuery = () =>
+  useQuery<ApiResponse<PublicServiceResponse[]>, AxiosError>({
+    queryKey: ['services', 'public'],
+    queryFn: serviceClient.getAllPublic,
+  });
