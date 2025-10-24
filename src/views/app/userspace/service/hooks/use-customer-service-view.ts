@@ -29,8 +29,8 @@ export const useCustomerServiceView = () => {
         endTime: '',
         sortOrder: 0,
         commissionPercentage: 0,
-        categoryId: '',
-        categoryName: '',
+        categoryId: '', //service.categoryId, TODO: add categoryId to service response for improved filtering
+        categoryName: '', // service.categoryName,
         images: service.images || [],
         photos: [],
         createdAt: '',

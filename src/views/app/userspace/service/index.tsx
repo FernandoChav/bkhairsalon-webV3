@@ -51,14 +51,14 @@ export const CustomerServiceView: FC = () => {
           </p>
         </div>
 
-        {/* Categories filter */}
+        {/* Categories filter 
         <CategoryFilter
           categories={topLevelCategories}
           isAllSelected={isAllSelected}
           selectedCategory={selectedCategory}
           selectAllCategories={selectAllCategories}
           filterByCategory={filterByCategory}
-        />
+        />*/}
 
         {/* Services Grid */}
         <ServiceList
