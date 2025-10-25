@@ -4,16 +4,23 @@
 import Image from 'next/image';
 
 import {
-  Calendar,
+  // Calendar ya no se usa
   Card,
   CardContent,
   CardHeader,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
   Skeleton,
 } from '@/components/shadcn';
 
 // Componentes locales
 import { AvailabilityList } from './components/availability-list';
 import { AvailabilitySkeleton } from './components/availability-skeleton';
+// Importamos el nuevo selector de semana
+import { WeekSelector } from './components/week-selector';
 // Hook de lógica local
 import { useBookingView } from './hooks/use-booking-view';
 
@@ -43,28 +50,28 @@ export const BookingView: React.FC<BookingViewProps> = ({
 
   // --- Renderizado de Carga del Servicio ---
   if (isLoadingService) {
-    // (El Skeleton completo de carga inicial)
     return (
       <div className="flex flex-col gap-8">
         {/* Skeleton de Detalles */}
-        <Card>
-          <Skeleton className="h-64 w-full rounded-t-lg" />
+        <Card className="shadow-lg border-0">
+          <Skeleton className="h-80 w-full rounded-t-lg" />
           <CardContent className="p-6">
             <Skeleton className="h-4 w-16 mb-2" />
-            <Skeleton className="h-8 w-1/2 mb-2" />
+            <Skeleton className="h-8 w-1/2 mb-2 font-serif" />
             <Skeleton className="h-6 w-1/4 mb-6" />
-            <Skeleton className="h-4 w-1/3 mb-2" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full mt-2" />
+            <Skeleton className="h-4 w-1/3 mb-2 font-serif" />
+            <Skeleton className="h-4 w-full font-sans" />
+            <Skeleton className="h-4 w-full mt-2 font-sans" />
           </CardContent>
         </Card>
         {/* Skeleton de Disponibilidad */}
-        <Card>
+        <Card className="shadow-lg border-0">
           <CardContent className="p-6">
-            <Skeleton className="h-8 w-1/3 mb-2" />
-            <Skeleton className="h-4 w-1/2 mb-6" />
-            <div className="flex flex-col md:flex-row gap-8">
-              <Skeleton className="h-80 w-full max-w-sm mx-auto md:max-w-none md:mx-0 md:w-80 rounded-md border" />
+            <Skeleton className="h-8 w-1/3 mb-2 font-serif" />
+            <Skeleton className="h-4 w-1/2 mb-6 font-sans" />
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:items-start">
+              {/* CAMBIO: Skeleton ahora es h-32 para coincidir con WeekSelector */}
+              <Skeleton className="h-32 w-full max-w-sm mx-auto md:max-w-none md:mx-0 md:w-80 rounded-md border" />
               <div className="flex-1">
                 <AvailabilitySkeleton />
               </div>
@@ -79,8 +86,10 @@ export const BookingView: React.FC<BookingViewProps> = ({
   if (isErrorService || !serviceDetails) {
     return (
       <div className="text-center text-destructive py-12">
-        <h2>Error al cargar el servicio</h2>
-        <p>
+        <h2 className="font-serif text-2xl font-semibold">
+          Error al cargar el servicio
+        </h2>
+        <p className="font-sans mt-2">
           No pudimos encontrar los detalles de este servicio. Intenta de nuevo.
         </p>
       </div>
@@ -92,58 +101,87 @@ export const BookingView: React.FC<BookingViewProps> = ({
     <div className="flex flex-col gap-8">
       {/* --- PARTE 1: DETALLES DEL SERVICIO (REAL) --- */}
 
-      <Card>
+      <Card className="shadow-lg border-0 overflow-hidden">
         <CardHeader className="p-0">
-          <div className="relative w-full h-80 overflow-hidden rounded-t-lg">
-            {serviceDetails.images && serviceDetails.images.length > 0 ? (
-              <Image
-                src={serviceDetails.images[0]}
-                alt={serviceDetails.name}
-                fill
-                className="object-contain"
-                priority
-              />
-            ) : (
-              <div className="bg-muted h-full flex items-center justify-center text-muted-foreground">
-                Sin imagen disponible
-              </div>
+          <Carousel
+            className="w-full"
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {serviceDetails.images && serviceDetails.images.length > 0 ? (
+                serviceDetails.images.map((imageUrl, index) => (
+                  <CarouselItem key={index}>
+                    <div className="relative w-full h-80">
+                      <Image
+                        src={imageUrl}
+                        alt={`${serviceDetails.name} - imagen ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))
+              ) : (
+                <CarouselItem>
+                  <div className="relative w-full h-80 bg-muted flex items-center justify-center text-muted-foreground font-sans">
+                    Sin imagen disponible
+                  </div>
+                </CarouselItem>
+              )}
+            </CarouselContent>
+            {serviceDetails.images && serviceDetails.images.length > 1 && (
+              <>
+                <CarouselPrevious className="absolute left-4" />
+                <CarouselNext className="absolute right-4" />
+              </>
             )}
-          </div>
+          </Carousel>
         </CardHeader>
         <CardContent className="p-6">
-          <span className="text-sm font-medium text-primary">Presencial</span>
-          <h2 className="text-3xl font-bold mt-1">{serviceDetails.name}</h2>
-          <p className="text-lg text-muted-foreground mt-1">
+          <span className="text-sm font-medium text-primary font-sans">
+            Presencial
+          </span>
+          <h2 className="text-3xl font-bold mt-1 font-serif">
+            {serviceDetails.name}
+          </h2>
+          <p className="text-lg text-muted-foreground mt-1 font-sans">
             ${serviceDetails.price.toLocaleString('es-CL')} CLP
           </p>
-          <h3 className="text-lg font-semibold mt-6 mb-2">Descripción</h3>
-          <p className="text-muted-foreground">{serviceDetails.description}</p>
+          <h3 className="text-lg font-semibold mt-6 mb-2 font-serif">
+            Descripción
+          </h3>
+          <p className="text-muted-foreground font-sans">
+            {serviceDetails.description}
+          </p>
         </CardContent>
       </Card>
 
       {/* --- PARTE 2: SELECTOR DE DISPONIBILIDAD --- */}
-      <Card>
+      <Card className="shadow-lg border-0">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-1">2. Disponibilidad</h2>
-          <p className="text-muted-foreground mb-6">Selecciona un horario</p>
+          <h2 className="text-2xl font-semibold mb-1 font-serif">
+            2. Disponibilidad
+          </h2>
+          <p className="text-muted-foreground mb-6 font-sans">
+            Selecciona un horario
+          </p>
 
-          {/* === SOLUCIÓN CON CSS GRID === */}
-          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
-            {/* Columna 1: Calendario */}
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:items-start">
+            {/* CAMBIO: <Calendar> reemplazado por <WeekSelector> */}
             <div
               className="flex-shrink-0 flex justify-center md:justify-start
                             w-full max-w-sm mx-auto md:max-w-none md:mx-0"
             >
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={handleDateSelect}
-                className="rounded-md border p-2 scale-95 md:scale-100"
-                disabled={date =>
-                  date < new Date(new Date().setHours(0, 0, 0, 0))
-                }
+              <WeekSelector
+                selectedDate={selectedDate}
+                onDateSelect={handleDateSelect}
               />
             </div>
+            {/* FIN DEL CAMBIO */}
 
             {/* Columna 2: Horarios */}
             <div className="flex flex-col w-full">
@@ -152,8 +190,13 @@ export const BookingView: React.FC<BookingViewProps> = ({
                 {isPendingAvailability && <AvailabilitySkeleton />}
 
                 {!isPendingAvailability && isErrorAvailability && (
-                  <div className="flex flex-col items-center justify-center h-full text-destructive border border-destructive rounded-md p-4">
-                    <p>Error al cargar la disponibilidad.</p>
+                  <div className="flex flex-col items-center justify-center h-full text-red-700 bg-red-50 border border-red-200 rounded-md p-4">
+                    <p className="font-medium font-sans">
+                      Error al cargar la disponibilidad
+                    </p>
+                    <p className="text-sm font-sans">
+                      Por favor, intenta refrescar la página.
+                    </p>
                   </div>
                 )}
 
@@ -167,14 +210,13 @@ export const BookingView: React.FC<BookingViewProps> = ({
 
               {/* Texto de Zona Horaria */}
               {!isPendingAvailability && (
-                <p className="text-xs text-muted-foreground text-center mt-4">
+                <p className="text-xs text-muted-foreground text-center mt-4 font-sans">
                   Horarios mostrados en la zona horaria del negocio
                   (America/Santiago)
                 </p>
               )}
             </div>
           </div>
-          {/* === FIN DE LA SOLUCIÓN === */}
         </CardContent>
       </Card>
     </div>

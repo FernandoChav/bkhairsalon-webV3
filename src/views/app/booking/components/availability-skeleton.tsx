@@ -13,28 +13,35 @@ export const AvailabilitySkeleton: FC = () => {
   return (
     <div className="flex flex-col gap-6">
       {/* Esqueleto de 1 profesional (puedes repetir este bloque si esperas más) */}
-      <div>
+
+      {/* CAMBIO 1: Contenedor principal ahora usa shadow-lg para imitar a AvailabilityList */}
+      <div className="shadow-lg rounded-md border-0">
         {/* Tarjeta del Profesional */}
-        <div className="flex items-center justify-between p-4 border rounded-t-md">
+        {/* CAMBIO 2: Se quita el borde exterior y se añade solo un borde inferior (border-b) */}
+        <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-full" />{' '}
             {/* Skeleton del Avatar */}
-            <Skeleton className="h-5 w-32" /> {/* Skeleton del Nombre */}
+            {/* CAMBIO 3: Añadido font-sans para consistencia */}
+            <Skeleton className="h-5 w-32 font-sans" />{' '}
+            {/* Skeleton del Nombre */}
           </div>
           <HiInformationCircle className="w-5 h-5 text-muted-foreground" />
         </div>
 
         {/* Grilla de Horarios */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 border border-t-0 rounded-b-md">
+        {/* CAMBIO 4: Se quitan los bordes de la grilla */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4">
           {/* Skeletons para los botones de hora */}
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
+          {/* CAMBIO 5: Añadido font-sans a todos los botones */}
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
+          <Skeleton className="h-9 w-full font-sans" />
         </div>
       </div>
     </div>
