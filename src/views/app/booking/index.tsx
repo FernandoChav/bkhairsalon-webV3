@@ -1,7 +1,11 @@
 'use client';
 
 // Componentes globales
+import { HiOutlineClock } from 'react-icons/hi';
+
 import Image from 'next/image';
+
+// NUEVO: Importar icono de reloj
 
 import {
   // Calendar ya no se usa
@@ -58,7 +62,10 @@ export const BookingView: React.FC<BookingViewProps> = ({
           <CardContent className="p-6">
             <Skeleton className="h-4 w-16 mb-2" />
             <Skeleton className="h-8 w-1/2 mb-2 font-serif" />
-            <Skeleton className="h-6 w-1/4 mb-6" />
+            <Skeleton className="h-6 w-1/4 mb-2" />{' '}
+            {/* CAMBIO: Reducido mb-6 a mb-2 */}
+            <Skeleton className="h-5 w-1/3 mb-6" />{' '}
+            {/* NUEVO: Skeleton para la duración */}
             <Skeleton className="h-4 w-1/3 mb-2 font-serif" />
             <Skeleton className="h-4 w-full font-sans" />
             <Skeleton className="h-4 w-full mt-2 font-sans" />
@@ -151,6 +158,12 @@ export const BookingView: React.FC<BookingViewProps> = ({
           <p className="text-lg text-muted-foreground mt-1 font-sans">
             ${serviceDetails.price.toLocaleString('es-CL')} CLP
           </p>
+
+          <div className="flex items-center gap-1.5 text-base text-muted-foreground mt-2 font-sans">
+            <HiOutlineClock className="w-4 h-4" />
+            <span>Duración: {serviceDetails.durationInMinutes} minutos</span>
+          </div>
+
           <h3 className="text-lg font-semibold mt-6 mb-2 font-serif">
             Descripción
           </h3>
@@ -171,20 +184,18 @@ export const BookingView: React.FC<BookingViewProps> = ({
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:items-start">
-            {/* CAMBIO: <Calendar> reemplazado por <WeekSelector> */}
             <div
-              className="flex-shrink-0 flex justify-center md:justify-start
-                            w-full max-w-sm mx-auto md:max-w-none md:mx-0"
+              className="shrink-0 flex justify-center md:justify-start
+                           w-full max-w-sm mx-auto md:w-80 md:max-w-none md:mx-0"
             >
               <WeekSelector
                 selectedDate={selectedDate}
                 onDateSelect={handleDateSelect}
               />
             </div>
-            {/* FIN DEL CAMBIO */}
 
             {/* Columna 2: Horarios */}
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full min-w-0">
               {/* Contenedor que crece */}
               <div className="flex-1">
                 {isPendingAvailability && <AvailabilitySkeleton />}
@@ -212,7 +223,7 @@ export const BookingView: React.FC<BookingViewProps> = ({
               {!isPendingAvailability && (
                 <p className="text-xs text-muted-foreground text-center mt-4 font-sans">
                   Horarios mostrados en la zona horaria del negocio
-                  (America/Santiago)
+                  (Antofagasta, GMT-4)
                 </p>
               )}
             </div>

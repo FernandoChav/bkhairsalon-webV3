@@ -9,8 +9,6 @@ import { useCheckAvailabilityMutation } from '@/hooks/api';
 // Hook de API global
 import { AvailabilityRequest } from '@/models/requests';
 
-// Importa el tipo para usarlo abajo
-
 // --- Componente Hijo ---
 import { AvailabilityList } from './availability-list';
 
@@ -71,7 +69,7 @@ export const AvailabilitySelector = ({
     // Contenedor principal
     <div className="flex flex-col lg:flex-row gap-8 p-4">
       {/* Columna 1: Calendario */}
-      <div className="flex-shrink-0 flex justify-center">
+      <div className="shrink-0 flex justify-center">
         <Calendar
           mode="single"
           selected={selectedDate}
