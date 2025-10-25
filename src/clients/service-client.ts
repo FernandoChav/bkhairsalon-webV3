@@ -103,12 +103,23 @@ class ServiceClient {
   }
 
   /**
-   * Obtiene todos los servicios públicos disponibles
+   * Obtiene todos los servicios públicos disponibles, necesita rol admin
    * @returns Respuesta de la API con lista de servicios públicos
    */
   async getAll(): Promise<ApiResponse<PublicServiceResponse[]>> {
     const response =
       await baseClient.get<ApiResponse<PublicServiceResponse[]>>('/service');
+    return response.data;
+  }
+  /**
+   * Obtiene todos los servicios públicos disponibles para, no necesita rol
+   * @returns Respuesta de la API con lista de servicios públicos
+   */
+  async getAllPublic(): Promise<ApiResponse<PublicServiceResponse[]>> {
+    const response =
+      await baseClient.get<ApiResponse<PublicServiceResponse[]>>(
+        '/service/public'
+      );
     return response.data;
   }
 }

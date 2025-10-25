@@ -9,6 +9,7 @@ export {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useGetAllServiceQuery,
+  useGetAllServicePublicQuery,
 } from './use-service-client';
 export {
   useEditUserMutation,
