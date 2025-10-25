@@ -9,6 +9,7 @@ export {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useGetAllServiceQuery,
+  useGetServiceByIdQuery,
 } from './use-service-client';
 export {
   useEditUserMutation,
@@ -16,3 +17,4 @@ export {
   useDeleteAccountMutation,
   useDeletionInfoQuery,
 } from './use-user-client';
+export { useCheckAvailabilityMutation } from './use-availability-client';

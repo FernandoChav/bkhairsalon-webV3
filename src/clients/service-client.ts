@@ -1,6 +1,10 @@
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest, UpdateServiceRequest } from '@/models/requests';
-import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
+import {
+  PublicServiceDetailResponse,
+  PublicServiceResponse,
+  ServiceResponse,
+} from '@/models/responses';
 
 import { baseClient } from './base-client';
 
@@ -109,6 +113,19 @@ class ServiceClient {
   async getAll(): Promise<ApiResponse<PublicServiceResponse[]>> {
     const response =
       await baseClient.get<ApiResponse<PublicServiceResponse[]>>('/service');
+    return response.data;
+  }
+  /**
+   * Obtiene los detalles de un servicio público por su ID
+   * @param id - ID del servicio público
+   * @returns Respuesta de la API con los detalles del servicio
+   */
+  async getById(id: string): Promise<ApiResponse<PublicServiceDetailResponse>> {
+    const response = await baseClient.get<
+      ApiResponse<PublicServiceDetailResponse>
+    >(
+      `/service/public/${id}` // URL dinámica
+    );
     return response.data;
   }
 }

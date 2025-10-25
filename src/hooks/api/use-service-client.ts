@@ -4,7 +4,11 @@ import type { AxiosError } from 'axios';
 import { serviceClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
 import { CreateServiceRequest, UpdateServiceRequest } from '@/models/requests';
-import { PublicServiceResponse, ServiceResponse } from '@/models/responses';
+import {
+  PublicServiceDetailResponse,
+  PublicServiceResponse,
+  ServiceResponse,
+} from '@/models/responses';
 
 export const useGetAllServiceQuery = () =>
   useQuery<ApiResponse<PublicServiceResponse[]>, AxiosError>({
@@ -24,4 +28,11 @@ export const useUpdateServiceMutation = () =>
     { id: string; data: UpdateServiceRequest }
   >({
     mutationFn: ({ id, data }) => serviceClient.updateService(id, data),
+  });
+export const useGetServiceByIdQuery = (serviceId: string) =>
+  useQuery<ApiResponse<PublicServiceDetailResponse>, AxiosError<ApiResponse>>({
+    queryKey: ['services', 'public', serviceId],
+    queryFn: () => serviceClient.getById(serviceId),
+    enabled: !!serviceId,
+    staleTime: 5 * 60 * 1000,
   });
