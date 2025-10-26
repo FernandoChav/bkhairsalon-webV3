@@ -40,3 +40,7 @@ export interface PublicServiceResponse {
   durationInMinutes: number;
   images: string[];
 }
+export interface PublicServiceDetailResponse extends PublicServiceResponse {
+  startTime?: string | null; // Puede ser null o no existir
+  endTime?: string | null; // Puede ser null o no existir
+}

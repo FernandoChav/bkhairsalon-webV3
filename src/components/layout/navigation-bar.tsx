@@ -47,55 +47,80 @@ export const NavigationBar: FC = () => {
           <span className="hidden sm:block">BK Hair Salon</span>
         </Link>
 
+        {/* --- SECCIÓN AUTENTICADA --- */}
         {isNotLoading && isAuthenticated && (
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-10 w-10 rounded-full p-0 hover:bg-muted/50 transition-colors duration-200 border border-border/50 hover:border-border cursor-pointer"
-              >
-                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                  <HiUser className="h-5 w-5 text-primary-foreground" />
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-64 border border-border shadow-lg bg-card"
-              align="end"
-              forceMount
+          // NUEVO: Contenedor para alinear los enlaces y el menú
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* NUEVO: Enlace a Servicios */}
+            <Button
+              variant="ghost"
+              className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"
+              asChild
             >
-              <div className="px-4 py-3">
-                <p className="text-sm font-medium text-card-foreground">
-                  {userName}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {userEmail}
-                </p>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/account"
-                  className="cursor-pointer flex items-center space-x-2 focus:bg-accent focus:text-accent-foreground"
+              <Link href="/service">Servicios</Link>
+            </Button>
+
+            {/* Menú de Perfil (Dropdown) existente */}
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full p-0 hover:bg-muted/50 transition-colors duration-200 border border-border/50 hover:border-border cursor-pointer"
                 >
-                  <HiCog className="h-4 w-4" />
-                  <span>Configuración</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/5 flex items-center space-x-2"
-                onClick={handleLogout}
+                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                    <HiUser className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-64 border border-border shadow-lg bg-card"
+                align="end"
+                forceMount
               >
-                <HiLogout className="h-4 w-4" />
-                <span>Cerrar Sesión</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <div className="px-4 py-3">
+                  <p className="text-sm font-medium text-card-foreground">
+                    {userName}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {userEmail}
+                  </p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/account"
+                    className="cursor-pointer flex items-center space-x-2 focus:bg-accent focus:text-accent-foreground"
+                  >
+                    <HiCog className="h-4 w-4" />
+                    <span>Configuración</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/5 flex items-center space-x-2"
+                  onClick={handleLogout}
+                >
+                  <HiLogout className="h-4 w-4" />
+                  <span>Cerrar Sesión</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )}
 
+        {/* --- SECCIÓN NO AUTENTICADA --- */}
         {isNotLoading && !isAuthenticated && (
           <div className="flex items-center space-x-3">
+            {/* NUEVO: Enlace a Servicios */}
+            <Button
+              variant="ghost"
+              className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"
+              asChild
+            >
+              <Link href="/services">Servicios</Link>
+            </Button>
+
+            {/* Enlaces existentes */}
             <Button
               variant="ghost"
               className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"

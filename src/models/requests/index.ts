@@ -8,3 +8,4 @@ export type {
 } from './category';
 export type { CreateServiceRequest, UpdateServiceRequest } from './service';
 export type { EditUserRequest, DeleteUserRequest } from './user';
+export type { AvailabilityRequest } from './availability';

@@ -4,6 +4,9 @@ import { ChevronUp, ShoppingCart } from 'lucide-react';
 
 import { FC } from 'react';
 
+// NUEVO: Importar Link
+import Link from 'next/link';
+
 import { Button } from '@/components/shadcn/button';
 import { CartItem } from '@/models/entities';
 
@@ -26,13 +29,13 @@ export const CartDrawer: FC<Props> = ({
   formatPrice,
   onToggleCart,
   onRemoveFromCart,
-  onCheckout,
 }) => (
   <div
     className={`fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 shadow-lg transition-all duration-300 ${
       isCartOpen ? 'translate-y-0' : 'translate-y-[calc(100%-4rem)]'
     }`}
   >
+    {/* --- Cabecera del Drawer (sin cambios) --- */}
     <button
       onClick={onToggleCart}
       className="w-full flex items-center justify-between px-4 py-4 hover:bg-neutral-50 transition-colors"
@@ -51,6 +54,7 @@ export const CartDrawer: FC<Props> = ({
       </div>
     </button>
 
+    {/* --- Contenido del Drawer (sin cambios) --- */}
     {isCartOpen && (
       <div className="max-h-96 overflow-y-auto border-t border-neutral-200">
         {cart.length === 0 ? (
@@ -59,13 +63,14 @@ export const CartDrawer: FC<Props> = ({
           </div>
         ) : (
           <>
+            {/* ... (lista de items, sin cambios) ... */}
             <div className="divide-y divide-neutral-200">
               {cart.map(item => (
                 <div
                   key={item.cartId}
                   className="flex items-center justify-between p-4 hover:bg-neutral-50"
                 >
-                  <div className="flex-grow">
+                  <div className="grow">
                     <p className="font-medium text-neutral-900">{item.name}</p>
                     <p className="text-sm text-neutral-600">
                       {getCategoryName(item.categoryId)}
@@ -85,6 +90,8 @@ export const CartDrawer: FC<Props> = ({
                 </div>
               ))}
             </div>
+
+            {/* --- Footer del Drawer (AQUÍ ESTÁ EL CAMBIO) --- */}
             <div className="p-4 bg-neutral-50 border-t border-neutral-200">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-lg font-semibold">Total:</span>
@@ -92,14 +99,29 @@ export const CartDrawer: FC<Props> = ({
                   {formatPrice(totalPrice)}
                 </span>
               </div>
-              <Button
-                onClick={onCheckout}
-                className="w-full"
-                size="lg"
-                disabled={cart.length === 0}
+
+              {/* CAMBIO: Envolvemos el botón en un <Link> */}
+              {/*
+                - Hacemos que el Link sea condicional para no navegar si el carrito está vacío.
+                - 'pointer-events-none' y 'aria-disabled' desactivan el Link si el carrito está vacío.
+              */}
+              <Link
+                href={cart.length > 0 ? '/booking/cart' : '#'}
+                className={`w-full ${
+                  cart.length === 0 ? 'pointer-events-none' : ''
+                }`}
+                aria-disabled={cart.length === 0}
+                tabIndex={cart.length === 0 ? -1 : undefined}
               >
-                Agendar horas
-              </Button>
+                <Button
+                  // onClick={onCheckout} // ELIMINADO: Ya no se usa para esto
+                  className="w-full"
+                  size="lg"
+                  disabled={cart.length === 0} // MANTENIDO: Para el estilo visual de deshabilitado
+                >
+                  Agendar horas
+                </Button>
+              </Link>
             </div>
           </>
         )}
