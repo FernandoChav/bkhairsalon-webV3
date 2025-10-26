@@ -47,7 +47,9 @@ export const ServiceCardItem: FC<Props> = ({
             <span className="text-sm">{service.duration} min</span>
           </div>
         </div>
-        <CardTitle className="text-xl">{service.name}</CardTitle>
+        <CardTitle className="text-xl font-bold font-montserrat text-neutral-900 mb-2">
+          {service.name}
+        </CardTitle>
         <CardDescription>{service.description}</CardDescription>
       </CardHeader>
 

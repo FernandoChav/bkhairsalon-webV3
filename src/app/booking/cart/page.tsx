@@ -9,7 +9,7 @@ export default function CartBookingPage() {
     <div className="pt-12">
       {/* Usamos 'max-w-4xl' para mantener consistencia */}
       <div className="max-w-4xl mx-auto pb-12">
-        <h1 className="text-3xl font-bold font-serif px-4 sm:px-0">
+        <h1 className="text-3xl font-bold font-montserrat px-4 sm:px-0">
           Revisar y Agendar Cita
         </h1>
         <p className="text-muted-foreground mb-8 font-sans px-4 sm:px-0">

@@ -34,7 +34,7 @@ export const CartBookingView: React.FC = () => {
       {/* --- PARTE 1: RESUMEN DEL CARRITO --- */}
       <Card className="shadow-lg border-0">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-4 font-serif">
+          <h2 className="text-2xl font-bold mb-4 font-montserrat">
             1. Tus Servicios
           </h2>
 
@@ -43,7 +43,7 @@ export const CartBookingView: React.FC = () => {
             {cart.map(service => (
               <div
                 key={service.id}
-                className="flex justify-between items-center font-sans"
+                className="flex justify-between items-center font-montserrat"
               >
                 <span>{service.name}</span>
                 <span className="font-medium">
@@ -76,10 +76,10 @@ export const CartBookingView: React.FC = () => {
       {/* Esta parte es idéntica a la de 'BookingView' */}
       <Card className="shadow-lg border-0">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-1 font-serif">
+          <h2 className="text-2xl font-bold mb-1 font-montserrat">
             2. Disponibilidad
           </h2>
-          <p className="text-muted-foreground mb-6 font-sans">
+          <p className="text-muted-foreground mb-6 font-montserrat">
             Selecciona un horario para tu cita
           </p>
 

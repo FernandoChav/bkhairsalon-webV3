@@ -28,7 +28,7 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
   // Caso 1: No hay disponibilidad (sin cambios)
   if (data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4 text-muted-foreground border rounded-md">
+      <div className="flex flex-col items-center justify-center h-full font-montserrat gap-4 text-muted-foreground border rounded-md">
         <HiOutlineFolder className="w-12 h-12" />
         <p className="font-sans">No hay disponibilidad para este día.</p>
       </div>
@@ -50,14 +50,14 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
           className="border-0 shadow-lg rounded-md mb-4" // Cada item es una tarjeta
         >
           {/* El Trigger es la cabecera del profesional */}
-          <AccordionTrigger className="flex w-full items-center justify-between p-4 hover:no-underline">
+          <AccordionTrigger className="flex w-full items-center font-montserrat justify-between p-4 hover:no-underline">
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarFallback>
                   {profesional.workerName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <span className="font-medium font-sans">
+              <span className="font-medium font-montserrat">
                 {profesional.workerName}
               </span>
             </div>

@@ -88,7 +88,7 @@ export const AvailabilitySelector = ({
         )}
 
         {isError && (
-          <div className="text-center text-destructive h-48 flex items-center justify-center">
+          <div className="text-center text-destructive font-montserrat h-48 flex items-center justify-center">
             {/* CAMBIO: Añadido font-sans */}
             <p className="font-sans">Error al cargar la disponibilidad.</p>
           </div>
@@ -103,7 +103,7 @@ export const AvailabilitySelector = ({
         {/* ------------------------------------ */}
 
         {/* CAMBIO: Añadido font-sans */}
-        <p className="text-xs text-muted-foreground text-center mt-4 font-sans">
+        <p className="text-xs text-muted-foreground font-montserrat text-center mt-4 font-sans">
           Horarios mostrados en la zona horaria del negocio (America/Santiago)
         </p>
       </div>
