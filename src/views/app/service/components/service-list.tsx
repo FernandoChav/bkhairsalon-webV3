@@ -9,7 +9,10 @@ import { ServiceCardItem } from '.';
 interface Props {
   services: ServiceResponse[];
   getCategoryName: (categoryId: string) => string;
-  onAddToCart: (service: ServiceResponse) => void;
+  onAddToCart: (
+    service: ServiceResponse,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void;
   formatPrice: (price: number) => string;
 }
 

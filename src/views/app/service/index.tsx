@@ -8,9 +8,14 @@ import {
   CartDrawer,
   CategoryFilter,
   CustomerServiceViewSkeleton,
+  FlyingCardAnim,
   ServiceList,
 } from './components';
-import { useCartActions, useCustomerServiceView } from './hooks';
+import {
+  useCartActions,
+  useCustomerServiceView,
+  useFlyingCartAnimation,
+} from './hooks';
 
 export const CustomerServiceView: FC = () => {
   const {
@@ -33,6 +38,9 @@ export const CustomerServiceView: FC = () => {
     removeFromCart,
     handleCheckout,
   } = useCartActions();
+
+  const { flyingCards, triggerAnimation, cartRef } =
+    useFlyingCartAnimation(addToCart);
 
   const formatPrice = useFormatPrice();
 
@@ -64,10 +72,11 @@ export const CustomerServiceView: FC = () => {
         <ServiceList
           services={filteredServices}
           getCategoryName={getCategoryName}
-          onAddToCart={addToCart}
+          onAddToCart={triggerAnimation}
           formatPrice={formatPrice}
         />
       </div>
+      <FlyingCardAnim flyingCards={flyingCards} cartRef={cartRef} />
 
       {/* Cart Lower Drawer */}
       <CartDrawer

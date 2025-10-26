@@ -22,7 +22,10 @@ import type { ServiceResponse } from '@/models/responses';
 interface Props {
   service: ServiceResponse;
   categoryName: string;
-  onAddToCart: (service: ServiceResponse) => void;
+  onAddToCart: (
+    service: ServiceResponse,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void;
   formatPrice: (price: number) => string;
 }
 
@@ -59,7 +62,7 @@ export const ServiceCardItem: FC<Props> = ({
       tenga su propia acción (onAddToCart) y no navegue.
     */}
     <CardFooter>
-      <Button onClick={() => onAddToCart(service)} className="w-full">
+      <Button onClick={e => onAddToCart(service, e)} className="w-full">
         Agregar al carrito
       </Button>
     </CardFooter>
