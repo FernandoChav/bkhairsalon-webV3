@@ -45,6 +45,8 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/workspace/:path*',
+    '/service/:path*',
+    '/booking/:path*',
     // Futuras rutas (descomentar cuando las crees):
     // '/client/:path*',
   ],

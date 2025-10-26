@@ -47,6 +47,14 @@ export const ROUTE_ACCESS_CONFIG = {
     UserRole.CLIENT,
   ],
 
+  // Área de agendamiento (clientes autenticados)
+  '/booking': [
+    UserRole.ADMIN,
+    UserRole.STYLIST,
+    UserRole.RECEPTIONIST,
+    UserRole.CLIENT,
+  ],
+
   // Área de workspace (trabajadores)
   '/workspace': [UserRole.ADMIN, UserRole.STYLIST, UserRole.RECEPTIONIST],
   '/workspace/service': [
@@ -61,8 +69,11 @@ export const hasRouteAccess = (
   userRoles: UserRole[],
   route: string
 ): boolean => {
+  const normalizedRoute = route.split('/')[1];
+  const matchedConfigKey = `/${normalizedRoute}`;
+
   const allowedRoles =
-    ROUTE_ACCESS_CONFIG[route as keyof typeof ROUTE_ACCESS_CONFIG];
+    ROUTE_ACCESS_CONFIG[matchedConfigKey as keyof typeof ROUTE_ACCESS_CONFIG];
 
   if (!allowedRoles) {
     return false; // Ruta no configurada = sin acceso
