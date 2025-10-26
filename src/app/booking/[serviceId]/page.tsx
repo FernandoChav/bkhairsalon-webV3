@@ -1,13 +1,22 @@
 'use client';
 
+import { useParams } from 'next/navigation';
+
 import { BookingView } from '@/views';
 
-// --- DATOS DE PRUEBA (TEMPORALES) ---
-const TEST_SERVICE_ID = 'a1d27de2-0ba6-4a7e-8348-65090f69671e';
-const TEST_INTERVAL = 10;
-// ------------------------------------
+// Ya NO necesitamos TEST_INTERVAL
 
 export default function BookingPage() {
+  const params = useParams();
+
+  const serviceId = Array.isArray(params.serviceId)
+    ? params.serviceId[0]
+    : params.serviceId;
+
+  if (!serviceId) {
+    return <div>Cargando...</div>; // O un skeleton
+  }
+
   return (
     <div className="pt-12">
       <div className="max-w-4xl mx-auto pb-12">
@@ -20,10 +29,10 @@ export default function BookingPage() {
 
         <hr className="my-8 mx-4 sm:mx-0" />
 
-        <BookingView
-          serviceId={TEST_SERVICE_ID}
-          slotIntervalMinutes={TEST_INTERVAL}
-        />
+        {/* CAMBIO: Ahora solo pasamos 'serviceId'.
+          BookingView se encargará de buscar el intervalo.
+        */}
+        <BookingView serviceId={serviceId} />
       </div>
     </div>
   );

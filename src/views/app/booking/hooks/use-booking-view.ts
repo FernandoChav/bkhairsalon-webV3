@@ -1,51 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // Hooks de API Globales
 import {
   useCheckAvailabilityMutation,
-  useGetServiceByIdQuery,
+  useGetServiceByIdQuery, // Ya lo estabas usando
 } from '@/hooks/api';
-// Importa ambos hooks
 import { AvailabilityRequest } from '@/models/requests';
 import {
   AvailabilityResponse,
   PublicServiceDetailResponse,
 } from '@/models/responses';
 
-// Ya no necesitamos MOCK_SERVICE_DETAILS
-
 interface UseBookingViewReturn {
-  // Estado del Servicio
+  // (El tipo de retorno no cambia)
   serviceDetails: PublicServiceDetailResponse | null | undefined;
   isLoadingService: boolean;
   isErrorService: boolean;
-
-  // Estado de Disponibilidad (igual que antes)
   selectedDate: Date | undefined;
   availabilityData: AvailabilityResponse[];
   isPendingAvailability: boolean;
   isErrorAvailability: boolean;
-
-  // Handlers (igual que antes)
   handleDateSelect: (date: Date | undefined) => void;
   handleSlotSelect: (workerId: string, time: string) => void;
 }
 
-export const useBookingView = (
-  serviceId: string,
-  slotIntervalMinutes: number // Podríamos obtener esto del servicio en el futuro
-): UseBookingViewReturn => {
-  // --- 1. LÓGICA DE DETALLES DEL SERVICIO (REAL) ---
+// CAMBIO 1: El hook ahora solo recibe 'serviceId'
+export const useBookingView = (serviceId: string): UseBookingViewReturn => {
+  // --- 1. LÓGICA DE DETALLES DEL SERVICIO (Sin cambios) ---
   const {
     data: serviceApiResponse,
     isLoading: isLoadingService,
     isError: isErrorService,
-  } = useGetServiceByIdQuery(serviceId); // Llama al nuevo hook con el ID
-  const serviceDetails = serviceApiResponse?.data; // Extrae los datos
+  } = useGetServiceByIdQuery(serviceId);
+  const serviceDetails = serviceApiResponse?.data;
 
-  // --- 2. LÓGICA DE DISPONIBILIDAD (REAL) ---
+  // CAMBIO 2: Obtenemos el intervalo desde los detalles del servicio
+  const slotIntervalMinutes = serviceDetails?.durationInMinutes;
+
+  // --- 2. LÓGICA DE DISPONIBILIDAD ---
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -56,65 +50,65 @@ export const useBookingView = (
     isError: isErrorAvailability,
   } = useCheckAvailabilityMutation();
 
-  // Función para llamar a la API de disponibilidad
-  const fetchAvailability = (date: Date) => {
-    const dateOnly = new Date(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-    );
-    const dateUTC = dateOnly.toISOString();
-    const requestBody: AvailabilityRequest = {
-      date: dateUTC,
-      serviceIds: [serviceId],
-      slotIntervalMinutes: slotIntervalMinutes,
-    };
-    checkAvailability(requestBody);
-  };
+  // CAMBIO 3: 'fetchAvailability' ahora usa 'useCallback'
+  const fetchAvailability = useCallback(
+    (date: Date) => {
+      // Guardia: Si no tenemos duración, no podemos buscar
+      if (!slotIntervalMinutes) {
+        return;
+      }
 
-  // Efecto para la carga inicial de disponibilidad (igual que antes)
+      const dateOnly = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      );
+      const dateUTC = dateOnly.toISOString();
+
+      const requestBody: AvailabilityRequest = {
+        date: dateUTC,
+        serviceIds: [serviceId],
+        slotIntervalMinutes: slotIntervalMinutes, // Usamos el valor dinámico
+      };
+      checkAvailability(requestBody);
+    },
+    [serviceId, slotIntervalMinutes, checkAvailability] // Depende del intervalo
+  );
+
+  // CAMBIO 4: 'useEffect' ahora depende de 'slotIntervalMinutes'
   useEffect(() => {
-    if (selectedDate && serviceId) {
-      // Asegura que serviceId exista
+    if (selectedDate && slotIntervalMinutes) {
       fetchAvailability(selectedDate);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceId, slotIntervalMinutes]); // Se ejecuta si cambia el servicio
+  }, [selectedDate, slotIntervalMinutes, fetchAvailability]);
 
-  // Handler del calendario (igual que antes)
+  // Handler del calendario (sin cambios)
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     if (date) {
       fetchAvailability(date);
-    } else {
-      // Opcional: limpiar datos si deseleccionan
-      // setAvailabilityData([]); // Necesitaríamos un estado local si hacemos esto
     }
   };
 
-  // Handler de selección de slot (igual que antes)
+  // Handler de selección de slot (sin cambios)
   const handleSlotSelect = (workerId: string, time: string) => {
     console.log('RESERVA FINAL:', {
       serviceId,
       date: selectedDate,
       workerId,
       time,
+      duration: slotIntervalMinutes,
     });
-    // toast.success(...);
   };
 
-  // Extrae los datos de disponibilidad
   const availabilityData = availabilityApiResponse?.data || [];
 
   return {
-    // Servicio
     serviceDetails,
     isLoadingService,
     isErrorService,
-    // Disponibilidad
     selectedDate,
     availabilityData,
     isPendingAvailability,
     isErrorAvailability,
-    // Handlers
     handleDateSelect,
     handleSlotSelect,
   };

@@ -9,7 +9,10 @@ export {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useGetAllServiceQuery,
+  // --- INICIO CÓDIGO RESUELTO ---
   useGetServiceByIdQuery,
+  useGetAllServicePublicQuery,
+  // --- FIN CÓDIGO RESUELTO ---
 } from './use-service-client';
 export {
   useEditUserMutation,

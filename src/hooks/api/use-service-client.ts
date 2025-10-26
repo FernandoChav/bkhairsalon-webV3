@@ -10,9 +10,13 @@ import {
   ServiceResponse,
 } from '@/models/responses';
 
+/**
+ * CAMBIO: Se ajustó la queryKey a 'admin' para diferenciarla de la pública
+ * y evitar colisiones de caché.
+ */
 export const useGetAllServiceQuery = () =>
   useQuery<ApiResponse<PublicServiceResponse[]>, AxiosError>({
-    queryKey: ['services', 'public'],
+    queryKey: ['services', 'admin'], // ANTES: ['services', 'public']
     queryFn: serviceClient.getAll,
   });
 
@@ -29,10 +33,27 @@ export const useUpdateServiceMutation = () =>
   >({
     mutationFn: ({ id, data }) => serviceClient.updateService(id, data),
   });
+
+// --- INICIO CÓDIGO RESUELTO ---
+
+/**
+ * Hook de la rama 'dev' para obtener todos los servicios públicos
+ */
+export const useGetAllServicePublicQuery = () =>
+  useQuery<ApiResponse<PublicServiceResponse[]>, AxiosError>({
+    queryKey: ['services', 'public'], // Esta es la key para la lista pública
+    queryFn: serviceClient.getAllPublic,
+  });
+
+/**
+ * Hook de tu rama ('HEAD') para obtener un servicio público por ID
+ */
 export const useGetServiceByIdQuery = (serviceId: string) =>
   useQuery<ApiResponse<PublicServiceDetailResponse>, AxiosError<ApiResponse>>({
-    queryKey: ['services', 'public', serviceId],
+    queryKey: ['services', 'public', serviceId], // Key anidada bajo la pública
     queryFn: () => serviceClient.getById(serviceId),
     enabled: !!serviceId,
     staleTime: 5 * 60 * 1000,
   });
+
+// --- FIN CÓDIGO RESUELTO ---

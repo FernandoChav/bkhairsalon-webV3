@@ -30,13 +30,9 @@ import { useBookingView } from './hooks/use-booking-view';
 
 interface BookingViewProps {
   serviceId: string;
-  slotIntervalMinutes: number;
 }
 
-export const BookingView: React.FC<BookingViewProps> = ({
-  serviceId,
-  slotIntervalMinutes,
-}) => {
+export const BookingView: React.FC<BookingViewProps> = ({ serviceId }) => {
   const {
     // Servicio
     serviceDetails,
@@ -50,7 +46,7 @@ export const BookingView: React.FC<BookingViewProps> = ({
     // Handlers
     handleDateSelect,
     handleSlotSelect,
-  } = useBookingView(serviceId, slotIntervalMinutes);
+  } = useBookingView(serviceId);
 
   // --- Renderizado de Carga del Servicio ---
   if (isLoadingService) {
