@@ -117,7 +117,7 @@ export const NavigationBar: FC = () => {
               className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 cursor-pointer"
               asChild
             >
-              <Link href="/services">Servicios</Link>
+              <Link href="/service">Servicios</Link>
             </Button>
 
             {/* Enlaces existentes */}
