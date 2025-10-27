@@ -2,24 +2,21 @@
 
 import { FC } from 'react';
 
-import type { ServiceResponse } from '@/models/responses';
+import { Service } from '@/models/entities';
 
 import { ServiceCardItem } from '.';
 
 interface Props {
-  services: ServiceResponse[];
+  services: Service[];
   getCategoryName: (categoryId: string) => string;
-  onAddToCart: (
-    service: ServiceResponse,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => void;
+  openBookingSheet: (service: Service) => void;
   formatPrice: (price: number) => string;
 }
 
 export const ServiceList: FC<Props> = ({
   services,
   getCategoryName,
-  onAddToCart,
+  openBookingSheet,
   formatPrice,
 }) => (
   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -28,7 +25,7 @@ export const ServiceList: FC<Props> = ({
         key={service.id}
         service={service}
         categoryName={getCategoryName(service.categoryId)}
-        onAddToCart={onAddToCart}
+        openBookingSheet={openBookingSheet}
         formatPrice={formatPrice}
       />
     ))}
