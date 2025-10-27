@@ -50,24 +50,11 @@ export const useAvailabilitySelector = ({
     checkAvailability(requestBody);
   }, [selectedDate, serviceId, slotIntervalMinutes, checkAvailability]);
 
-  // Handle slot selection
-  const handleSlotSelect = (workerId: string, time: string) => {
-    console.log('Slot seleccionado:', {
-      serviceId,
-      date: selectedDate,
-      workerId,
-      time,
-    });
-    // You can return this data or call a callback here
-    return { serviceId, date: selectedDate, workerId, time };
-  };
-
   return {
     selectedDate,
     setSelectedDate,
     availabilityData,
     isPending,
     isError,
-    handleSlotSelect,
   };
 };

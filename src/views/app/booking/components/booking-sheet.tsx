@@ -28,6 +28,8 @@ interface Props {
   formatPrice: (price: number) => string;
   onConfirm: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isConfirmDisabled?: boolean;
+  selectedSlot: { workerId: string; time: string } | null;
+  setSelectedSlot: (slot: { workerId: string; time: string } | null) => void;
 }
 
 export const BookingSheet: FC<Props> = ({
@@ -38,6 +40,8 @@ export const BookingSheet: FC<Props> = ({
   setForWho,
   formatPrice,
   onConfirm,
+  selectedSlot,
+  setSelectedSlot,
 }) => {
   // Call hook at the top level
   const formatMinutes = useFormatMinutes();
@@ -65,7 +69,8 @@ export const BookingSheet: FC<Props> = ({
             <AvailabilitySelector
               serviceId={selectedService.id}
               slotIntervalMinutes={selectedService.duration}
-              onSlotSelect={slotData => console.log('Selected:', slotData)}
+              selectedSlot={selectedSlot}
+              setSelectedSlot={setSelectedSlot}
             />
           )}
         </div>
@@ -107,7 +112,7 @@ export const BookingSheet: FC<Props> = ({
             onClick={onConfirm}
             className="w-full mt-4"
             size="lg"
-            disabled={!forWho.trim()}
+            disabled={!forWho.trim() || !selectedSlot}
           >
             Confirmar hora
           </Button>

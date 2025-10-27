@@ -20,16 +20,33 @@ export const useBookingSheet = (
     setForWho('');
     setIsOpen(true);
   }, []);
-
+  const [selectedSlot, setSelectedSlot] = useState<{
+    workerId: string;
+    time: string;
+  } | null>(null);
   const confirmBooking = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!selectedService || !forWho.trim() || forWho.trim().length < 10)
+      if (
+        !selectedService ||
+        !forWho.trim() ||
+        forWho.trim().length > 10 ||
+        !selectedSlot
+      )
         return;
+
       if (triggerAnimation) triggerAnimation(selectedService, event);
+
       addBooking(selectedService, forWho);
+
+      console.log('Booking confirmed:', {
+        service: selectedService,
+        forWho,
+        slot: selectedSlot,
+      });
+
       setIsOpen(false);
     },
-    [selectedService, forWho, addBooking, triggerAnimation]
+    [selectedService, forWho, selectedSlot, addBooking, triggerAnimation]
   );
 
   const isConfirmDisabled =
@@ -44,5 +61,7 @@ export const useBookingSheet = (
     openSheet,
     confirmBooking,
     isConfirmDisabled,
+    selectedSlot,
+    setSelectedSlot,
   };
 };

@@ -55,6 +55,8 @@ export const CustomerServiceView: FC = () => {
     setForWho,
     confirmBooking,
     isConfirmDisabled,
+    selectedSlot,
+    setSelectedSlot,
   } = useBookingSheet(addBooking);
 
   // Flying card animation
@@ -106,6 +108,8 @@ export const CustomerServiceView: FC = () => {
           formatPrice={formatPrice}
           onConfirm={confirmBooking}
           isConfirmDisabled={isConfirmDisabled}
+          selectedSlot={selectedSlot}
+          setSelectedSlot={setSelectedSlot}
         />
       </div>
 

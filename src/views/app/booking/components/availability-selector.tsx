@@ -10,18 +10,17 @@ import { useAvailabilitySelector } from '../hooks';
 interface AvailabilitySelectorProps {
   serviceId: string;
   slotIntervalMinutes: number;
-  onSlotSelect?: (data: {
-    serviceId: string;
-    date: Date | undefined;
+  selectedSlot?: {
     workerId: string;
     time: string;
-  }) => void;
+  } | null;
+  setSelectedSlot: (slot: { workerId: string; time: string } | null) => void;
 }
 
 export const AvailabilitySelector = ({
   serviceId,
   slotIntervalMinutes,
-  onSlotSelect,
+  setSelectedSlot,
 }: AvailabilitySelectorProps) => {
   const {
     selectedDate,
@@ -29,18 +28,12 @@ export const AvailabilitySelector = ({
     availabilityData,
     isPending,
     isError,
-    handleSlotSelect,
   } = useAvailabilitySelector({
     serviceId,
     slotIntervalMinutes,
   });
-
-  // Enhanced slot selection handler
-  const handleSlotSelectWithCallback = (workerId: string, time: string) => {
-    const selectionData = handleSlotSelect(workerId, time);
-    if (onSlotSelect) {
-      onSlotSelect(selectionData);
-    }
+  const handleSlotSelect = (workerId: string, time: string) => {
+    setSelectedSlot({ workerId, time });
   };
 
   // Handle date selection from WeekSelector
@@ -89,7 +82,7 @@ export const AvailabilitySelector = ({
               {!isPending && !isError && (
                 <AvailabilityList
                   data={availabilityData}
-                  onSlotSelect={handleSlotSelectWithCallback}
+                  onSlotSelect={handleSlotSelect}
                 />
               )}
             </div>
