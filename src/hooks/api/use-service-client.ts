@@ -1,14 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
+import { useMutation, useQuery, UseMutationResult } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 import { serviceClient } from '@/clients';
 import { ApiResponse } from '@/models/generics';
-import { CreateServiceRequest, UpdateServiceRequest } from '@/models/requests';
+import { CreateServiceRequest, UpdateServiceRequest, DeleteServiceRequest } from '@/models/requests';
 import {
   PublicServiceDetailResponse,
   PublicServiceResponse,
   ServiceResponse,
 } from '@/models/responses';
+import { id } from 'date-fns/locale';
 
 /**
  * CAMBIO: Se ajustó la queryKey a 'admin' para diferenciarla de la pública
@@ -56,4 +57,17 @@ export const useGetServiceByIdQuery = (serviceId: string) =>
     staleTime: 5 * 60 * 1000,
   });
 
+export const useDeleteServiceMutation = (): UseMutationResult<
+  ApiResponse<object>,
+  AxiosError<ApiResponse>,
+  DeleteServiceRequest
+  > => {
+    return useMutation<
+      ApiResponse<object>,
+      AxiosError<ApiResponse>,
+      DeleteServiceRequest
+    >({
+      mutationFn: ({ id }: DeleteServiceRequest) => serviceClient.deleteService(id),
+    });
+  }
 // --- FIN CÓDIGO RESUELTO ---

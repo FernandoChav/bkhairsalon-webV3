@@ -144,6 +144,15 @@ class ServiceClient {
     return response.data;
   }
 
+  /**
+ * Elimina un servicio existente (soft delete)
+ * @param id - ID del servicio a eliminar
+ * @returns Respuesta de la API confirmando la eliminación
+ */
+  async deleteService(id: string): Promise<ApiResponse> {
+    const response = await baseClient.delete<ApiResponse>(`/service/${id}`);
+    return response.data;
+  }
   // --- FIN DE CÓDIGO RESUELTO ---
 }
 export const serviceClient = new ServiceClient();

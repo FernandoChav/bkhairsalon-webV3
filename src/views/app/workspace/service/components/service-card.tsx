@@ -96,7 +96,7 @@ const DraggableServiceCard: FC<ServiceCardProps> = ({
 // Componente de contenido de ServiceCard (sin drag)
 const ServiceCardContent: FC<{ service: ServiceResponse }> = ({ service }) => {
   const [isEditMode] = useAtom(isEditModeAtom);
-  const { handleServiceClick, handleEditService } = useServiceActions();
+  const { handleServiceClick, handleEditService, handleDeleteService } = useServiceActions();
 
   return (
     <Card className="group shadow-none hover:shadow-lg hover:border-border/80 transition-all">
@@ -167,13 +167,14 @@ const ServiceCardContent: FC<{ service: ServiceResponse }> = ({ service }) => {
                   <p>Editar servicio</p>
                 </TooltipContent>
               </Tooltip>
-
+              
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
                     className="h-7 w-7 p-0 text-destructive cursor-pointer"
+                    onClick={() => handleDeleteService(service)}
                   >
                     <HiTrash className="h-3 w-3" />
                   </Button>
