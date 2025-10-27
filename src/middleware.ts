@@ -47,6 +47,7 @@ export const config = {
     '/workspace/:path*',
     '/service/:path*',
     '/booking/:path*',
+    '/payment/:path*',
     // Futuras rutas (descomentar cuando las crees):
     // '/client/:path*',
   ],

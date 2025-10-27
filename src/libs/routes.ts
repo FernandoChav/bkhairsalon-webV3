@@ -54,6 +54,19 @@ export const ROUTE_ACCESS_CONFIG = {
     UserRole.RECEPTIONIST,
     UserRole.CLIENT,
   ],
+  // Área de pagos (clientes autenticados)
+  '/payment': [
+    UserRole.ADMIN,
+    UserRole.STYLIST,
+    UserRole.RECEPTIONIST,
+    UserRole.CLIENT,
+  ],
+  '/payment/confirmation': [
+    UserRole.ADMIN,
+    UserRole.STYLIST,
+    UserRole.RECEPTIONIST,
+    UserRole.CLIENT,
+  ],
 
   // Área de workspace (trabajadores)
   '/workspace': [UserRole.ADMIN, UserRole.STYLIST, UserRole.RECEPTIONIST],

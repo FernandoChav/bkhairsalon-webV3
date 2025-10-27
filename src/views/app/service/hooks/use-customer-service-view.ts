@@ -1,5 +1,3 @@
-'use client';
-
 import { atom, useAtom } from 'jotai';
 
 import { useMemo } from 'react';
@@ -8,6 +6,7 @@ import {
   useGetAllCategoryQuery,
   useGetAllServicePublicQuery,
 } from '@/hooks/api';
+import { Service } from '@/models/entities';
 import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
 export const selectedCategoryAtom = atom<string>('all');
@@ -27,21 +26,28 @@ export const useCustomerServiceView = () => {
     [categories]
   );
 
-  const filteredServices = useMemo(() => {
+  const filteredServices: Service[] = useMemo(() => {
     if (!categories || !servicesData?.data) return [];
 
-    const allServices: (ServiceResponse & {
-      categoryId: string;
-      categoryName: string;
-    })[] = [];
+    const allServices: Service[] = [];
     const traverseCategories = (cats: CategoryResponse[]) => {
       cats.forEach(cat => {
         if (cat.services) {
-          cat.services.forEach(s => {
+          cat.services.forEach((s: ServiceResponse) => {
             allServices.push({
-              ...s,
+              id: s.id,
+              name: s.name,
+              description: s.description,
+              duration: s.duration,
+              price: s.price,
+              startTime: s.startTime,
+              endTime: s.endTime,
+              sortOrder: s.sortOrder,
+              commissionPercentage: s.commissionPercentage,
               categoryId: cat.id,
-              categoryName: cat.name,
+              isDeleted: false,
+              createdAt: s.createdAt,
+              updatedAt: s.updatedAt,
             });
           });
         }
@@ -66,7 +72,6 @@ export const useCustomerServiceView = () => {
   const selectAllCategories = () => setSelectedCategory('all');
   const filterByCategory = (slug: string) => setSelectedCategory(slug || 'all');
   const isAllSelected = selectedCategory === 'all';
-
   const isLoading = categoriesLoading || servicesLoading;
 
   return {

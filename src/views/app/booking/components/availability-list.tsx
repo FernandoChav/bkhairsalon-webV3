@@ -3,7 +3,6 @@
 import { HiOutlineFolder } from 'react-icons/hi';
 
 import {
-  // Importar Accordion
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -13,8 +12,7 @@ import {
 } from '@/components/shadcn';
 import { AvailabilityResponse } from '@/models/responses';
 
-// ¡Ahora SÍ usamos este componente!
-import { ProfessionalAvailabilityCard } from './professional-availability-card';
+import { ProfessionalAvailabilityCard } from '.';
 
 interface AvailabilityListProps {
   data: AvailabilityResponse[];
@@ -28,9 +26,9 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
   // Caso 1: No hay disponibilidad (sin cambios)
   if (data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full font-montserrat gap-4 text-muted-foreground border rounded-md">
-        <HiOutlineFolder className="w-12 h-12" />
-        <p className="font-sans">No hay disponibilidad para este día.</p>
+      <div className="flex flex-col items-center justify-center h-full font-montserrat text-muted-foreground border rounded-md">
+        <HiOutlineFolder className="w-12 h-12 mt-2" />
+        <p className="font-sans pb-2">No hay disponibilidad para este día.</p>
       </div>
     );
   }
@@ -47,10 +45,10 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
         <AccordionItem
           value={profesional.workerId}
           key={profesional.workerId}
-          className="border-0 shadow-lg rounded-md mb-4" // Cada item es una tarjeta
+          className="border-0 shadow-lg rounded-md mb-2" // Cada item es una tarjeta
         >
           {/* El Trigger es la cabecera del profesional */}
-          <AccordionTrigger className="flex w-full items-center font-montserrat justify-between p-4 hover:no-underline">
+          <AccordionTrigger className="flex w-full items-center font-montserrat justify-between p-3 hover:no-underline">
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarFallback>

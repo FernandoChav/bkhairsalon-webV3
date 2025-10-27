@@ -2,22 +2,27 @@
 
 import { FC } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useFormatPrice } from '@/hooks/common';
+import {
+  BookedServicesDrawer,
+  BookingSheet,
+} from '@/views/app/booking/components';
+import { useBookedServices, useBookingSheet } from '@/views/app/booking/hooks';
 
 import {
-  CartDrawer,
   CategoryFilter,
   CustomerServiceViewSkeleton,
   FlyingCardAnim,
   ServiceList,
 } from './components';
-import {
-  useCartActions,
-  useCustomerServiceView,
-  useFlyingCartAnimation,
-} from './hooks';
+import { useCustomerServiceView, useFlyingCartAnimation } from './hooks';
 
 export const CustomerServiceView: FC = () => {
+  const router = useRouter();
+
+  // Categories and services
   const {
     topLevelCategories,
     filteredServices,
@@ -29,24 +34,40 @@ export const CustomerServiceView: FC = () => {
     isLoading,
   } = useCustomerServiceView();
 
+  // Booked services hook
   const {
-    cart,
+    bookedServices,
     totalPrice,
-    isCartOpen,
-    toggleCart,
-    addToCart,
-    removeFromCart,
-    handleCheckout,
-  } = useCartActions();
+    isOpen: isDrawerOpen,
+    addBooking,
+    removeBooking,
+    toggleDrawer,
+    handleContinue,
+  } = useBookedServices();
 
-  const { flyingCards, triggerAnimation, cartRef } =
-    useFlyingCartAnimation(addToCart);
+  // Booking sheet hook
+  const {
+    isOpen: isSheetOpen,
+    setIsOpen: setIsSheetOpen,
+    openSheet,
+    selectedService,
+    forWho,
+    setForWho,
+    confirmBooking,
+    isConfirmDisabled,
+    selectedSlot,
+    setSelectedSlot,
+  } = useBookingSheet(addBooking);
+
+  // Flying card animation
+  const { flyingCards, cartRef } = useFlyingCartAnimation(addBooking);
 
   const formatPrice = useFormatPrice();
 
   if (isLoading) {
     return <CustomerServiceViewSkeleton />;
   }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100 pb-32">
       <div className="container mx-auto px-4 py-6">
@@ -72,22 +93,39 @@ export const CustomerServiceView: FC = () => {
         <ServiceList
           services={filteredServices}
           getCategoryName={getCategoryName}
-          onAddToCart={triggerAnimation}
+          openBookingSheet={openSheet}
           formatPrice={formatPrice}
         />
+
+        {/* Booking Sheet */}
+        <BookingSheet
+          open={isSheetOpen}
+          onOpenChange={setIsSheetOpen}
+          selectedService={selectedService}
+          forWho={forWho}
+          setForWho={setForWho}
+          getCategoryName={getCategoryName}
+          formatPrice={formatPrice}
+          onConfirm={confirmBooking}
+          isConfirmDisabled={isConfirmDisabled}
+          selectedSlot={selectedSlot}
+          setSelectedSlot={setSelectedSlot}
+        />
       </div>
+
+      {/* Flying Card Animations */}
       <FlyingCardAnim flyingCards={flyingCards} cartRef={cartRef} />
 
-      {/* Cart Lower Drawer */}
-      <CartDrawer
-        cart={cart}
+      {/* Booked Services Drawer */}
+      <BookedServicesDrawer
+        bookedServices={bookedServices}
         totalPrice={totalPrice}
-        isCartOpen={isCartOpen}
+        isOpen={isDrawerOpen}
         getCategoryName={getCategoryName}
         formatPrice={formatPrice}
-        onToggleCart={toggleCart}
-        onRemoveFromCart={removeFromCart}
-        onCheckout={handleCheckout}
+        onToggle={toggleDrawer}
+        onRemove={removeBooking}
+        onContinue={() => handleContinue(() => router.push('/payment'))}
       />
     </div>
   );

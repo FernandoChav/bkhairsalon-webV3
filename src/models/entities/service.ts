@@ -11,3 +11,8 @@ export interface Service extends BaseEntity {
   commissionPercentage: number;
   categoryId: string;
 }
+
+export interface BookedService extends Service {
+  id: string;
+  forWho: string;
+}
