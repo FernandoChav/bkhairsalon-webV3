@@ -13,6 +13,7 @@ export {
   useGetServiceByIdQuery,
   useGetAllServicePublicQuery,
   // --- FIN CÓDIGO RESUELTO ---
+  useDeleteServiceMutation,
 } from './use-service-client';
 export {
   useEditUserMutation,

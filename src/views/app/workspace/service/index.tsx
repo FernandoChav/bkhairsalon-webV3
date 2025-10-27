@@ -8,6 +8,8 @@ import {
   isEditModeAtom,
   selectedServiceCategoryAtom,
   selectedUpdateServiceAtom,
+  selectedDeleteServiceAtom,
+  isDeleteServiceModalOpenAtom,
 } from '@/atoms';
 
 import {
@@ -22,6 +24,7 @@ import {
   ServiceHeader,
   ServiceViewSkeleton,
   UpdateServiceModal,
+  DeleteServiceModal,
 } from './components';
 import { useCategoryActions, useServiceActions, useServiceView } from './hooks';
 
@@ -30,6 +33,8 @@ export const ServiceView: FC = () => {
   const selectedServiceCategory = useAtomValue(selectedServiceCategoryAtom);
   const selectedUpdateService = useAtomValue(selectedUpdateServiceAtom);
   const isEditMode = useAtomValue(isEditModeAtom);
+  const selectedDeleteService = useAtomValue(selectedDeleteServiceAtom);
+  const isDeleteServiceModalOpen = useAtomValue(isDeleteServiceModalOpenAtom);
 
   // Main view logic
   const {
@@ -65,6 +70,7 @@ export const ServiceView: FC = () => {
     handleCloseServiceSheet,
     handleCloseCreateServiceModal,
     handleCloseUpdateServiceModal,
+    handleCloseDeleteServiceModal,
   } = useServiceActions();
 
   // Computed values for rendering
@@ -169,6 +175,13 @@ export const ServiceView: FC = () => {
         <UpdateServiceModal
           onClose={handleCloseUpdateServiceModal}
           service={selectedUpdateService}
+        />
+      )}
+      {/* Delete Service Modal */}
+      {isDeleteServiceModalOpen && selectedDeleteService && (
+        <DeleteServiceModal
+          onClose={handleCloseDeleteServiceModal}
+          service={selectedDeleteService}
         />
       )}
     </div>

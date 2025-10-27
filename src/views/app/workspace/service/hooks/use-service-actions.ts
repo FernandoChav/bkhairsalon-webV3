@@ -1,5 +1,4 @@
 import { useSetAtom } from 'jotai';
-
 import { useCallback } from 'react';
 
 import {
@@ -9,6 +8,8 @@ import {
   selectedServiceAtom,
   selectedServiceCategoryAtom,
   selectedUpdateServiceAtom,
+  isDeleteServiceModalOpenAtom,
+  selectedDeleteServiceAtom,
 } from '@/atoms';
 import { CategoryResponse, ServiceResponse } from '@/models/responses';
 
@@ -17,9 +18,11 @@ interface UseServiceActionsReturn {
   handleServiceClick: (service: ServiceResponse) => void;
   handleCreateService: (category: CategoryResponse) => void;
   handleEditService: (service: ServiceResponse) => void;
+  handleDeleteService: (service: ServiceResponse) => void;
   handleCloseServiceSheet: () => void;
   handleCloseCreateServiceModal: () => void;
   handleCloseUpdateServiceModal: () => void;
+  handleCloseDeleteServiceModal: () => void;
 }
 
 export const useServiceActions = (): UseServiceActionsReturn => {
@@ -29,6 +32,8 @@ export const useServiceActions = (): UseServiceActionsReturn => {
   const setSelectedServiceCategory = useSetAtom(selectedServiceCategoryAtom);
   const setIsUpdateServiceModalOpen = useSetAtom(isUpdateServiceModalOpenAtom);
   const setSelectedUpdateService = useSetAtom(selectedUpdateServiceAtom);
+  const setIsDeleteServiceModalOpen = useSetAtom(isDeleteServiceModalOpenAtom);
+  const setSelectedDeleteService = useSetAtom(selectedDeleteServiceAtom);
 
   // Handlers - Service
   const handleServiceClick = useCallback(
@@ -60,6 +65,19 @@ export const useServiceActions = (): UseServiceActionsReturn => {
     ]
   );
 
+  const handleDeleteService = useCallback(
+    (service: ServiceResponse) => {
+      setSelectedDeleteService(service);
+      setIsDeleteServiceModalOpen(true);
+      setIsServiceSheetOpen(false);
+    },
+    [
+      setSelectedDeleteService,
+      setIsDeleteServiceModalOpen,
+      setIsServiceSheetOpen,
+    ]
+  );
+
   const handleCloseServiceSheet = useCallback(() => {
     setIsServiceSheetOpen(false);
   }, [setIsServiceSheetOpen]);
@@ -74,13 +92,20 @@ export const useServiceActions = (): UseServiceActionsReturn => {
     setSelectedUpdateService(null);
   }, [setIsUpdateServiceModalOpen, setSelectedUpdateService]);
 
+  const handleCloseDeleteServiceModal = useCallback(() => {
+    setIsDeleteServiceModalOpen(false);
+    setSelectedDeleteService(null);
+  }, [setIsDeleteServiceModalOpen, setSelectedDeleteService]);
+
   return {
     // Handlers
     handleServiceClick,
     handleCreateService,
     handleEditService,
+    handleDeleteService,
     handleCloseServiceSheet,
     handleCloseCreateServiceModal,
     handleCloseUpdateServiceModal,
+    handleCloseDeleteServiceModal,
   };
 };

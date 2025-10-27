@@ -24,3 +24,7 @@ export interface UpdateServiceRequest {
   deletePhotoIds?: string[];
   newPhotos?: File[];
 }
+
+export interface DeleteServiceRequest {
+  id: string;
+}
