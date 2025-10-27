@@ -1,0 +1,10 @@
+echo "Running pre-push checks..."
+
+# Build application to verify no errors
+echo "Building application..."
+yarn build
+
+echo "Running tests..."
+yarn test
+
+echo "Pre-push checks completed successfully"

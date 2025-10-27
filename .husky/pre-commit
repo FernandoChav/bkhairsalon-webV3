@@ -1,0 +1,19 @@
+echo "Running pre-commit checks..."
+
+# Fix linting issues automatically
+echo "Fixing linting issues..."
+yarn lint:fix
+
+# Run linting check
+echo "Running linting check..."
+yarn lint
+
+# Check TypeScript types
+echo "Checking TypeScript types..."
+yarn type-check
+
+# Format code
+echo "Formatting code..."
+yarn format
+
+echo "Pre-commit checks completed successfully"
