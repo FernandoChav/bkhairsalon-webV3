@@ -125,7 +125,7 @@ export const CustomerServiceView: FC = () => {
         formatPrice={formatPrice}
         onToggle={toggleDrawer}
         onRemove={removeBooking}
-        onContinue={() => handleContinue(() => router.push('/service/payment'))}
+        onContinue={() => handleContinue(() => router.push('/payment'))}
       />
     </div>
   );
