@@ -22,7 +22,6 @@ export const BookedServicesDrawer: FC<Props> = ({
   bookedServices,
   totalPrice,
   isOpen,
-  getCategoryName,
   formatPrice,
   onToggle,
   onRemove,
@@ -70,12 +69,13 @@ export const BookedServicesDrawer: FC<Props> = ({
                     <p className="font-medium text-neutral-900 truncate">
                       {item.name}
                     </p>
-                    <p className="text-sm text-neutral-600">
-                      {getCategoryName(item.categoryId)}
-                    </p>
-                    <p className="text-sm text-neutral-900 font-semibold">
+                  </div>
+                  <div className="flex-shrink-0">
+                    <p className="font-semibold text-neutral-900">
                       {formatPrice(item.price)}
                     </p>
+                  </div>
+                  <div className="flex-shrink-0">
                     <p className="text-sm text-neutral-600">
                       Para: {item.forWho}
                     </p>
@@ -84,7 +84,7 @@ export const BookedServicesDrawer: FC<Props> = ({
                     variant="ghost"
                     size="icon"
                     onClick={() => onRemove(item.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="flex-shrink-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
                     <X className="w-4 h-4" />
                   </Button>

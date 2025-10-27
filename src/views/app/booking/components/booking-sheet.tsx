@@ -80,15 +80,26 @@ export const BookingSheet: FC<Props> = ({
           </div>
 
           {/* Para: */}
-          <div className="space-y-2 mt-4">
+          <div className="space-y-2">
             <Label htmlFor="forWho">Para:</Label>
             <Input
               id="forWho"
-              placeholder="Mí, hijo, mamá, amiga, etc."
+              placeholder="hijo, mamá, tía, amiga, etc."
               value={forWho}
               onChange={e => setForWho(e.target.value)}
               className="text-base"
             />
+            {forWho.trim().length <= 1 && (
+              <p className="text-sm text-red-500">
+                Por favor ingresa para quién es la cita.
+              </p>
+            )}
+
+            {forWho.trim().length > 10 && (
+              <p className="text-sm text-red-500">
+                Por favor descríbalo en menos de 10 caracteres.
+              </p>
+            )}
           </div>
 
           {/* Confirmar hora Button */}

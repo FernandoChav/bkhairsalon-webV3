@@ -23,7 +23,8 @@ export const useBookingSheet = (
 
   const confirmBooking = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!selectedService || !forWho.trim()) return;
+      if (!selectedService || !forWho.trim() || forWho.trim().length < 10)
+        return;
       if (triggerAnimation) triggerAnimation(selectedService, event);
       addBooking(selectedService, forWho);
       setIsOpen(false);
@@ -31,7 +32,8 @@ export const useBookingSheet = (
     [selectedService, forWho, addBooking, triggerAnimation]
   );
 
-  const isConfirmDisabled = !forWho.trim() || !selectedService;
+  const isConfirmDisabled =
+    !forWho.trim() || !selectedService || forWho.trim().length < 10;
 
   return {
     isOpen,
