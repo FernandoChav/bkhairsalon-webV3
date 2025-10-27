@@ -13,6 +13,8 @@ export {
   isEditCategoryModalOpenAtom,
   isUpdateServiceModalOpenAtom,
   isEditModeAtom,
+  isDeleteServiceModalOpenAtom,
+  selectedDeleteServiceAtom,
 } from './service-view';
 export {
   completeProgressAtom,

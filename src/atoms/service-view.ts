@@ -29,3 +29,7 @@ export const selectedUpdateServiceAtom = atom<ServiceResponse | null>(null);
 // Drag and Drop State
 export const isEditModeAtom = atom(false);
 export const expandedCategoriesAtom = atom<Set<string>>(new Set<string>());
+
+// Delete Service Confirmation
+export const isDeleteServiceModalOpenAtom = atom(false);
+export const selectedDeleteServiceAtom = atom<ServiceResponse | null>(null);

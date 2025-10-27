@@ -9,3 +9,4 @@ export { UpdateServiceModal } from './update-service-modal';
 export { ServiceViewSkeleton } from './service-view-skeleton';
 export { ServiceHeader } from './service-header';
 export { CategoryList } from './category-list';
+export { DeleteServiceModal } from './delete-service-modal';
