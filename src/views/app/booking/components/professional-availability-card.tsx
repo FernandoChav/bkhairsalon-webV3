@@ -16,7 +16,6 @@ import {
 } from '@/components/shadcn';
 import { AvailabilityResponse } from '@/models/responses';
 
-// --- Definiciones y Lógica de Filtro (Sin cambios) ---
 type TimeSlotFilter = 'morning' | 'afternoon';
 
 const filterTimeBlocks = (
@@ -25,16 +24,11 @@ const filterTimeBlocks = (
 ) => {
   return blocks.filter(slot => {
     const hour = parseInt(slot.start.substring(0, 2));
-    if (filter === 'morning') {
-      return hour >= 8 && hour < 13;
-    }
-    if (filter === 'afternoon') {
-      return hour >= 13 && hour < 20;
-    }
+    if (filter === 'morning') return hour >= 8 && hour < 13;
+    if (filter === 'afternoon') return hour >= 13 && hour < 20;
     return true;
   });
 };
-// ------------------------------------
 
 interface ProfessionalAvailabilityCardProps {
   profesional: AvailabilityResponse;
@@ -45,6 +39,7 @@ export const ProfessionalAvailabilityCard: React.FC<
   ProfessionalAvailabilityCardProps
 > = ({ profesional, onSlotSelect }) => {
   const [activeFilter, setActiveFilter] = useState<TimeSlotFilter>('morning');
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const morningSlots = filterTimeBlocks(
     profesional.availableTimeBlocks,
@@ -55,9 +50,31 @@ export const ProfessionalAvailabilityCard: React.FC<
     'afternoon'
   );
 
+  const handleSlotClick = (time: string) => {
+    setSelectedTime(time); // update local state for visual feedback
+    onSlotSelect(profesional.workerId, time); // call parent handler
+  };
+
+  const renderSlots = (slots: { start: string }[]) =>
+    slots.map(slot => {
+      const isSelected = slot.start === selectedTime;
+      return (
+        <CarouselItem key={slot.start} className="pl-2 basis-1/3 sm:basis-1/4">
+          <Button
+            variant={isSelected ? 'default' : 'outline'} // highlight selected
+            className={`font-normal font-sans w-full transition-colors ${
+              isSelected ? 'bg-gray-400 text-white' : ''
+            }`}
+            onClick={() => handleSlotClick(slot.start)}
+          >
+            {slot.start.substring(0, 5)}
+          </Button>
+        </CarouselItem>
+      );
+    });
+
   return (
     <div className="w-full">
-      {/* Tabs (Mañana/Tarde) */}
       <Tabs
         value={activeFilter}
         onValueChange={value => setActiveFilter(value as TimeSlotFilter)}
@@ -68,33 +85,15 @@ export const ProfessionalAvailabilityCard: React.FC<
           <TabsTrigger value="afternoon">Tarde</TabsTrigger>
         </TabsList>
 
-        {/* Contenido de "Mañana" */}
         <TabsContent value="morning" className="pt-4">
           {morningSlots.length > 0 ? (
-            // CAMBIO 1: Añadir 'px-10' (padding horizontal) al Carousel
             <Carousel
               opts={{ align: 'start', dragFree: true }}
               className="w-full relative px-10"
             >
               <CarouselContent className="-ml-2">
-                {morningSlots.map(slot => (
-                  <CarouselItem
-                    key={slot.start}
-                    className="pl-2 basis-1/3 sm:basis-1/4"
-                  >
-                    <Button
-                      variant="outline"
-                      className="font-normal font-sans w-full"
-                      onClick={() =>
-                        onSlotSelect(profesional.workerId, slot.start)
-                      }
-                    >
-                      {slot.start.substring(0, 5)}
-                    </Button>
-                  </CarouselItem>
-                ))}
+                {renderSlots(morningSlots)}
               </CarouselContent>
-              {/* CAMBIO 2: Posicionar botones DENTRO del padding */}
               <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
               <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
             </Carousel>
@@ -105,33 +104,15 @@ export const ProfessionalAvailabilityCard: React.FC<
           )}
         </TabsContent>
 
-        {/* Contenido de "Tarde" */}
         <TabsContent value="afternoon" className="pt-4">
           {afternoonSlots.length > 0 ? (
-            // CAMBIO 1: Añadir 'px-10' (padding horizontal) al Carousel
             <Carousel
               opts={{ align: 'start', dragFree: true }}
               className="w-full relative px-10"
             >
               <CarouselContent className="-ml-2">
-                {afternoonSlots.map(slot => (
-                  <CarouselItem
-                    key={slot.start}
-                    className="pl-2 basis-1/3 sm:basis-1/4"
-                  >
-                    <Button
-                      variant="outline"
-                      className="font-normal font-sans w-full"
-                      onClick={() =>
-                        onSlotSelect(profesional.workerId, slot.start)
-                      }
-                    >
-                      {slot.start.substring(0, 5)}
-                    </Button>
-                  </CarouselItem>
-                ))}
+                {renderSlots(afternoonSlots)}
               </CarouselContent>
-              {/* CAMBIO 2: Posicionar botones DENTRO del padding */}
               <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
               <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
             </Carousel>
