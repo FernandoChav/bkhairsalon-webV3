@@ -1,18 +1,9 @@
-// hooks/use-availability-selector.ts
 'use client';
 
 import { useEffect, useState } from 'react';
 
 import { useCheckAvailabilityMutation } from '@/hooks/api';
 import { AvailabilityRequest } from '@/models/requests';
-
-// hooks/use-availability-selector.ts
-
-// hooks/use-availability-selector.ts
-
-// hooks/use-availability-selector.ts
-
-// hooks/use-availability-selector.ts
 
 interface UseAvailabilitySelectorProps {
   serviceId: string;

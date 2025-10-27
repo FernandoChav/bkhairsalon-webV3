@@ -1,112 +1,108 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-// --- Tus Componentes Existentes ---
-import { Calendar } from '@/components/shadcn';
+import { CardContent } from '@/components/shadcn/card';
+import { Skeleton } from '@/components/shadcn/skeleton';
 import { LoadingSpinner } from '@/components/ui';
-import { useCheckAvailabilityMutation } from '@/hooks/api';
-// Hook de API global
-import { AvailabilityRequest } from '@/models/requests';
 
-// --- Componente Hijo ---
-import { AvailabilityList } from './availability-list';
+import { AvailabilityList, WeekSelector } from '.';
+import { useAvailabilitySelector } from '../hooks';
 
 interface AvailabilitySelectorProps {
   serviceId: string;
   slotIntervalMinutes: number;
+  onSlotSelect?: (data: {
+    serviceId: string;
+    date: Date | undefined;
+    workerId: string;
+    time: string;
+  }) => void;
 }
 
 export const AvailabilitySelector = ({
   serviceId,
   slotIntervalMinutes,
+  onSlotSelect,
 }: AvailabilitySelectorProps) => {
-  // Estado para el día seleccionado en el calendario
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
-
   const {
-    data: apiResponse,
-    mutate: checkAvailability,
+    selectedDate,
+    setSelectedDate,
+    availabilityData,
     isPending,
     isError,
-  } = useCheckAvailabilityMutation();
+    handleSlotSelect,
+  } = useAvailabilitySelector({
+    serviceId,
+    slotIntervalMinutes,
+  });
 
-  // Efecto: Llama a la API cada vez que selectedDate cambia
-  useEffect(() => {
-    if (!selectedDate) return;
-    const dateOnly = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate()
-      )
-    );
-    const dateUTC = dateOnly.toISOString();
-    const requestBody: AvailabilityRequest = {
-      date: dateUTC,
-      serviceIds: [serviceId],
-      slotIntervalMinutes: slotIntervalMinutes,
-    };
-    checkAvailability(requestBody);
-  }, [selectedDate, serviceId, slotIntervalMinutes, checkAvailability]);
+  // Enhanced slot selection handler
+  const handleSlotSelectWithCallback = (workerId: string, time: string) => {
+    const selectionData = handleSlotSelect(workerId, time);
+    if (onSlotSelect) {
+      onSlotSelect(selectionData);
+    }
+  };
 
-  // Extrae los datos (array de profesionales)
-  const availabilityData = apiResponse?.data || [];
-
-  // Define la función que se pasará a AvailabilityList
-  const handleSlotSelect = (workerId: string, time: string) => {
-    console.log('Slot seleccionado en AvailabilitySelector:', {
-      serviceId,
-      date: selectedDate,
-      workerId,
-      time,
-    });
+  // Handle date selection from WeekSelector
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
   };
 
   return (
-    // Contenedor principal
-    <div className="flex flex-col lg:flex-row gap-8 p-4">
-      {/* Columna 1: Calendario */}
-      <div className="shrink-0 flex justify-center">
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={setSelectedDate}
-          className="rounded-md border"
-          disabled={date => date < new Date(new Date().setHours(0, 0, 0, 0))}
-        />
-      </div>
-
-      {/* Columna 2: Horarios */}
-      <div className="flex-1">
-        {isPending && (
-          <div className="flex justify-center items-center h-48">
-            <LoadingSpinner />
-          </div>
-        )}
-
-        {isError && (
-          <div className="text-center text-destructive font-montserrat h-48 flex items-center justify-center">
-            {/* CAMBIO: Añadido font-sans */}
-            <p className="font-sans">Error al cargar la disponibilidad.</p>
-          </div>
-        )}
-
-        {!isPending && !isError && (
-          <AvailabilityList
-            data={availabilityData}
-            onSlotSelect={handleSlotSelect}
-          />
-        )}
-        {/* ------------------------------------ */}
-
-        {/* CAMBIO: Añadido font-sans */}
-        <p className="text-xs text-muted-foreground font-montserrat text-center mt-4 font-sans">
-          Horarios mostrados en la zona horaria del negocio (America/Santiago)
+    <div className="flex flex-col gap-2 rounded-xl border-border border-0">
+      <CardContent>
+        <h2 className="text-2xl font-bold font-montserrat">Disponibilidad</h2>
+        <p className="text-muted-foreground mb-2 font-montserrat">
+          Selecciona un horario y estilista para tu cita
         </p>
-      </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 md:items-start">
+          {/* Column 1: WeekSelector */}
+          <div className="shrink-0 flex justify-center md:justify-start w-full max-w-sm mx-auto md:w-80 md:max-w-none md:mx-0">
+            {selectedDate ? (
+              <WeekSelector
+                selectedDate={selectedDate}
+                onDateSelect={handleDateSelect}
+              />
+            ) : (
+              <Skeleton className="h-32 w-full md:w-80 rounded-md border" />
+            )}
+          </div>
+
+          {/* Column 2: Time Slots */}
+          <div className="flex flex-col w-full min-w-0">
+            <div className="flex-1">
+              {isPending && (
+                <div className="flex justify-center items-center h-48">
+                  <LoadingSpinner />
+                </div>
+              )}
+
+              {isError && (
+                <div className="text-center text-destructive font-montserrat h-48 flex items-center justify-center">
+                  <p className="font-sans">
+                    Error al cargar la disponibilidad.
+                  </p>
+                </div>
+              )}
+
+              {!isPending && !isError && (
+                <AvailabilityList
+                  data={availabilityData}
+                  onSlotSelect={handleSlotSelectWithCallback}
+                />
+              )}
+            </div>
+
+            {!isPending && (
+              <p className="text-xs text-muted-foreground text-center mt-2 font-sans">
+                Horarios mostrados en la zona horaria del negocio
+                (Antofagasta/GMT-3)
+              </p>
+            )}
+          </div>
+        </div>
+      </CardContent>
     </div>
   );
 };

@@ -1,26 +1,13 @@
 'use client';
 
-import {
-  addDays,
-  eachDayOfInterval,
-  endOfWeek,
-  format,
-  isBefore,
-  isSameDay,
-  startOfToday,
-  startOfWeek,
-  subDays,
-} from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { useState } from 'react';
-
-// Importa tu utilidad 'cn' de shadcn
 import { Button } from '@/components/shadcn';
 import { cn } from '@/libs';
 
-// Importar 'locale' en español
+import { useWeekSelector } from '../hooks';
 
 interface WeekSelectorProps {
   selectedDate: Date | undefined;
@@ -31,35 +18,27 @@ export const WeekSelector: React.FC<WeekSelectorProps> = ({
   selectedDate,
   onDateSelect,
 }) => {
-  const [displayDate, setDisplayDate] = useState(selectedDate ?? new Date());
-  const today = startOfToday();
-
-  // (Lógica de fechas y navegación sin cambios)
-  const weekStart = startOfWeek(displayDate, { weekStartsOn: 1 });
-  const weekEnd = endOfWeek(displayDate, { weekStartsOn: 1 });
-  const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
-
-  const goToPreviousWeek = () => {
-    setDisplayDate(subDays(displayDate, 7));
-  };
-
-  const goToNextWeek = () => {
-    setDisplayDate(addDays(displayDate, 7));
-  };
-
-  const formattedDateRange = `${format(weekStart, 'd MMMM', {
-    locale: es,
-  })} - ${format(weekEnd, 'd MMMM yyyy', { locale: es })}`;
+  const {
+    days,
+    today,
+    formattedDateRange,
+    isPreviousWeekDisabled,
+    goToPreviousWeek,
+    goToNextWeek,
+  } = useWeekSelector({
+    selectedDate,
+    onDateSelect,
+  });
 
   return (
     <div className="w-full font-sans border rounded-md p-4">
-      {/* --- Cabecera: Título y Navegación (Sin cambios) --- */}
+      {/* Header: Title and Navigation */}
       <div className="flex items-center justify-between mb-4">
         <Button
           variant="outline"
           size="icon"
           onClick={goToPreviousWeek}
-          disabled={isBefore(weekStart, today)}
+          disabled={isPreviousWeekDisabled}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -71,13 +50,13 @@ export const WeekSelector: React.FC<WeekSelectorProps> = ({
         </Button>
       </div>
 
-      {/* --- Grilla de Días --- */}
+      {/* Days Grid */}
       <div className="grid grid-cols-7 gap-2">
         {days.map(day => {
           const isDaySelected = selectedDate
             ? isSameDay(day, selectedDate)
             : false;
-          const isDayPast = isBefore(day, today);
+          const isDayPast = day < today;
 
           return (
             <button
@@ -85,14 +64,12 @@ export const WeekSelector: React.FC<WeekSelectorProps> = ({
               type="button"
               onClick={() => onDateSelect(day)}
               disabled={isDayPast}
-              // --- CAMBIO AQUÍ ---
               className={cn(
-                'flex flex-col items-center justify-center p-2 rounded-md transition-colors border', // 1. Añadimos 'border' base
-                'h-16 w-full text-xs font-medium',
+                'flex flex-col items-center justify-center p-2 rounded-md transition-colors border h-16 w-full text-xs font-medium',
                 !isDayPast && 'hover:bg-accent hover:text-accent-foreground',
                 isDaySelected
-                  ? 'border-primary text-primary' // 2. Estilo seleccionado (Outline)
-                  : 'border-transparent', // 3. Estilo no-seleccionado (Transparente)
+                  ? 'border-primary text-primary'
+                  : 'border-transparent',
                 isDayPast
                   ? 'text-muted-foreground opacity-50 cursor-not-allowed'
                   : 'text-foreground'
