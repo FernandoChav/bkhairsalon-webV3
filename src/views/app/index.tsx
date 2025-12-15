@@ -3,7 +3,22 @@ import { HiCalendar, HiChevronDown, HiLocationMarker } from 'react-icons/hi';
 
 import { FC } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
+
+import mainImage from '@/assets/landing/main_logo.png';
+import portf1 from '@/assets/landing/portf1.png';
+import portf2 from '@/assets/landing/portf2.png';
+import portf3 from '@/assets/landing/portf3.png';
+import portf4 from '@/assets/landing/portf4.png';
+import portf5 from '@/assets/landing/portf5.png';
+import portf6 from '@/assets/landing/portf6.png';
+import portf7 from '@/assets/landing/portf7.png';
+import portf8 from '@/assets/landing/portf8.png';
+import portf9 from '@/assets/landing/portf9.png';
+import portf10 from '@/assets/landing/portf10.png';
+import portf11 from '@/assets/landing/portf11.png';
+import portf12 from '@/assets/landing/portf12.png';
 
 import { Button } from '@/components/shadcn';
 import { ScrollingMarquee } from '@/components/ui';
@@ -31,72 +46,84 @@ const portfolioImages = [
     variant: 'accent' as const,
     text: 'Foto 1',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf1,
   },
   {
     id: 2,
     variant: 'primary' as const,
     text: 'Foto 2',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf2,
   },
   {
     id: 3,
     variant: 'accent' as const,
     text: 'Foto 3',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf3,
   },
   {
     id: 4,
     variant: 'primary' as const,
     text: 'Foto 4',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf4,
   },
   {
     id: 5,
     variant: 'accent' as const,
     text: 'Foto 5',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf5,
   },
   {
     id: 6,
     variant: 'primary' as const,
     text: 'Foto 6',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf6,
   },
   {
     id: 7,
     variant: 'accent' as const,
     text: 'Foto 7',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf7,
   },
   {
     id: 8,
     variant: 'primary' as const,
     text: 'Foto 8',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf8,
   },
   {
     id: 9,
     variant: 'accent' as const,
     text: 'Foto 9',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf9,
   },
   {
     id: 10,
     variant: 'primary' as const,
     text: 'Foto 10',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf10,
   },
   {
     id: 11,
     variant: 'accent' as const,
     text: 'Foto 11',
     textClassName: 'text-sm text-accent-foreground',
+    src: portf11,
   },
   {
     id: 12,
     variant: 'primary' as const,
     text: 'Foto 12',
     textClassName: 'text-sm text-primary-foreground',
+    src: portf12,
   },
 ];
 
@@ -216,11 +243,13 @@ export const LandingView: FC = () => {
                   clipPath: 'polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)',
                 }}
               >
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">
-                    Imagen Principal
-                  </span>
-                </div>
+                <Image
+                  src={mainImage}
+                  alt="Banguelia Karamanos - Estilista Profesional"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
             </div>
           </div>
@@ -424,18 +453,28 @@ export const LandingView: FC = () => {
         </div>
       </LandingSection>
       <LandingSection background="default" padding="lg" maxWidth="7xl">
-        <SectionHeader title="Portfolio" className="mb-12 text-right" />
+        <SectionHeader title="Portafolio" className="mb-12 text-right" />
 
         <LandingGrid columns={{ default: 1, md: 3, lg: 4 }} gap="md">
           {portfolioImages.map(image => (
             <LandingCard
               key={image.id}
               variant={image.variant}
-              className="h-80 hover:scale-105 transition-transform duration-300"
+              className="relative h-80 hover:scale-105 transition-transform duration-300 overflow-hidden group"
               size="md"
             >
-              <div className="w-full h-full flex items-center justify-center">
-                <span className={image.textClassName}>{image.text}</span>
+              <Image
+                src={image.src}
+                alt={image.text}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+              />
+
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="text-white font-medium tracking-widest uppercase text-sm">
+                  {image.text}
+                </span>
               </div>
             </LandingCard>
           ))}
